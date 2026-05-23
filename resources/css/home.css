@@ -1,0 +1,150 @@
+header {
+    position: relative;
+    height: 670px;
+    overflow: hidden;
+}
+#header-text-box {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 2;
+}
+#header-text {
+    display: flex;
+    flex-direction: column;
+    font-weight: 580;
+    font-size: 60px;
+    line-height: 1.15;
+    padding: 20px;
+}
+#header-text > :nth-child(3) {
+    color: #0066FF !important;
+    font-weight: bold;
+}
+
+#create-auction-btn {
+    display: flex;
+    width: 250px;
+    justify-content: center;
+    background-color: #0066FF;
+    color: white;
+    font-weight: 650;
+    font-size: 32px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 25px;
+}
+
+
+.header-hexagon {
+    position: absolute;
+    z-index: 1;
+}
+
+#car-img {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+}
+
+#categories {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.section-text-title {
+    font-weight: 650;
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
+}
+#categories-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 40px;
+    gap: 25px;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    width: 120px;
+    border: 3px solid #0066FF;
+    border-radius: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.category-card img{
+    border-radius: 50px;
+    height: 80px;
+}
+
+.category-title {
+    font-size: 16px;
+    font-weight: bolder;
+    width: 100%;
+    text-align: center;
+    word-break: break-word;
+}
+#newest-auctions {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    align-items: center;
+}
+
+#auctions-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    gap: 50px;
+}
+
+.newest-auction-card {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 350px;
+    box-shadow: 0px 0px 13px 5px rgba(224,224,224,0.47);
+    border-radius: 30px;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+.newest-auction-card img {
+    height: 150px;
+}
+.newest-auction-card .auction-title {
+    font-weight: 580;
+    font-size: 25px;
+}
+
+.check-auction-btn {
+    background-color: #0066FF;
+    color: white;
+    font-weight: bolder;
+    border-radius: 15px;
+    font-size: 20px;
+    padding: 8px;
+    width: 80%;
+}
+.auction-price {
+    width: 80%;
+    text-align: right;
+    font-weight: bolder;
+    color: #0066FF;
+    font-size: 22px;
+    padding: 10px;
+}

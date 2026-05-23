@@ -22,8 +22,9 @@
     <main>
         @yield('content')
     </main>
+  <img id="footer-waves" src="{{asset('assets/footer-waves.svg')}}" alt="waves"/>
   <footer>
-
+        Mateusz Serafin, Przemysław Sulowski
   </footer>
   </body>
 </html>
