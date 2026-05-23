@@ -5,7 +5,61 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+
+nav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    font-family: Inter, serif;
+    font-weight: bold;
+    color: #1A1A1A;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 40px 10px 40px;
 }
+
+#logo {
+
+}
+
+#logo img {
+    height: 90px;
+}
+
+#search-box {
+    display: flex;
+    width: auto;
+}
+
+#search {
+    border: 3px solid #0066FF;
+    height: 50px;
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 15px 0px 0px 15px;
+    font-weight: 500;
+}
+
+#filter-btn {
+    background-color: #0066FF;
+    padding: 5px 10px 5px 10px;
+    border-radius: 0px 12px 12px 0px;
+}
+
+#filter-btn img{
+    height: 35px;
+    width: 35px;
+}
+
+#menu {
+    display: flex;
+    list-style-type: none;
+    gap: 10px;
+}
+
+#menu li img{
+    scale: 0.8;
+}
+
+
+
