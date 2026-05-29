@@ -1,13 +1,12 @@
 header {
     position: relative;
-    height: 670px;
-    overflow: hidden;
+    height: 650px;
 }
 #header-text-box {
     position: absolute;
     top: 40px;
     left: 40px;
-    z-index: 2;
+    z-index: 3;
 }
 #header-text {
     display: flex;
@@ -20,6 +19,7 @@ header {
 #header-text > :nth-child(3) {
     color: #0066FF !important;
     font-weight: bold;
+    z-index: 3;
 }
 
 #create-auction-btn {
@@ -33,6 +33,7 @@ header {
     padding: 10px;
     border-radius: 10px;
     margin-top: 25px;
+    z-index: 2;
 }
 
 
@@ -49,9 +50,10 @@ header {
 }
 
 #categories {
+    margin-top: 150px;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 10px;
 }
 
 .section-text-title {
@@ -67,25 +69,28 @@ header {
     justify-content: center;
     margin-top: 30px;
     padding: 40px;
-    gap: 25px;
+    gap: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1100px;
 }
 
 .category-card {
     display: flex;
     flex-direction: column;
-    width: 120px;
+    width: 140px;
     border: 3px solid #0066FF;
-    border-radius: 40px;
+    border-radius: 50px;
     align-items: center;
     justify-content: center;
-    padding: 10px;
     gap: 10px;
     overflow: hidden;
+    padding: 10px;
 }
 
 .category-card img{
     border-radius: 50px;
-    height: 80px;
+    height: 90px;
 }
 
 .category-title {
@@ -108,8 +113,8 @@ header {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 80%;
-    gap: 50px;
+    max-width: 1000px;
+    gap: 30px;
 }
 
 .newest-auction-card {
@@ -147,4 +152,20 @@ header {
     color: #0066FF;
     font-size: 22px;
     padding: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+    .header-hexagon {
+        z-index: 3;
+    }
+    #clouds {
+        z-index: 5 !important;
+    }
+    #car-img {
+        z-index: 4 !important;
+    }
+
+    .center-hexagon {
+        display: none;
+    }
 }

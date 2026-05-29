@@ -15,20 +15,25 @@ nav {
     color: #1A1A1A;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 40px 10px 40px;
+}
+
+main {
+    min-height: 100vh;
 }
 
 #logo {
-
+    display: flex;
 }
 
 #logo img {
     height: 90px;
+    width: 300px;
 }
 
 #search-box {
     display: flex;
-    width: auto;
+    justify-content: center;
+    width: 40%;
 }
 
 #search {
@@ -38,12 +43,14 @@ nav {
     font-size: 20px;
     border-radius: 15px 0px 0px 15px;
     font-weight: 500;
+    width: 100%;
 }
 
 #filter-btn {
     background-color: #0066FF;
     padding: 5px 10px 5px 10px;
     border-radius: 0px 12px 12px 0px;
+    width: 60px;
 }
 
 #filter-btn img{
@@ -55,6 +62,9 @@ nav {
     display: flex;
     list-style-type: none;
     gap: 10px;
+    justify-content: end;
+    width: auto;
+    padding: 20px;
 }
 
 #menu li img{

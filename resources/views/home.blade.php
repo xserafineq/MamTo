@@ -16,20 +16,20 @@
                 <button id="create-auction-btn">Utwórz aukcje</button>
             </div>
         </div>
-        <div style="bottom: 0" class="header-hexagon">
+        <div style="bottom: 0; z-index: 4 !important;" class="header-hexagon">
             <img src="{{asset('assets/hexagon-half.svg')}}" alt="hexagon"/>
         </div>
-        <div style="right: 0" class="header-hexagon">
+        <div style="right: 0;" class="header-hexagon">
             <img src="{{asset('assets/hexagon-halftop.png')}}" alt="hexagon"/>
         </div>
-        <div style="right: 400px; top: 180px" class="header-hexagon">
+        <div style="right: 400px; top: 180px;" class="header-hexagon center-hexagon">
             <img src="{{asset('assets/hexagon.svg')}}" alt="hexagon"/>
         </div>
         <div id="car-img">
-            <img src="{{asset('assets/car.svg')}}" alt="car"/>
+            <img style="object-fit: cover;" src="{{asset('assets/car.svg')}}" alt="car"/>
         </div>
-        <div style="position: absolute; bottom: 0; right: 0; z-index: 3;">
-            <img src="{{asset('assets/cloud.png')}}" alt="clouds"/>
+        <div id="clouds" style="display: flex; width: 100%; padding: 0; position: absolute; z-index: 3; bottom: -30px; height: 180px;">
+            <img style="object-fit: cover;" src="{{asset('assets/clouds.svg')}}" width="100%" alt="clouds"/>
         </div>
     </header>
     <section id="categories">
@@ -89,6 +89,12 @@
     <section id="newest-auctions">
         <div class="section-text-title">Najnowsze <span style="color: #0066FF">Aukcje</span></div>
         <div id="auctions-box">
+            <div class="newest-auction-card">
+                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
+                <div class="auction-title">Tytuł aukcji</div>
+                <button class="check-auction-btn">Sprawdź</button>
+                <div class="auction-price">2000 zł</div>
+            </div>
             <div class="newest-auction-card">
                 <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
                 <div class="auction-title">Tytuł aukcji</div>

@@ -48,7 +48,10 @@ services:
       environment:
           PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
           PGADMIN_DEFAULT_PASSWORD: strong-password
+      volumes:
+          - pgadmin_data:/var/lib/pgadmin
 
-# Named volumes for data persistence
+
 volumes:
   postgres_data:
+  pgadmin_data:
