@@ -9,11 +9,12 @@
 }
 
 #filters {
-    width: 90%;
+    width: 75%;
     display: flex;
     justify-content: space-between;
     /*background-color: red;*/
     margin: auto;
+    padding: 10px;
 }
 #sortby {
     display: flex;
@@ -29,6 +30,7 @@
     font-size: 18px;
     padding: 5px;
     text-align: center;
+    background-color: white;
 }
 
 .searched-auction-card {
