@@ -17,6 +17,13 @@
                 <option>Najnowsze</option>
             </select>
         </div>
+        <div id="price">
+            <div>Cena</div>
+            <div id="price-inputs">
+                <input type="number" placeholder="od">
+                <input type="number" placeholder="do">
+            </div>
+        </div>
     </section>
     <section id="searched-auctions">
         <div class="searched-auction-card">

@@ -24,6 +24,29 @@
     gap: 5px;
 }
 
+#price {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+#price-inputs {
+    display: flex;
+    gap: 10px;
+}
+#price-inputs input {
+    border: 2px solid #0066FF;
+    border-radius: 10px;
+    font-size: 18px;
+    padding: 5px;
+    text-align: center;
+    background-color: white;
+    width: 80px;
+    font-weight: 550;
+}
+
+
 #filters select {
     border: 2px solid #0066FF;
     border-radius: 10px;
@@ -31,6 +54,7 @@
     padding: 5px;
     text-align: center;
     background-color: white;
+    font-weight: 550;
 }
 
 .searched-auction-card {

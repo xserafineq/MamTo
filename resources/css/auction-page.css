@@ -1,0 +1,312 @@
+#auction-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+    align-items: center;
+    margin-top: 50px;
+}
+
+#main-data {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+}
+
+#information {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#title {
+    font-weight: 700;
+    font-size: 28px;
+    color: #111;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#price {
+    font-weight: 650;
+    color: #0066ff;
+    font-size: 26px;
+    margin-bottom: 2px;
+}
+
+#finalPrice {
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+#carousel-container {
+    position: relative;
+    width: 550px;
+    flex-shrink: 0;
+}
+
+#carousel-container .carousel,
+#carousel-container .carousel-inner,
+#carousel-container .carousel-item,
+#carousel-container .carousel-item img {
+    border-radius: 16px;
+    height: 380px !important;
+    object-fit: cover;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    backdrop-filter: blur(4px);
+}
+
+.carousel-control:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.prev-btn {
+    left: 15px;
+}
+
+.next-btn {
+    right: 15px;
+}
+
+#seller {
+    margin-top: 15px;
+}
+
+.seller-header {
+    font-weight: 700;
+    font-size: 18px;
+    color: #111;
+    margin-bottom: 15px;
+}
+
+#seller-data {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#seller-avatar {
+    height: 80px !important;
+    width: 80px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+#seller-main-data {
+    display: flex;
+    flex-direction: column;
+}
+
+#email {
+    font-weight: 600;
+    font-size: 16px;
+    color: #444;
+}
+
+#phoneNumber {
+    color: #777;
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+#rating {
+    color: #0066ff;
+    font-weight: 600;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+#extra-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0 !important;
+    justify-content: end;
+}
+
+.info-item {
+    display: flex;
+    padding: 10px;
+    color: gray;
+    height: 30px;
+
+}
+
+
+
+#actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 25px;
+    padding-top: 10px;
+}
+
+#btns-box {
+    display: flex;
+    justify-content: right;
+    margin-top: 20px;
+}
+
+.btn-like {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    transition: transform 0.2s;
+    width: 80px;
+}
+
+.btn-like:hover {
+    transform: scale(1.1);
+}
+
+.btn-like svg {
+    stroke: #0066ff;
+    fill: none;
+}
+
+.btn-message {
+    background-color: #0066ff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 36px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    max-width: 300px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-message:hover {
+    background-color: #0052cc;
+    transform: translateY(-1px);
+}
+
+#description {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    border: 3px solid #3b82f6;
+    padding: 15px;
+    font-weight: 550;
+    font-size: 20px;
+    border-radius: 10px;
+    height: auto;
+    color: #323232;
+}
+
+#description-head {
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 10px;
+    color: black;
+}
+
+
+#other-auctions {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    align-items: center;
+}
+
+#auctions-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 1000px;
+    gap: 30px;
+}
+
+.section-text-title {
+    font-weight: 650;
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
+}
+
+.other-auction-card {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 350px;
+    box-shadow: 0px 0px 13px 5px rgba(224,224,224,0.47);
+    border-radius: 30px;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+.other-auction-card img {
+    height: 150px;
+}
+.other-auction-card .auction-title {
+    font-weight: 580;
+    font-size: 25px;
+}
+
+.check-auction-btn {
+    background-color: #0066FF;
+    color: white;
+    font-weight: bolder;
+    border-radius: 15px;
+    font-size: 20px;
+    padding: 8px;
+    width: 80%;
+}
+.auction-price {
+    width: 80%;
+    text-align: right;
+    font-weight: bolder;
+    color: #0066FF;
+    font-size: 22px;
+    padding: 10px;
+}
+
+
+@media (max-width: 992px) {
+    #main-data {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    #carousel-container {
+        width: 100%;
+        max-width: 550px;
+    }
+
+    #information {
+        width: 100%;
+        max-width: 550px;
+        padding-left: 0;
+    }
+}
