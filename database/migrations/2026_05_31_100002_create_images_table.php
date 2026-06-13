@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('Images', function (Blueprint $table) {
             $table->id();
-            $table->integer('uuid')->nullable();
+            $table->uuid('uuid')->nullable();
             $table->text('filename');
             $table->timestamp('uploadedAt');
         });
