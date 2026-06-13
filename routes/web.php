@@ -3,9 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Auction;
 use App\Models\Category;
+
+
 
 Route::get('/', function () {
     $categories = Category::with('image')
@@ -13,6 +16,7 @@ Route::get('/', function () {
         ->get();
 
     $newestAuctions = Auction::with('image')
+        ->where('status', 'aktywna')
         ->latest('createdAt')
         ->limit(6)
         ->get();
@@ -20,10 +24,21 @@ Route::get('/', function () {
     return view('home', compact('categories', 'newestAuctions'));
 });
 
+
 Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/auctions/create', [AuctionController::class, 'create'])->name('auctions.create');
+    Route::post('/auctions/create', [AuctionController::class, 'store'])->name('auctions.store');
+    Route::get('/my-auctions', [AuctionController::class, 'mine'])->name('auctions.mine');
+    Route::get('/auctions/{auction}/edit', [AuctionController::class, 'edit'])->name('auctions.edit')->whereNumber('auction');
+    Route::put('/auctions/{auction}', [AuctionController::class, 'update'])->name('auctions.update')->whereNumber('auction');
+    Route::post('/auctions/{auction}/close', [AuctionController::class, 'close'])->name('auctions.close')->whereNumber('auction');
+
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
+    Route::get('/followed', [UserController::class, 'followed'])->name('followed.index');
 
     Route::get('/messages', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/messages/{chat}', [ChatController::class, 'show'])->name('chats.show');

@@ -1,0 +1,136 @@
+#create-auction-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    margin: auto;
+    margin-top: 80px;
+    align-items: center;
+}
+
+#create-auction-container form {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    max-width: 1200px;
+    width: 100%;
+    align-items: center;
+}
+
+#upload-img-card-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+}
+
+.upload-img-card {
+    flex: 1 1 160px;
+    max-width: 200px;
+    min-width: 110px;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 12px 0 rgb(241 241 241);
+    gap: 25px;
+    border-radius: 15px;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-img-card img {
+    width: clamp(48px, 50%, 100px);
+    height: clamp(48px, 50%, 100px);
+    object-fit: contain;
+}
+
+.upload-img-card div {
+    font-size: clamp(14px, 2.5vw, 25px);
+    color: #535353;
+    font-weight: 550;
+    text-align: center;
+}
+
+form input, form textarea, form select {
+    box-shadow: 0 0 12px 0 rgb(241 241 241);
+    border: 0 !important;
+    width: 100%;
+}
+
+#price-category-box {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+}
+
+#btns-box {
+    display: flex;
+    padding: 20px;
+    min-height: 100px;
+    align-items: center;
+    gap: 20px;
+}
+
+@media screen and (max-width: 900px) {
+    #create-auction-container {
+        max-width: 92%;
+        margin-top: 50px;
+    }
+
+    #upload-img-card-container {
+        gap: 8px;
+    }
+
+    .upload-img-card {
+        flex: 1 1 calc(33.333% - 8px);
+        max-width: none;
+        min-width: 100px;
+        gap: 15px;
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #create-auction-container {
+        max-width: 95%;
+        margin-top: 30px;
+    }
+
+    .upload-img-card {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 90px;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .upload-img-card img {
+        width: clamp(40px, 40%, 70px);
+        height: clamp(40px, 40%, 70px);
+    }
+
+    #price-category-box {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    #btns-box {
+        flex-wrap: wrap;
+        justify-content: center;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .upload-img-card {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 80px;
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .upload-img-card div {
+        font-size: 13px;
+    }
+}

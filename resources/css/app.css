@@ -7,6 +7,8 @@
 
 
 nav {
+    position: relative;
+    z-index: 1030;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -42,9 +44,9 @@ main {
     border: 3px solid #0066FF;
     height: 50px;
     padding: 20px;
-    font-size: 16px;
+    font-size: 20px;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-weight: 400;
+    font-weight: 550;
     border-radius: 15px 0 0 15px;
     width: 100%;
 }
@@ -77,6 +79,215 @@ main {
 #menu li a {
     display: flex;
     align-items: center;
+}
+
+@media screen and (max-width: 1100px) {
+    #logo img {
+        height: 70px;
+        width: 230px;
+    }
+
+    #search-box {
+        width: 45%;
+    }
+
+    #menu {
+        padding: 12px;
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    #logo {
+        flex: 1;
+        min-width: 0;
+    }
+
+    #logo img {
+        height: 58px;
+        width: auto;
+        max-width: 190px;
+    }
+
+    #menu {
+        padding: 0;
+        gap: 6px;
+    }
+
+    #menu li img,
+    .user-menu__trigger img {
+        scale: 0.72;
+    }
+
+    #search-box {
+        order: 3;
+        width: 100%;
+    }
+
+    #search {
+        height: 44px;
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+
+    #filter-btn {
+        width: 52px;
+        padding: 4px 8px;
+    }
+
+    #filter-btn img {
+        height: 30px;
+        width: 30px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #logo img {
+        height: 48px;
+        max-width: 155px;
+    }
+
+    #search {
+        height: 40px;
+        padding: 10px 14px;
+        font-size: 14px;
+        border-width: 2px;
+    }
+
+    #filter-btn {
+        width: 46px;
+    }
+
+    #filter-btn img {
+        height: 26px;
+        width: 26px;
+    }
+
+    #menu li img,
+    .user-menu__trigger img {
+        scale: 0.65;
+    }
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu__trigger {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.user-menu__trigger img {
+    scale: 0.8;
+}
+
+.user-menu__dropdown {
+    min-width: 220px;
+    margin-top: 12px !important;
+    padding: 8px 0;
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.user-menu__dropdown .dropdown-item {
+    font-weight: 600;
+    font-size: 15px;
+    color: #1A1A1A;
+    padding: 10px 18px;
+}
+
+.user-menu__dropdown .dropdown-item:hover,
+.user-menu__dropdown .dropdown-item:focus {
+    background-color: #f0f6ff;
+    color: #0066FF;
+}
+
+.user-menu__dropdown .dropdown-divider {
+    margin: 6px 0;
+}
+
+.user-menu__logout {
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: none;
+}
+
+.user-menu__logout:hover {
+    color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.profile-page,
+.user-list-page {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.profile-page h1,
+.user-list-page h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgb(241 241 241);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.user-list-page__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    box-shadow: 0 0 12px rgb(241 241 241);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.user-list-page__item:hover {
+    transform: translateY(-2px);
+    color: inherit;
+}
+
+.user-list-page__item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.user-list-page__title {
+    font-weight: 650;
+    font-size: 18px;
+}
+
+.user-list-page__price {
+    color: #0066FF;
+    font-weight: 700;
+    margin-top: 4px;
 }
 #footer-waves {
     width: 100%;
