@@ -62,6 +62,9 @@
                         <li><a class="dropdown-item" href="{{ route('chats.index') }}">Wiadomości</a></li>
                         <li><a class="dropdown-item" href="{{ route('followed.index') }}">Obserwowane</a></li>
                         <li><a class="dropdown-item" href="{{ route('auctions.mine') }}">Moje ogłoszenia</a></li>
+                        @if(auth()->user()->isAdmin)
+                            <li><a class="dropdown-item user-menu__admin-link" href="{{ route('admin.panel') }}">Panel administratora</a></li>
+                        @endif
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">

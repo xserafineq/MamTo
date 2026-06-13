@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable(['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'joinedAt', 'lastOnline', 'isAdmin'])]
+#[Fillable(['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'joinedAt', 'lastOnline', 'isAdmin', 'isMainAdmin'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -27,6 +27,7 @@ class User extends Authenticatable
             'joinedAt' => 'datetime',
             'lastOnline' => 'datetime',
             'isAdmin' => 'boolean',
+            'isMainAdmin' => 'boolean',
             'password' => 'hashed',
         ];
     }

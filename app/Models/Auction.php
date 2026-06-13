@@ -18,6 +18,7 @@ class Auction extends Model
         'negotiable',
         'location',
         'status',
+        'approved',
         'userId',
         'categoryId',
         'imageId',
@@ -29,9 +30,15 @@ class Auction extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'negotiable' => 'boolean',
+        'approved' => 'boolean',
         'createdAt' => 'datetime',
         'updatedAt' => 'datetime',
     ];
+
+    public function scopePubliclyVisible($query)
+    {
+        return $query->where('status', 'aktywna')->where('approved', true);
+    }
 
     public function user(): BelongsTo
     {

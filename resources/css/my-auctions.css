@@ -27,6 +27,10 @@
     color: #dc3545;
 }
 
+.my-auctions-stats__pending {
+    color: #e67e00;
+}
+
 .my-auctions-new-btn {
     display: inline-block;
     background-color: #0066FF;
@@ -126,6 +130,11 @@
     color: #666;
     font-size: 13px;
     font-weight: 600;
+}
+
+.my-auctions-card__badge--pending {
+    background: #fff4e6;
+    color: #e67e00;
 }
 
 .my-auctions-card__actions {

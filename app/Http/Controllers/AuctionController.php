@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminUpdateAuctionRequest;
 use App\Http\Requests\StoreAuctionRequest;
 use App\Http\Requests\UpdateAuctionRequest;
 use App\Models\Auction;
@@ -21,7 +22,7 @@ class AuctionController extends Controller
             ? (int) $request->input('category')
             : null;
 
-        $query = Auction::with('image')->where('status', 'aktywna');
+        $query = Auction::with('image')->publiclyVisible();
 
         if ($request->filled('price_min')) {
             $query->where('price', '>=', $request->input('price_min'));
@@ -48,6 +49,7 @@ class AuctionController extends Controller
         $auctions = $query->paginate(10)->withQueryString();
 
         $directAuctionCounts = Auction::query()
+            ->publiclyVisible()
             ->selectRaw('"categoryId", COUNT(*) as count')
             ->groupBy('categoryId')
             ->pluck('count', 'categoryId')
@@ -103,7 +105,13 @@ class AuctionController extends Controller
 
     public function show(Auction $auction): View
     {
+        $isOwner = auth()->check() && (int) auth()->id() === (int) $auction->userId;
+
         if ($auction->status !== 'aktywna' && ! $this->viewerIsAdmin()) {
+            abort(404);
+        }
+
+        if (! $auction->approved && ! $this->viewerIsAdmin() && ! $isOwner) {
             abort(404);
         }
 
@@ -120,12 +128,11 @@ class AuctionController extends Controller
         $otherAuctions = Auction::with('image')
             ->where('userId', $auction->userId)
             ->where('id', '!=', $auction->id)
-            ->where('status', 'aktywna')
+            ->publiclyVisible()
             ->latest('createdAt')
             ->limit(3)
             ->get();
 
-        $isOwner = auth()->check() && (int) auth()->id() === (int) $auction->userId;
         $phoneDigits = preg_replace('/\D/', '', $auction->user->phoneNumber);
         $displayPhone = $this->formatDisplayPhone($phoneDigits, $isOwner);
 
@@ -162,10 +169,11 @@ class AuctionController extends Controller
             ->latest('createdAt')
             ->get();
 
-        $activeCount = $auctions->where('status', 'aktywna')->count();
+        $activeCount = $auctions->where('status', 'aktywna')->where('approved', true)->count();
         $closedCount = $auctions->where('status', 'zakończona')->count();
+        $pendingCount = $auctions->where('approved', false)->count();
 
-        return view('my-auctions', compact('auctions', 'activeCount', 'closedCount'));
+        return view('my-auctions', compact('auctions', 'activeCount', 'closedCount', 'pendingCount'));
     }
 
     // Formularz edycji ogłoszenia
@@ -185,6 +193,20 @@ class AuctionController extends Controller
         ]);
     }
 
+    // Edycja aukcji przez administratora
+    public function adminEdit(Auction $auction): View
+    {
+        $this->ensureAdmin();
+
+        return view('edit-auction', [
+            'auction' => $auction,
+            'categories' => $this->getSelectableCategories(),
+            'cancelRoute' => route('admin.auctions.index'),
+            'updateRoute' => route('admin.auctions.update', $auction),
+            'isAdminEdit' => true,
+        ]);
+    }
+
     // Aktualizacja ogłoszenia
     public function update(UpdateAuctionRequest $request, Auction $auction, ImageService $imageService): RedirectResponse
     {
@@ -195,6 +217,43 @@ class AuctionController extends Controller
                 ->route('auctions.mine')
                 ->withErrors(['auction' => 'Zamkniętego ogłoszenia nie można edytować.']);
         }
+
+        DB::transaction(function () use ($request, $auction, $imageService) {
+            $data = $request->safe()->except(['thumbnail', 'images']);
+            $data['negotiable'] = $request->boolean('negotiable');
+
+            if (Category::requiresApproval($request->validated('categoryId'))) {
+                $data['approved'] = false;
+            }
+
+            if ($request->hasFile('thumbnail')) {
+                $thumbnail = $imageService->storeImage($request->file('thumbnail'));
+                $data['imageId'] = $thumbnail->id;
+            }
+
+            $auction->update($data);
+
+            if ($request->hasFile('images')) {
+                $auction->additionalImages()->detach();
+
+                foreach ($request->file('images') as $order => $file) {
+                    $image = $imageService->storeImage($file);
+                    $auction->additionalImages()->attach($image->id, ['order' => $order + 1]);
+                }
+            }
+        });
+
+        return redirect()
+            ->route('auctions.mine')
+            ->with('success', Category::requiresApproval($request->validated('categoryId'))
+                ? 'Ogłoszenie zostało zaktualizowane i ponownie przesłane do akceptacji.'
+                : 'Ogłoszenie zostało zaktualizowane.');
+    }
+
+    // Aktualizacja aukcji przez administratora
+    public function adminUpdate(AdminUpdateAuctionRequest $request, Auction $auction, ImageService $imageService): RedirectResponse
+    {
+        $this->ensureAdmin();
 
         DB::transaction(function () use ($request, $auction, $imageService) {
             $data = $request->safe()->except(['thumbnail', 'images']);
@@ -218,8 +277,8 @@ class AuctionController extends Controller
         });
 
         return redirect()
-            ->route('auctions.mine')
-            ->with('success', 'Ogłoszenie zostało zaktualizowane.');
+            ->route('admin.auctions.index')
+            ->with('success', 'Aukcja została zaktualizowana.');
     }
 
     // Zamknięcie ogłoszenia — operacja nieodwracalna
@@ -251,7 +310,9 @@ class AuctionController extends Controller
     // Zapis nowej aukcji
     public function store(StoreAuctionRequest $request, ImageService $imageService): RedirectResponse
     {
-        $auction = DB::transaction(function () use ($request, $imageService) {
+        $requiresApproval = Category::requiresApproval($request->validated('categoryId'));
+
+        $auction = DB::transaction(function () use ($request, $imageService, $requiresApproval) {
             $thumbnail = $imageService->storeImage($request->file('thumbnail'));
 
             $auction = Auction::create([
@@ -261,6 +322,7 @@ class AuctionController extends Controller
                 'negotiable' => $request->boolean('negotiable'),
                 'location' => $request->validated('location'),
                 'status' => 'aktywna',
+                'approved' => ! $requiresApproval,
                 'userId' => Auth::id(),
                 'categoryId' => $request->validated('categoryId'),
                 'imageId' => $thumbnail->id,
@@ -275,6 +337,12 @@ class AuctionController extends Controller
 
             return $auction;
         });
+
+        if ($requiresApproval) {
+            return redirect()
+                ->route('auctions.mine')
+                ->with('success', 'Ogłoszenie zostało przesłane do akceptacji administratora.');
+        }
 
         return redirect()
             ->route('auctions.show', $auction)
@@ -317,5 +385,12 @@ class AuctionController extends Controller
     private function viewerIsAdmin(): bool
     {
         return auth()->check() && auth()->user()->isAdmin;
+    }
+
+    private function ensureAdmin(): void
+    {
+        if (! $this->viewerIsAdmin()) {
+            abort(403);
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\ChatController;
@@ -16,7 +17,7 @@ Route::get('/', function () {
         ->get();
 
     $newestAuctions = Auction::with('image')
-        ->where('status', 'aktywna')
+        ->publiclyVisible()
         ->latest('createdAt')
         ->limit(6)
         ->get();
@@ -44,6 +45,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/messages/{chat}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('/messages/{chat}', [ChatController::class, 'storeMessage'])->name('chats.messages.store');
     Route::get('/auctions/{auction}/chat', [ChatController::class, 'start'])->name('chats.start');
+
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('panel');
+        Route::get('/auctions', [AdminController::class, 'auctions'])->name('auctions.index');
+        Route::get('/approvals', [AdminController::class, 'approvals'])->name('approvals.index');
+        Route::post('/approvals/{auction}/approve', [AdminController::class, 'approve'])->name('approvals.approve')->whereNumber('auction');
+        Route::get('/administrators', [AdminController::class, 'administrators'])->name('administrators.index');
+        Route::put('/administrators/{user}/permissions', [AdminController::class, 'updatePermissions'])->name('administrators.permissions.update')->whereNumber('user');
+        Route::get('/auctions/{auction}/edit', [AuctionController::class, 'adminEdit'])->name('auctions.edit')->whereNumber('auction');
+        Route::put('/auctions/{auction}', [AuctionController::class, 'adminUpdate'])->name('auctions.update')->whereNumber('auction');
+    });
 });
 
 Route::get('/auctions/{auction}', [AuctionController::class, 'show'])

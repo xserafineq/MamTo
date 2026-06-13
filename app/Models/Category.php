@@ -37,4 +37,22 @@ class Category extends Model
     {
         return $this->hasMany(Auction::class, 'categoryId');
     }
+
+    // Kategoria wymaga akceptacji administratora (Praca i podkategorie)
+    public static function requiresApproval(int $categoryId): bool
+    {
+        $category = static::find($categoryId);
+
+        while ($category) {
+            if ($category->name === 'Praca') {
+                return true;
+            }
+
+            $category = $category->parentId
+                ? static::find($category->parentId)
+                : null;
+        }
+
+        return false;
+    }
 }

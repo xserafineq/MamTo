@@ -19,7 +19,8 @@ export default defineConfig({
                 'resources/css/auction-page.css',
                 'resources/css/messages.css',
                 'resources/css/create-auction.css',
-                'resources/css/my-auctions.css',,
+                'resources/css/my-auctions.css',
+                'resources/css/admin-panel.css',
                 'resources/css/profile.css'
             ],
             refresh: true,

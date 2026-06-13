@@ -107,6 +107,16 @@ class CategorySeeder extends Seeder
                 ],
             ],
             [
+                'name' => 'Praca',
+                'children' => [
+                    ['name' => 'IT i technologie'],
+                    ['name' => 'Handel i sprzedaż'],
+                    ['name' => 'Produkcja'],
+                    ['name' => 'Biuro i administracja'],
+                    ['name' => 'Inne oferty pracy'],
+                ],
+            ],
+            [
                 'name' => 'Usługi',
                 'children' => [
                     ['name' => 'Budowlane'],
