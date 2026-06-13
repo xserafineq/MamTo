@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuctionController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
-use App\Models\Auction;
 
 Route::get('/', function () {
     $categories = Category::with('image')
@@ -14,13 +13,7 @@ Route::get('/', function () {
     return view('home', compact('categories'));
 });
 
-Route::get('/auctions', function () {
-    $auctions = Auction::with('image')
-        ->latest('createdAt')
-        ->paginate(10);
-
-    return view('auctions', compact('auctions'));
-});
+Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.index');
 
 Route::get('/auction-page', function () {
     return view('auction-page');

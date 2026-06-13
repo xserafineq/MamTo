@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/auth/login.js',
                 'resources/js/auth/register.js',
+                'resources/js/auctions/category-picker.js',
             ],
             refresh: true,
         }),

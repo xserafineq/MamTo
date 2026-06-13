@@ -26,7 +26,9 @@ class AuctionSeeder extends Seeder
         $statuses = ['aktywna', 'zakończona'];
 
         for ($i = 0; $i < 30; $i++) {
-            Auction::create([
+            $createdAt = fake()->dateTimeBetween('-7 days', 'now');
+
+            Auction::forceCreate([
                 'name' => fake()->sentence(4),
                 'description' => fake()->paragraph(3),
                 'price' => fake()->randomFloat(2, 50, 50000),
@@ -36,6 +38,8 @@ class AuctionSeeder extends Seeder
                 'userId' => $users->random()->id,
                 'categoryId' => $categories->random()->id,
                 'imageId' => $image->id,
+                'createdAt' => $createdAt,
+                'updatedAt' => $createdAt,
             ]);
         }
     }
