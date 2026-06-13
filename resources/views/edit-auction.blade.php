@@ -25,7 +25,7 @@
         id="create-auction-form"
         data-mode="edit"
         method="POST"
-        action="{{ route('auctions.update', $auction) }}"
+        action="{{ $updateRoute ?? route('auctions.update', $auction) }}"
         enctype="multipart/form-data"
         novalidate
     >
@@ -135,9 +135,24 @@
             <div class="invalid-feedback d-block">{{ $message }}</div>
         @enderror
 
+        @if(!empty($isAdminEdit))
+            <select
+                name="status"
+                id="status"
+                class="form-select @error('status') is-invalid @enderror"
+                required
+            >
+                <option value="aktywna" @selected(old('status', $auction->status) === 'aktywna')>Aktywna</option>
+                <option value="zakończona" @selected(old('status', $auction->status) === 'zakończona')>Zamknięta</option>
+            </select>
+            @error('status')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+        @endif
+
         <div id="btns-box">
             <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
-            <a href="{{ route('auctions.mine') }}" class="btn btn-danger">Anuluj</a>
+            <a href="{{ $cancelRoute ?? route('auctions.mine') }}" class="btn btn-danger">Anuluj</a>
         </div>
     </form>
 </section>

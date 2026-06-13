@@ -35,6 +35,7 @@ class AuctionSeeder extends Seeder
                 'negotiable' => fake()->boolean(),
                 'location' => fake()->randomElement($locations),
                 'status' => fake()->randomElement($statuses),
+                'approved' => true,
                 'userId' => $users->random()->id,
                 'categoryId' => $categories->random()->id,
                 'imageId' => $image->id,

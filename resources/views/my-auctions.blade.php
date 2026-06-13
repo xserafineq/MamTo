@@ -11,6 +11,9 @@
         <div class="my-auctions-stats">
             <span class="my-auctions-stats__active">Aktywne: {{ $activeCount }}</span>
             <span class="my-auctions-stats__closed">Zamknięte: {{ $closedCount }}</span>
+            @if($pendingCount > 0)
+                <span class="my-auctions-stats__pending">Do akceptacji: {{ $pendingCount }}</span>
+            @endif
         </div>
 
         <a href="{{ route('auctions.create') }}" class="btn btn-primary my-auctions-new-btn">Nowa aukcja</a>
@@ -46,6 +49,8 @@
                         </div>
                         @if($auction->status !== 'aktywna')
                             <span class="my-auctions-card__badge">Zamknięte</span>
+                        @elseif(!$auction->approved)
+                            <span class="my-auctions-card__badge my-auctions-card__badge--pending">Oczekuje na akceptację</span>
                         @endif
                     </div>
                 @if($auction->status === 'aktywna' || auth()->user()?->isAdmin)

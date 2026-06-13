@@ -218,11 +218,22 @@ main {
     margin: 6px 0;
 }
 
+.user-menu__admin-link {
+    color: #0066FF !important;
+}
+
+.user-menu__admin-link:hover,
+.user-menu__admin-link:focus {
+    color: #0052cc !important;
+    background-color: #f0f6ff;
+}
+
 .user-menu__logout {
     width: 100%;
     text-align: left;
     border: none;
     background: none;
+    color: #e43d3d !important;
 }
 
 .user-menu__logout:hover {

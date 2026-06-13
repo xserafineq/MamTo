@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'joinedAt' => now(),
             'lastOnline' => now(),
             'isAdmin' => true,
+            'isMainAdmin' => true,
         ]);
 
         User::create([
