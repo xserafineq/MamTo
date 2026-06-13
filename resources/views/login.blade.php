@@ -6,7 +6,7 @@
     <title>MamTo - Logowanie</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    @vite('resources/css/forms.css')
+    @vite(['resources/css/forms.css', 'resources/js/auth/login.js'])
 </head>
 <body>
 
@@ -19,20 +19,53 @@
                     <p class="text-muted small">Zaloguj się do swojego konta</p>
                 </div>
 
-                <form action="/login" method="POST">
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2 small" role="alert">
+                        @foreach ($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                    </div>
+                @endif
+
+                <form id="login-form" action="{{ route('login') }}" method="POST" novalidate>
                     @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label text-secondary fw-semibold small">Adres e-mail</label>
-                        <input type="email" name="email" id="email" class="form-control form-control-lg" placeholder="nazwa@przyklad.com" required autofocus>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            class="form-control form-control-lg @error('email') is-invalid @enderror"
+                            placeholder="nazwa@przyklad.com"
+                            value="{{ old('email') }}"
+                            maxlength="200"
+                            required
+                            autofocus
+                        >
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label text-secondary fw-semibold small">Hasło</label>
-                        <input type="password" name="password" id="password" class="form-control form-control-lg" placeholder="••••••••" required>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control form-control-lg @error('password') is-invalid @enderror"
+                            placeholder="••••••••"
+                            minlength="8"
+                            maxlength="255"
+                            required
+                        >
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">Zaloguj się</button>
                 </form>
                 <div class="text-center">
-                    <p class="text-muted small mb-2">Nie masz konta? <a href="/register" class="text-decoration-none fw-semibold">Zarejestruj się</a></p>
+                    <p class="text-muted small mb-2">Nie masz konta? <a href="{{ route('register') }}" class="text-decoration-none fw-semibold">Zarejestruj się</a></p>
                     <a href="/" class="text-decoration-none text-muted small">Powrót do strony głównej</a>
                 </div>
             </div>
