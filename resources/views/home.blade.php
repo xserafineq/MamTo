@@ -13,7 +13,7 @@
                 <div>Utwórz nową</div>
                 <div>aukcje całkowicie</div>
                 <div>za darmo</div>
-                <button id="create-auction-btn">Utwórz aukcje</button>
+                <a href="{{ route('auctions.create') }}" id="create-auction-btn">Utwórz aukcje</a>
             </div>
         </div>
         <div style="bottom: 0; z-index: 4 !important;" class="header-hexagon">
