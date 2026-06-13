@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    @vite(['resources/css/auctions.css'])
-</head>
-<body>
 @extends('layout')
+
+@push('styles')
+    @vite(['resources/css/auctions.css'])
+@endpush
 
 @section('content')
     <section id="filters">
@@ -26,76 +24,41 @@
         </div>
     </section>
     <section id="searched-auctions">
-        <div class="searched-auction-card">
-            <img src="https://agroprofil.pl/cms/wp-content/uploads/2019/12/7r330_lemken_plow_dsc2933-e1576754071505.jpg" class="searched-auction-img" alt="auction-img"/>
-            <div class="content">
-                <div class="title-price">
-                    <div class="title">
-                        JOHN DEERE 250KM 4X4 2020 280MTH
+        @forelse($auctions as $auction)
+            <div class="searched-auction-card">
+                <img
+                    src="{{ $auction->image?->file_url ?? asset('assets/placeholder.png') }}"
+                    class="searched-auction-img"
+                    alt="{{ $auction->name }}"
+                    style="object-fit: cover;"
+                />
+                <div class="content">
+                    <div class="title-price">
+                        <div class="title">{{ $auction->name }}</div>
+                        <div class="price">{{ number_format($auction->price, 0, ',', ' ') }} zł</div>
                     </div>
-                    <div class="price">
-                        2500 zł
+                    <div class="description">
+                        {{ $auction->description }}
                     </div>
-                </div>
-                <div class="description">
-                    JOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4
-                    2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTH JOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTH
-                </div>
-                <div class="date-location">
-                    <div class="date">24 kwietnia 2026</div>
-                    <div class="date">Tarnobrzeg</div>
+                    <div class="date-location">
+                        <div class="date">{{ $auction->createdAt->format('d.m.Y') }}</div>
+                        <div class="date">{{ $auction->location }}</div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="searched-auction-card">
-            <img src="https://agroprofil.pl/cms/wp-content/uploads/2019/12/7r330_lemken_plow_dsc2933-e1576754071505.jpg" class="searched-auction-img" alt="auction-img"/>
-            <div class="content">
-                <div class="title-price">
-                    <div class="title">
-                        JOHN DEERE 250KM 4X4 2020 280MTH
-                    </div>
-                    <div class="price">
-                        2500 zł
-                    </div>
-                </div>
-                <div class="description">
-                    JOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4
-                    2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTH JOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTH
-                </div>
-                <div class="date-location">
-                    <div class="date">24 kwietnia 2026</div>
-                    <div class="date">Tarnobrzeg</div>
-                </div>
-            </div>
-        </div>
-        <div class="searched-auction-card">
-            <img src="https://agroprofil.pl/cms/wp-content/uploads/2019/12/7r330_lemken_plow_dsc2933-e1576754071505.jpg" class="searched-auction-img" alt="auction-img"/>
-            <div class="content">
-                <div class="title-price">
-                    <div class="title">
-                        JOHN DEERE 250KM 4X4 2020 280MTH
-                    </div>
-                    <div class="price">
-                        2500 zł
-                    </div>
-                </div>
-                <div class="description">
-                    JOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4
-                    2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTH JOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTHJOHN DEERE 250KM 4X4 2020 280MTH
-                </div>
-                <div class="date-location">
-                    <div class="date">24 kwietnia 2026</div>
-                    <div class="date">Tarnobrzeg</div>
-                </div>
-            </div>
-        </div>
+        @empty
+            <p>Brak aukcji.</p>
+        @endforelse
     </section>
-    <div id="pagination">
-        <btn class="pagination-btn">1</btn>
-        <btn class="pagination-btn">2</btn>
-        <btn class="pagination-btn">3</btn>
-        <btn class="pagination-btn">...</btn>
-    </div>
+    @if ($auctions->hasPages())
+        <div id="pagination">
+            @for ($page = 1; $page <= $auctions->lastPage(); $page++)
+                @if ($page === $auctions->currentPage())
+                    <span class="pagination-btn is-current">{{ $page }}</span>
+                @else
+                    <a href="{{ $auctions->url($page) }}" class="pagination-btn">{{ $page }}</a>
+                @endif
+            @endfor
+        </div>
+    @endif
 @endsection
-</body>
-</html>

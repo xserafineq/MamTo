@@ -3,6 +3,7 @@
   <head>
       <title>Mamto.pl</title>
      @vite(['resources/css/app.css'])
+     @stack('styles')
   </head>
   <body>
     <nav>
@@ -11,7 +12,7 @@
         </div>
         <div id="search-box">
             <input id="search" type="text" placeholder="szukaj">
-            <button id="filter-btn"><img src="{{ asset('assets/fi-ss-filter.png') }}"></button>
+            <button id="filter-btn"><img src="{{ asset('assets/fi-ss-filter.png')}}" alt=""></button>
         </div>
         <ul id="menu">
             <li><img src="{{ asset('assets/fi-bs-heart.png') }}" alt="favourites"/></li>

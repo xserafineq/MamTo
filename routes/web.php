@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
+use App\Models\Auction;
 
 Route::get('/', function () {
     $categories = Category::with('image')
@@ -12,7 +13,11 @@ Route::get('/', function () {
 });
 
 Route::get('/auctions', function () {
-    return view('auctions');
+    $auctions = Auction::with('image')
+        ->latest('createdAt')
+        ->paginate(10);
+
+    return view('auctions', compact('auctions'));
 });
 
 
