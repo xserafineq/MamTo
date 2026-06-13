@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreMessageRequest;
+use App\Http\Resources\ChatResource;
+use App\Http\Resources\MessageResource;
 use App\Models\Auction;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class ChatController extends Controller
 {
-    public function index(): View
+    public function index(): JsonResponse
     {
-        $userId = auth()->id();
+        $userId = request()->user()->id;
 
         $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages'])
             ->where(function ($query) use ($userId) {
@@ -33,24 +35,26 @@ class ChatController extends Controller
             ->sortByDesc(fn (Chat $chat) => $chat->lastMessage?->sentAt)
             ->values();
 
-        $newMessagesCount = $chats->where('isUnread', true)->count();
-
-        return view('messages.index', compact('chats', 'newMessagesCount'));
+        return response()->json([
+            'data' => ChatResource::collection($chats),
+            'unreadCount' => $chats->where('isUnread', true)->count(),
+        ]);
     }
 
-    public function show(Chat $chat): View
+    public function show(Chat $chat): JsonResponse
     {
         $this->authorizeChatAccess($chat);
 
         $chat->load(['auction.image', 'seller', 'buyer', 'messages.sender']);
+        $chat->setRelation('messages', $chat->messages->sortBy('sentAt')->values());
+        $chat->otherParticipant = $this->getOtherParticipant($chat, request()->user()->id);
 
-        $messages = $chat->messages->sortBy('sentAt')->values();
-        $otherParticipant = $this->getOtherParticipant($chat, auth()->id());
-
-        return view('messages.show', compact('chat', 'messages', 'otherParticipant'));
+        return response()->json([
+            'data' => new ChatResource($chat),
+        ]);
     }
 
-    public function start(Auction $auction): RedirectResponse
+    public function start(Auction $auction): JsonResponse
     {
         if ($auction->status !== 'aktywna') {
             abort(404);
@@ -60,44 +64,50 @@ class ChatController extends Controller
             abort(404);
         }
 
-        if ((int) $auction->userId === (int) auth()->id()) {
+        if ((int) $auction->userId === (int) request()->user()->id) {
             abort(403, 'Nie możesz napisać wiadomości do własnej aukcji.');
         }
 
         $chat = Chat::firstOrCreate(
             [
                 'auctionId' => $auction->id,
-                'buyerId' => auth()->id(),
+                'buyerId' => request()->user()->id,
             ],
             [
                 'sellerId' => $auction->userId,
             ],
         );
 
-        return redirect()->route('chats.show', $chat);
+        $chat->load(['auction.image', 'seller', 'buyer']);
+
+        return response()->json([
+            'message' => 'Czat został otwarty.',
+            'data' => new ChatResource($chat),
+        ], 201);
     }
 
-    public function storeMessage(Request $request, Chat $chat): RedirectResponse
+    public function storeMessage(StoreMessageRequest $request, Chat $chat): JsonResponse
     {
         $this->authorizeChatAccess($chat);
 
-        $validated = $request->validate([
-            'text' => ['required', 'string', 'max:2000'],
-        ]);
-
-        Message::create([
+        $message = Message::create([
             'chatId' => $chat->id,
-            'text' => trim($validated['text']),
+            'text' => trim($request->validated('text')),
             'sentAt' => now(),
-            'senderId' => auth()->id(),
+            'senderId' => request()->user()->id,
         ]);
 
-        return redirect()->route('chats.show', $chat);
+        $message->load('sender');
+
+        return response()->json([
+            'message' => 'Wiadomość została wysłana.',
+            'data' => new MessageResource($message),
+        ], 201);
     }
 
     private function authorizeChatAccess(Chat $chat): void
     {
-        $userId = auth()->id();
+        $userId = request()->user()->id;
 
         abort_unless(
             (int) $chat->buyerId === (int) $userId || (int) $chat->sellerId === (int) $userId,

@@ -1,0 +1,11 @@
+HTTP/1.1 302 Found
+Date: Sat, 13 Jun 2026 12:14:46 GMT
+Server: Apache/2.4.67 (Debian)
+X-Powered-By: PHP/8.4.21
+Cache-Control: no-cache, private
+Location: http://localhost:8000
+Set-Cookie: XSRF-TOKEN=eyJpdiI6IjVzQ3R5R0VneUtQMlBOMkpoV3JXbnc9PSIsInZhbHVlIjoiRDFHdldVSmJUMFBZaWNwa1RmZGlCY0diTFg3Zkc2NXRPek1TQXZzZ1VYSVMvaTNMSHJpcm9SQzNYbjkzQUZoNmorRGFwTzZqSjhRc1NlM29HMWpxaXh0MlMwcFJsdzliaTFoUWpLS1NjYlBOUU5YcDBOSHg2WU1uRTdocU0vWlEiLCJtYWMiOiJhMjUwMDZiOWM3M2MwOGRlYTFjOTExMzI5MjNjYjkzMjJhMzVlNWJhYjIxZTUwMDBiYzQ0ZWZlZDU5NzI0OGFkIiwidGFnIjoiIn0%3D; expires=Sat, 13 Jun 2026 14:14:47 GMT; Max-Age=7200; path=/; samesite=lax
+Set-Cookie: laravel-session=eyJpdiI6Ik1ySzdTWVBRNzlnSzdlNC9UdTNvaVE9PSIsInZhbHVlIjoiUUNtSm9vNGx2NFFxNFFubFNLL3BmM3pRN3ZkOXZXdTluMFB5cTdnMFdlUnhzRC85a3VVVmpjWTk2TWpKdU1pZnVyeWgrWElRc3RCaE1KK1pCUUx6ZG1hS2tRN0pyNFluRStBT0x3TS90aDNqUFZUdjVVbTJsN3RCanJqazRVWlMiLCJtYWMiOiI5MTc5NTEzNjYzZjBkMTg4Y2EwYzlmOGI5MjU3OTFjYjFjYTY0YTQ3OTQzNmYyNzkzY2M3NjkyNjVkYWU5ZmNjIiwidGFnIjoiIn0%3D; expires=Sat, 13 Jun 2026 14:14:47 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=utf-8
+
