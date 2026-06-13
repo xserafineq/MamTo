@@ -14,6 +14,14 @@
                 <div>aukcje całkowicie</div>
                 <div>za darmo</div>
                 <a href="{{ route('auctions.create') }}" id="create-auction-btn">Utwórz aukcje</a>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" style="margin-top: 12px;">
+                        @csrf
+                        <button type="submit" style="background:#1A1A1A;color:white;border:none;border-radius:10px;padding:10px 20px;font-size:18px;font-weight:650;cursor:pointer;">
+                            Wyloguj
+                        </button>
+                    </form>
+                @endauth
             </div>
         </div>
         <div style="bottom: 0; z-index: 4 !important;" class="header-hexagon">
@@ -37,13 +45,13 @@
 
         <div id="categories-box">
             @forelse($categories as $category)
-                <div class="category-card">
+                <a href="{{ route('auctions.index', ['category' => $category->id]) }}" class="category-card">
                     <img
                         src="{{ $category->image?->file_url ?? asset('assets/default-category.png') }}"
                         alt="{{ $category->name }}"
                     />
                     <div class="category-title">{{ $category->name }}</div>
-                </div>
+                </a>
             @empty
                 <p>Brak kategorii.</p>
             @endforelse
@@ -52,42 +60,19 @@
     <section id="newest-auctions">
         <div class="section-text-title">Najnowsze <span style="color: #0066FF">Aukcje</span></div>
         <div id="auctions-box">
-            <div class="newest-auction-card">
-                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
-                <div class="auction-title">Tytuł aukcji</div>
-                <button class="check-auction-btn">Sprawdź</button>
-                <div class="auction-price">2000 zł</div>
-            </div>
-            <div class="newest-auction-card">
-                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
-                <div class="auction-title">Tytuł aukcji</div>
-                <button class="check-auction-btn">Sprawdź</button>
-                <div class="auction-price">2000 zł</div>
-            </div>
-            <div class="newest-auction-card">
-                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
-                <div class="auction-title">Tytuł aukcji</div>
-                <button class="check-auction-btn">Sprawdź</button>
-                <div class="auction-price">2000 zł</div>
-            </div>
-            <div class="newest-auction-card">
-                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
-                <div class="auction-title">Tytuł aukcji</div>
-                <button class="check-auction-btn">Sprawdź</button>
-                <div class="auction-price">2000 zł</div>
-            </div>
-            <div class="newest-auction-card">
-                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
-                <div class="auction-title">Tytuł aukcji</div>
-                <button class="check-auction-btn">Sprawdź</button>
-                <div class="auction-price">2000 zł</div>
-            </div>
-            <div class="newest-auction-card">
-                <img src="{{asset('assets/car.svg')}}" alt="auction-img"/>
-                <div class="auction-title">Tytuł aukcji</div>
-                <button class="check-auction-btn">Sprawdź</button>
-                <div class="auction-price">2000 zł</div>
-            </div>
+            @forelse($newestAuctions as $auction)
+                <div class="newest-auction-card">
+                    <img
+                        src="{{ $auction->image?->file_url ?? asset('assets/placeholder.png') }}"
+                        alt="{{ $auction->name }}"
+                    />
+                    <div class="auction-title">{{ $auction->name }}</div>
+                    <a href="{{ route('auctions.show', $auction) }}" class="check-auction-btn">Sprawdź</a>
+                    <div class="auction-price">{{ number_format($auction->price, 0, ',', ' ') }} zł</div>
+                </div>
+            @empty
+                <p>Brak aukcji.</p>
+            @endforelse
         </div>
     </section>
 @endsection

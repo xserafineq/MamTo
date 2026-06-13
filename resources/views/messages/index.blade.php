@@ -1,0 +1,56 @@
+@extends('layout')
+
+@push('styles')
+    @vite(['resources/css/messages.css'])
+@endpush
+
+@section('content')
+    <section id="messages-page">
+        <h1 id="messages-title">Wiadomości</h1>
+        <p id="messages-subtitle">
+            Masz
+            <span class="messages-subtitle__highlight">{{ $newMessagesCount }}</span>
+            @if($newMessagesCount === 1)
+                nową wiadomość
+            @elseif($newMessagesCount >= 2 && $newMessagesCount <= 4)
+                nowe wiadomości
+            @else
+                nowych wiadomości
+            @endif
+        </p>
+
+        <div id="messages-list">
+            @forelse($chats as $chat)
+                <article class="message-card">
+                    <img
+                        class="message-card__image"
+                        src="{{ $chat->auction?->image?->file_url ?? asset('assets/placeholder.png') }}"
+                        alt="{{ $chat->auction?->name ?? 'Aukcja' }}"
+                    />
+                    <div class="message-card__content">
+                        <h2 class="message-card__title">{{ $chat->auction?->name ?? 'Usunięta aukcja' }}</h2>
+                        <p class="message-card__meta">
+                            Chat z
+                            <span class="message-card__email">{{ $chat->otherParticipant->email }}</span>,
+                            @if($chat->lastMessage)
+                                {{ $chat->lastMessage->sentAt->format('d/m/Y H:i') }}
+                            @else
+                                brak wiadomości
+                            @endif
+                        </p>
+                        <div class="message-card__actions">
+                            @if($chat->isUnread)
+                                <a href="{{ route('chats.show', $chat) }}" class="message-btn message-btn--primary">zobacz</a>
+                            @else
+                                <a href="{{ route('chats.show', $chat) }}" class="message-btn message-btn--read">odczytane</a>
+                            @endif
+                            <button type="button" class="message-btn message-btn--archive" disabled>archiwizuj</button>
+                        </div>
+                    </div>
+                </article>
+            @empty
+                <p class="messages-empty">Brak wiadomości. Napisz do sprzedawcy z poziomu strony aukcji.</p>
+            @endforelse
+        </div>
+    </section>
+@endsection
