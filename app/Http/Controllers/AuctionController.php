@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAuctionRequest;
 use App\Models\Auction;
 use App\Models\Category;
+use App\Services\ImageService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AuctionController extends Controller
@@ -114,16 +119,98 @@ class AuctionController extends Controller
             ->limit(3)
             ->get();
 
+        $isOwner = auth()->check() && (int) auth()->id() === (int) $auction->userId;
+        $phoneDigits = preg_replace('/\D/', '', $auction->user->phoneNumber);
+        $displayPhone = $this->formatDisplayPhone($phoneDigits, $isOwner);
+
         return view('auction-page', compact(
             'auction',
             'images',
             'sellerRating',
             'otherAuctions',
+            'displayPhone',
+            'phoneDigits',
+            'isOwner',
         ));
     }
 
+    // Formatuje numer telefonu
+    private function formatDisplayPhone(string $digits, bool $showFull): string
+    {
+        if (strlen($digits) !== 9) {
+            return $digits;
+        }
+
+        if ($showFull) {
+            return substr($digits, 0, 3) . ' ' . substr($digits, 3, 3) . ' ' . substr($digits, 6, 3);
+        }
+
+        return substr($digits, 0, 3) . ' *** ' . substr($digits, 6, 3);
+    }
+
+    // Formularz tworzenia aukcji
     public function create(): View
     {
-        return view('create-auction');
+        $categories = $this->getSelectableCategories();
+
+        return view('create-auction', compact('categories'));
+    }
+
+    // Zapis nowej aukcji
+    public function store(StoreAuctionRequest $request, ImageService $imageService): RedirectResponse
+    {
+        $auction = DB::transaction(function () use ($request, $imageService) {
+            $thumbnail = $imageService->storeImage($request->file('thumbnail'));
+
+            $auction = Auction::create([
+                'name' => $request->validated('name'),
+                'description' => $request->validated('description'),
+                'price' => $request->validated('price'),
+                'negotiable' => $request->boolean('negotiable'),
+                'location' => $request->validated('location'),
+                'status' => 'aktywna',
+                'userId' => Auth::id(),
+                'categoryId' => $request->validated('categoryId'),
+                'imageId' => $thumbnail->id,
+            ]);
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $order => $file) {
+                    $image = $imageService->storeImage($file);
+                    $auction->additionalImages()->attach($image->id, ['order' => $order + 1]);
+                }
+            }
+
+            return $auction;
+        });
+
+        return redirect()
+            ->route('auctions.show', $auction)
+            ->with('success', 'Aukcja została utworzona.');
+    }
+
+    private function getSelectableCategories()
+    {
+        $categories = Category::orderBy('name')->get()->keyBy('id');
+
+        return $categories
+            ->map(fn (Category $category) => [
+                'id' => $category->id,
+                'label' => $this->buildCategoryLabel($category, $categories),
+            ])
+            ->values();
+    }
+
+    private function buildCategoryLabel(Category $category, $allCategories): string
+    {
+        $parts = [];
+        $current = $category;
+
+        while ($current) {
+            array_unshift($parts, $current->name);
+            $current = $current->parentId ? $allCategories->get($current->parentId) : null;
+        }
+
+        return implode(' > ', $parts);
     }
 }

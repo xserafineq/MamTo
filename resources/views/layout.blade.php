@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
       <title>Mamto.pl</title>
      @vite(['resources/css/app.css'])
      @stack('styles')
@@ -8,7 +9,9 @@
   <body>
     <nav>
         <div id="logo">
-            <img src="{{ asset('assets/logo.png') }}" alt="logo"/>
+            <a href="/">
+                <img src="{{ asset('assets/logo.png') }}" alt="logo"/>
+            </a>
         </div>
         <form method="GET" action="{{ route('auctions.index') }}" id="search-box">
             @if (request()->filled('price_min'))
@@ -53,5 +56,6 @@
         Mateusz Serafin, Przemysław Sulowski
   </footer>
   @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

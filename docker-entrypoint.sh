@@ -42,5 +42,8 @@ exit(1);
 echo "Running database migrations..."
 php artisan migrate --force
 
+# Public link to storage (uploaded images)
+php artisan storage:link --force
+
 # Execute the main command (e.g. apache2-foreground)
 exec "$@"

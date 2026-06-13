@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Auction;
 use App\Models\Category;
 
+
+
 Route::get('/', function () {
     $categories = Category::with('image')
         ->whereNull('parentId')
@@ -24,6 +26,7 @@ Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.ind
 
 Route::middleware('auth')->group(function () {
     Route::get('/auctions/create', [AuctionController::class, 'create'])->name('auctions.create');
+    Route::post('/auctions/create', [AuctionController::class, 'store'])->name('auctions.store');
 
     Route::get('/messages', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/messages/{chat}', [ChatController::class, 'show'])->name('chats.show');
