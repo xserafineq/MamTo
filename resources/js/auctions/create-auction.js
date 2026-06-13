@@ -1,7 +1,28 @@
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { clearFieldError, setFieldError } from '../auth/validation';
+import {
+    buildLabeledResults,
+    normalizeLocationText,
+    reverseGeocode,
+    searchLocations,
+} from './geocoding';
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const DEFAULT_CENTER = [52.0693, 19.4803];
+const DEFAULT_ZOOM = 6;
+const SELECTED_ZOOM = 14;
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: markerIcon2x,
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#create-auction-form');
@@ -15,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageInputs = form.querySelectorAll('input[name="images[]"]');
     const salaryType = form.querySelector('#salaryType');
     const price = form.querySelector('#price');
+
+    initLocationMap(form);
 
     form.querySelectorAll('input:not([type="file"]), textarea, select').forEach((input) => {
         input.addEventListener('input', () => clearFieldError(input));
@@ -45,6 +68,199 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function initLocationMap(form) {
+    const locationInput = form.querySelector('#location');
+    const latInput = form.querySelector('#lat');
+    const lngInput = form.querySelector('#lng');
+    const suggestionsEl = form.querySelector('#location-suggestions');
+    const mapEl = form.querySelector('#map');
+
+    if (!locationInput || !latInput || !lngInput || !suggestionsEl || !mapEl) {
+        return;
+    }
+
+    const map = L.map(mapEl).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19,
+    }).addTo(map);
+
+    let marker = null;
+    let searchTimeout = null;
+    let lastSearchResults = [];
+
+    const setCoordinates = (lat, lng, label = null) => {
+        latInput.value = Number(lat).toFixed(8);
+        lngInput.value = Number(lng).toFixed(8);
+
+        if (label) {
+            locationInput.value = label.length > 200 ? label.slice(0, 200) : label;
+        }
+
+        clearFieldError(locationInput);
+
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+
+        map.setView([lat, lng], SELECTED_ZOOM);
+    };
+
+    const hideSuggestions = () => {
+        suggestionsEl.innerHTML = '';
+        suggestionsEl.style.display = 'none';
+    };
+
+    const tryAutoSelectMatch = (query, labeledResults) => {
+        const normalizedQuery = normalizeLocationText(query);
+
+        if (!normalizedQuery) {
+            return false;
+        }
+
+        const match = labeledResults.find(
+            (item) => normalizeLocationText(item.label) === normalizedQuery,
+        );
+
+        if (!match) {
+            return false;
+        }
+
+        setCoordinates(match.result.lat, match.result.lon, match.label);
+        hideSuggestions();
+        return true;
+    };
+
+    const showSuggestions = (labeledResults) => {
+        suggestionsEl.innerHTML = '';
+
+        if (!labeledResults.length) {
+            suggestionsEl.style.display = 'none';
+            return;
+        }
+
+        labeledResults.forEach(({ result, label }) => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'location-suggestions__item';
+            item.textContent = label;
+
+            item.addEventListener('click', () => {
+                setCoordinates(result.lat, result.lon, label);
+                hideSuggestions();
+            });
+
+            suggestionsEl.appendChild(item);
+        });
+
+        suggestionsEl.style.display = 'block';
+    };
+
+    const runLocationSearch = async (query) => {
+        try {
+            const results = await searchLocations(query);
+            lastSearchResults = buildLabeledResults(results);
+
+            if (tryAutoSelectMatch(query, lastSearchResults)) {
+                return;
+            }
+
+            showSuggestions(lastSearchResults);
+        } catch {
+            lastSearchResults = [];
+            hideSuggestions();
+        }
+    };
+
+    map.on('click', async (event) => {
+        const { lat, lng } = event.latlng;
+
+        try {
+            const label = await reverseGeocode(lat, lng);
+            setCoordinates(lat, lng, label);
+            hideSuggestions();
+        } catch {
+            setCoordinates(lat, lng);
+            setFieldError(locationInput, 'Nie udało się pobrać adresu. Spróbuj ponownie.');
+        }
+    });
+
+    locationInput.addEventListener('input', () => {
+        latInput.value = '';
+        lngInput.value = '';
+
+        if (marker) {
+            map.removeLayer(marker);
+            marker = null;
+        }
+
+        clearTimeout(searchTimeout);
+        const query = locationInput.value.trim();
+
+        if (query.length < 3) {
+            lastSearchResults = [];
+            hideSuggestions();
+            return;
+        }
+
+        searchTimeout = setTimeout(() => runLocationSearch(query), 400);
+    });
+
+    locationInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (latInput.value && lngInput.value) {
+                return;
+            }
+
+            const query = locationInput.value.trim();
+
+            if (query.length >= 3 && lastSearchResults.length) {
+                tryAutoSelectMatch(query, lastSearchResults);
+            }
+        }, 150);
+    });
+
+    locationInput.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') {
+            return;
+        }
+
+        event.preventDefault();
+
+        const query = locationInput.value.trim();
+
+        if (query.length < 3 || !lastSearchResults.length) {
+            return;
+        }
+
+        if (tryAutoSelectMatch(query, lastSearchResults)) {
+            return;
+        }
+
+        const first = lastSearchResults[0];
+        setCoordinates(first.result.lat, first.result.lon, first.label);
+        hideSuggestions();
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!suggestionsEl.contains(event.target) && event.target !== locationInput) {
+            hideSuggestions();
+        }
+    });
+
+    const initialLat = parseFloat(latInput.value);
+    const initialLng = parseFloat(lngInput.value);
+
+    if (!Number.isNaN(initialLat) && !Number.isNaN(initialLng)) {
+        setCoordinates(initialLat, initialLng);
+    }
+
+    setTimeout(() => map.invalidateSize(), 100);
+}
 
 function getPracaIds(form) {
     try {
@@ -193,11 +409,17 @@ function validateForm(form, categorySelect, thumbnailInput, imageInputs) {
     }
 
     const location = form.querySelector('#location');
+    const lat = form.querySelector('#lat');
+    const lng = form.querySelector('#lng');
+
     if (!location.value.trim()) {
         setFieldError(location, 'Lokalizacja jest wymagana.');
         isValid = false;
     } else if (location.value.trim().length > 200) {
         setFieldError(location, 'Lokalizacja może mieć maksymalnie 200 znaków.');
+        isValid = false;
+    } else if (!lat.value || !lng.value) {
+        setFieldError(location, 'Wybierz lokalizację klikając na mapie.');
         isValid = false;
     }
 

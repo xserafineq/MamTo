@@ -244,12 +244,28 @@
     justify-content: end;
 }
 
-.info-item {
+#extra-info-location-date {
     display: flex;
-    padding: 10px;
-    color: gray;
-    height: 30px;
+    flex-direction: column;
+    gap: 4px;
+}
 
+.info-item {
+    display: block;
+    padding: 4px 10px;
+    color: gray;
+    height: auto;
+    min-height: 0;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.info-item.location {
+    font-size: 14px;
+}
+
+.info-item.date {
+    flex-shrink: 0;
 }
 
 

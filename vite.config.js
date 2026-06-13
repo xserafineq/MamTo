@@ -14,6 +14,7 @@ export default defineConfig({
                 'resources/js/auth/login.js',
                 'resources/js/auth/register.js',
                 'resources/js/auctions/category-picker.js',
+                'resources/js/auctions/city-search.js',
                 'resources/js/auctions/auction-page.js',
                 'resources/js/auctions/create-auction.js',
                 'resources/js/profile.js',

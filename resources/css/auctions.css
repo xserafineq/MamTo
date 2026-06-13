@@ -22,12 +22,102 @@
 }
 
 #sortby,
-#category-filter {
+#category-filter,
+#city-filter {
     display: flex;
     flex-direction: column;
     font-weight: bold;
     font-size: 22px;
     gap: 5px;
+}
+
+.city-search {
+    position: relative;
+    flex: 1;
+    min-width: 160px;
+}
+
+.city-filter__inputs {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.city-distance {
+    flex-shrink: 0;
+}
+
+#city-distance {
+    border: 2px solid #0066FF;
+    border-radius: 10px;
+    background-color: white;
+    font-size: 18px;
+    font-weight: 550;
+    padding: 5px 12px;
+    min-height: 36px;
+    width: 80px;
+    box-sizing: border-box;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+#city-distance::-webkit-outer-spin-button,
+#city-distance::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#city-search {
+    border: 2px solid #0066FF;
+    border-radius: 10px;
+    background-color: white;
+    font-size: 18px;
+    font-weight: 550;
+    padding: 5px 12px;
+    min-height: 36px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.city-suggestions {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: #fff;
+    border: 2px solid #0066FF;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.city-suggestions__item {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+}
+
+.city-suggestions__item:hover,
+.city-suggestions__item:focus {
+    background: #eef4ff;
+    color: #0066FF;
+}
+
+.city-suggestions__item:last-child {
+    border-bottom: none;
 }
 
 #category-selects {
@@ -172,10 +262,12 @@
     border: 2px solid #0066FF;
     border-radius: 10px;
     font-size: 18px;
-    padding: 5px;
+    font-weight: 550;
+    padding: 5px 12px;
+    min-height: 36px;
+    box-sizing: border-box;
     text-align: center;
     background-color: white;
-    font-weight: 550;
 }
 
 .searched-auction-card {
@@ -196,10 +288,11 @@
 }
 
 .searched-auction-img {
-    background-color: red;
+    background-color: #f3f3f3;
     width: 280px;
     height: 220px;
     border-radius: 25px;
+    object-fit: cover;
 }
 .content {
     display: flex;

@@ -42,6 +42,8 @@ abstract class AuctionFormRequest extends FormRequest
                 Rule::in($this->salaryTypeOptions()),
             ],
             'location' => ['required', 'string', 'max:200'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
             'thumbnail' => array_filter([
                 $thumbnailRequired && ! $isJob ? 'required' : 'nullable',
                 'image',
