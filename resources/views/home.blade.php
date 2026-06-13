@@ -36,54 +36,17 @@
         <div class="section-text-title">Kategorie <span style="color: #0066FF">Główne</span></div>
 
         <div id="categories-box">
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
-            <div class="category-card">
-                <img src="{{asset('assets/category-card-test-img.png')}}" alt="category-img"/>
-                <div class="category-title">Rowery</div>
-            </div>
+            @forelse($categories as $category)
+                <div class="category-card">
+                    <img
+                        src="{{ $category->image?->file_url ?? asset('assets/default-category.png') }}"
+                        alt="{{ $category->name }}"
+                    />
+                    <div class="category-title">{{ $category->name }}</div>
+                </div>
+            @empty
+                <p>Brak kategorii.</p>
+            @endforelse
         </div>
     </section>
     <section id="newest-auctions">

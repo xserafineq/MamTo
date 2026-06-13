@@ -1,9 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Category;
 
 Route::get('/', function () {
-    return view('home');
+    $categories = Category::with('image')
+        ->whereNull('parentId')
+        ->get();
+
+    return view('home', compact('categories'));
 });
 
 Route::get('/auctions', function () {
