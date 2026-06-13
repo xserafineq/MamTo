@@ -95,6 +95,33 @@ class AuctionController extends Controller
         return $ids;
     }
 
+    public function show(Auction $auction): View
+    {
+        $auction->load(['user.ratingsReceived', 'image', 'additionalImages']);
+
+        $images = collect([$auction->image])
+            ->merge($auction->additionalImages)
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $sellerRating = $auction->user->ratingsReceived->avg('rating');
+
+        $otherAuctions = Auction::with('image')
+            ->where('userId', $auction->userId)
+            ->where('id', '!=', $auction->id)
+            ->latest('createdAt')
+            ->limit(3)
+            ->get();
+
+        return view('auction-page', compact(
+            'auction',
+            'images',
+            'sellerRating',
+            'otherAuctions',
+        ));
+    }
+
     public function create(): View
     {
         return view('create-auction');

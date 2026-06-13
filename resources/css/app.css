@@ -73,6 +73,11 @@ main {
 #menu li img{
     scale: 0.8;
 }
+
+#menu li a {
+    display: flex;
+    align-items: center;
+}
 #footer-waves {
     width: 100%;
 }

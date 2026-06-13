@@ -37,7 +37,11 @@
         </form>
         <ul id="menu">
             <li><img src="{{ asset('assets/fi-bs-heart.png') }}" alt="favourites"/></li>
-            <li><img src="{{ asset('assets/messages.png') }}" alt="messages"/></li>
+            <li>
+                <a href="{{ auth()->check() ? route('chats.index') : route('login') }}">
+                    <img src="{{ asset('assets/messages.png') }}" alt="messages"/>
+                </a>
+            </li>
             <li><img src="{{ asset('assets/fi-sr-user.png') }}" alt="user-profile"/></li>
         </ul>
     </nav>
@@ -48,5 +52,6 @@
   <footer>
         Mateusz Serafin, Przemysław Sulowski
   </footer>
+  @stack('scripts')
   </body>
 </html>

@@ -14,6 +14,8 @@ export default defineConfig({
                 'resources/js/auth/login.js',
                 'resources/js/auth/register.js',
                 'resources/js/auctions/category-picker.js',
+                'resources/css/auction-page.css',
+                'resources/css/messages.css',
             ],
             refresh: true,
         }),

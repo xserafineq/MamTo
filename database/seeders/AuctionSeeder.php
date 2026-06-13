@@ -30,7 +30,7 @@ class AuctionSeeder extends Seeder
 
             Auction::forceCreate([
                 'name' => fake()->sentence(4),
-                'description' => fake()->paragraph(3),
+                'description' => fake()->paragraph(100),
                 'price' => fake()->randomFloat(2, 50, 50000),
                 'negotiable' => fake()->boolean(),
                 'location' => fake()->randomElement($locations),

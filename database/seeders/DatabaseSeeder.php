@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ImageSeeder::class,
             AuctionSeeder::class,
+            ChatSeeder::class,
         ]);
     }
 }

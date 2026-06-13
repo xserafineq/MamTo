@@ -99,7 +99,7 @@
     </section>
     <section id="searched-auctions">
         @forelse($auctions as $auction)
-            <div class="searched-auction-card">
+            <a href="{{ route('auctions.show', $auction) }}" class="searched-auction-card">
                 <img
                     src="{{ $auction->image?->file_url ?? asset('assets/placeholder.png') }}"
                     class="searched-auction-img"
@@ -112,14 +112,14 @@
                         <div class="price">{{ number_format($auction->price, 0, ',', ' ') }} zł</div>
                     </div>
                     <div class="description">
-                        {{ $auction->description }}
+                        {{ Str::limit(Str::words($auction->description, 30, ''), 200, '...') }}
                     </div>
                     <div class="date-location">
                         <div class="date">{{ $auction->createdAt->format('d.m.Y') }}</div>
                         <div class="date">{{ $auction->location }}</div>
                     </div>
                 </div>
-            </div>
+            </a>
         @empty
             <p>Brak aukcji.</p>
         @endforelse
