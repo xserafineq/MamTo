@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAuctionRequest;
 use App\Http\Requests\UpdateAuctionRequest;
 use App\Models\Auction;
 use App\Models\Category;
+use App\Models\Image;
 use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -133,8 +134,10 @@ class AuctionController extends Controller
             ->limit(3)
             ->get();
 
+        $isOwner = auth()->check() && (int) auth()->id() === (int) $auction->userId;
         $phoneDigits = preg_replace('/\D/', '', $auction->user->phoneNumber);
         $displayPhone = $this->formatDisplayPhone($phoneDigits, $isOwner);
+        $isJobOffer = Category::requiresApproval($auction->categoryId);
 
         return view('auction-page', compact(
             'auction',
@@ -144,6 +147,7 @@ class AuctionController extends Controller
             'displayPhone',
             'phoneDigits',
             'isOwner',
+            'isJobOffer',
         ));
     }
 
@@ -190,6 +194,7 @@ class AuctionController extends Controller
         return view('edit-auction', [
             'auction' => $auction,
             'categories' => $this->getSelectableCategories(),
+            'pracaCategoryIds' => Category::getPracaCategoryIds(),
         ]);
     }
 
@@ -201,6 +206,7 @@ class AuctionController extends Controller
         return view('edit-auction', [
             'auction' => $auction,
             'categories' => $this->getSelectableCategories(),
+            'pracaCategoryIds' => Category::getPracaCategoryIds(),
             'cancelRoute' => route('admin.auctions.index'),
             'updateRoute' => route('admin.auctions.update', $auction),
             'isAdminEdit' => true,
@@ -219,8 +225,7 @@ class AuctionController extends Controller
         }
 
         DB::transaction(function () use ($request, $auction, $imageService) {
-            $data = $request->safe()->except(['thumbnail', 'images']);
-            $data['negotiable'] = $request->boolean('negotiable');
+            $data = $this->prepareAuctionPayload($request->validated(), (int) $request->validated('categoryId'));
 
             if (Category::requiresApproval($request->validated('categoryId'))) {
                 $data['approved'] = false;
@@ -256,8 +261,7 @@ class AuctionController extends Controller
         $this->ensureAdmin();
 
         DB::transaction(function () use ($request, $auction, $imageService) {
-            $data = $request->safe()->except(['thumbnail', 'images']);
-            $data['negotiable'] = $request->boolean('negotiable');
+            $data = $this->prepareAuctionPayload($request->validated(), (int) $request->validated('categoryId'));
 
             if ($request->hasFile('thumbnail')) {
                 $thumbnail = $imageService->storeImage($request->file('thumbnail'));
@@ -304,7 +308,10 @@ class AuctionController extends Controller
     {
         $categories = $this->getSelectableCategories();
 
-        return view('create-auction', compact('categories'));
+        return view('create-auction', [
+            'categories' => $categories,
+            'pracaCategoryIds' => Category::getPracaCategoryIds(),
+        ]);
     }
 
     // Zapis nowej aukcji
@@ -313,19 +320,20 @@ class AuctionController extends Controller
         $requiresApproval = Category::requiresApproval($request->validated('categoryId'));
 
         $auction = DB::transaction(function () use ($request, $imageService, $requiresApproval) {
-            $thumbnail = $imageService->storeImage($request->file('thumbnail'));
+            $imageId = $request->hasFile('thumbnail')
+                ? $imageService->storeImage($request->file('thumbnail'))->id
+                : Image::query()->value('id');
+
+            if (! $imageId) {
+                throw new \RuntimeException('Brak domyślnego zdjęcia w systemie.');
+            }
 
             $auction = Auction::create([
-                'name' => $request->validated('name'),
-                'description' => $request->validated('description'),
-                'price' => $request->validated('price'),
-                'negotiable' => $request->boolean('negotiable'),
-                'location' => $request->validated('location'),
+                ...$this->prepareAuctionPayload($request->validated(), (int) $request->validated('categoryId')),
                 'status' => 'aktywna',
                 'approved' => ! $requiresApproval,
                 'userId' => Auth::id(),
-                'categoryId' => $request->validated('categoryId'),
-                'imageId' => $thumbnail->id,
+                'imageId' => $imageId,
             ]);
 
             if ($request->hasFile('images')) {
@@ -341,7 +349,7 @@ class AuctionController extends Controller
         if ($requiresApproval) {
             return redirect()
                 ->route('auctions.mine')
-                ->with('success', 'Ogłoszenie zostało przesłane do akceptacji administratora.');
+                ->with('job_pending_approval', true);
         }
 
         return redirect()
@@ -372,6 +380,23 @@ class AuctionController extends Controller
         }
 
         return implode(' > ', $parts);
+    }
+
+    private function prepareAuctionPayload(array $data, int $categoryId): array
+    {
+        $isJob = Category::requiresApproval($categoryId);
+        $payload = collect($data)->except(['thumbnail', 'images'])->all();
+
+        if ($isJob) {
+            $payload['salaryType'] = $data['salaryType'];
+            $payload['negotiable'] = $data['salaryType'] === 'do uzgodnienia';
+            $payload['price'] = $payload['negotiable'] ? 0 : $data['price'];
+        } else {
+            $payload['salaryType'] = null;
+            $payload['negotiable'] = (bool) ($data['negotiable'] ?? false);
+        }
+
+        return $payload;
     }
 
     // Sprawdza, czy zalogowany użytkownik jest właścicielem ogłoszenia

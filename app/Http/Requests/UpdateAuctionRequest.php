@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-
-class UpdateAuctionRequest extends FormRequest
+class UpdateAuctionRequest extends AuctionFormRequest
 {
     public function authorize(): bool
     {
@@ -14,32 +11,24 @@ class UpdateAuctionRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'categoryId' => ['required', 'integer', Rule::exists('Categories', 'id')],
-            'negotiable' => ['required', 'boolean'],
-            'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-            'location' => ['required', 'string', 'max:200'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
-            'images' => ['nullable', 'array', 'max:4'],
-            'images.*' => ['image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
-        ];
+        return $this->sharedRules(thumbnailRequired: false);
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Tytuł aukcji jest wymagany.',
+            'name.required' => $this->isJobCategory() ? 'Stanowisko jest wymagane.' : 'Tytuł aukcji jest wymagany.',
             'name.max' => 'Tytuł może mieć maksymalnie 255 znaków.',
             'description.max' => 'Opis może mieć maksymalnie 5000 znaków.',
             'categoryId.required' => 'Wybierz kategorię.',
             'categoryId.exists' => 'Wybrana kategoria nie istnieje.',
             'negotiable.required' => 'Wybierz, czy cena jest do negocjacji.',
-            'price.required' => 'Cena jest wymagana.',
-            'price.numeric' => 'Cena musi być liczbą.',
-            'price.min' => 'Cena nie może być ujemna.',
-            'price.max' => 'Cena jest zbyt wysoka.',
+            'price.required' => $this->isJobCategory() ? 'Wynagrodzenie jest wymagane.' : 'Cena jest wymagana.',
+            'price.numeric' => $this->isJobCategory() ? 'Wynagrodzenie musi być liczbą.' : 'Cena musi być liczbą.',
+            'price.min' => $this->isJobCategory() ? 'Wynagrodzenie nie może być ujemne.' : 'Cena nie może być ujemna.',
+            'price.max' => $this->isJobCategory() ? 'Wynagrodzenie jest zbyt wysokie.' : 'Cena jest zbyt wysoka.',
+            'salaryType.required' => 'Wybierz rodzaj wynagrodzenia.',
+            'salaryType.in' => 'Wybrany rodzaj wynagrodzenia jest nieprawidłowy.',
             'location.required' => 'Lokalizacja jest wymagana.',
             'location.max' => 'Lokalizacja może mieć maksymalnie 200 znaków.',
             'thumbnail.image' => 'Miniatura musi być obrazem.',

@@ -18,7 +18,7 @@
 
         <a href="{{ route('auctions.create') }}" class="btn btn-primary my-auctions-new-btn">Nowa aukcja</a>
 
-        @if (session('success'))
+        @if (session('success') && ! session('job_pending_approval'))
             <div class="alert alert-success py-2 small" role="alert">{{ session('success') }}</div>
         @endif
 
@@ -102,4 +102,36 @@
             <a href="{{ route('auctions.create') }}" class="btn btn-primary mt-3">Utwórz aukcję</a>
         @endforelse
     </section>
+
+    @if (session('job_pending_approval'))
+        <div class="modal fade" id="jobPendingModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ogłoszenie o pracę</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+                    </div>
+                    <div class="modal-body">
+                        Ogłoszenie czeka na akceptację administratora.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
+
+@push('scripts')
+    @if (session('job_pending_approval'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modal = document.getElementById('jobPendingModal');
+                if (modal) {
+                    bootstrap.Modal.getOrCreateInstance(modal).show();
+                }
+            });
+        </script>
+    @endif
+@endpush

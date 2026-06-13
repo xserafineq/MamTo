@@ -55,4 +55,26 @@ class Category extends Model
 
         return false;
     }
+
+    public static function getPracaCategoryIds(): array
+    {
+        $praca = static::where('name', 'Praca')->whereNull('parentId')->first();
+
+        if (! $praca) {
+            return [];
+        }
+
+        return static::collectDescendantIds($praca->id);
+    }
+
+    private static function collectDescendantIds(int $categoryId): array
+    {
+        $ids = [$categoryId];
+
+        foreach (static::where('parentId', $categoryId)->pluck('id') as $childId) {
+            $ids = array_merge($ids, static::collectDescendantIds($childId));
+        }
+
+        return $ids;
+    }
 }
