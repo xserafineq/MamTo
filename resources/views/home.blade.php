@@ -12,14 +12,6 @@
                 <div>aukcje całkowicie</div>
                 <div>za darmo</div>
                 <a href="{{ route('auctions.create') }}" id="create-auction-btn">Utwórz aukcje</a>
-                @auth
-                    <form method="POST" action="{{ route('logout') }}" style="margin-top: 12px;">
-                        @csrf
-                        <button type="submit" style="background:#1A1A1A;color:white;border:none;border-radius:10px;padding:10px 20px;font-size:18px;font-weight:650;cursor:pointer;">
-                            Wyloguj
-                        </button>
-                    </form>
-                @endauth
             </div>
         </div>
         <div style="bottom: 0; z-index: 4 !important;" class="header-hexagon">

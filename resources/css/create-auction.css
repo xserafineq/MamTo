@@ -64,6 +64,10 @@ form input, form textarea, form select {
     gap: 20px;
 }
 
+.is-job-form #price-category-box #salaryType {
+    display: block !important;
+}
+
 #btns-box {
     display: flex;
     padding: 20px;

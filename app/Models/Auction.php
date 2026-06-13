@@ -21,6 +21,7 @@ class Auction extends Model
         'longitude',
         'status',
         'approved',
+        'salaryType',
         'userId',
         'categoryId',
         'imageId',
