@@ -46,15 +46,23 @@
                     {{ $auction->name }}
                 </div>
                 <div id="price">
-                    {{ number_format($auction->price, 0, ',', ' ') }} zł
+                    @if($isJobOffer)
+                        @if($auction->salaryType === 'do uzgodnienia' || ($auction->negotiable && ! $auction->salaryType))
+                            Wynagrodzenie do uzgodnienia
+                        @else
+                            {{ number_format($auction->price, 0, ',', ' ') }} zł {{ $auction->salaryType }}
+                        @endif
+                    @else
+                        {{ number_format($auction->price, 0, ',', ' ') }} zł
+                    @endif
                 </div>
-                @if($auction->negotiable)
+                @if(!$isJobOffer && $auction->negotiable)
                     <div id="finalPrice">
                         do negocjacji
                     </div>
                 @endif
                 <div id="seller">
-                    <div class="seller-header">Sprzedający</div>
+                    <div class="seller-header">{{ $isJobOffer ? 'Pracodawca' : 'Sprzedający' }}</div>
                     <div id="seller-data">
                         <img id="seller-avatar" src="{{ asset('assets/seller.png') }}" alt="avatar"/>
                         <div id="seller-main-data">

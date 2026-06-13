@@ -19,6 +19,7 @@ class Auction extends Model
         'location',
         'status',
         'approved',
+        'salaryType',
         'userId',
         'categoryId',
         'imageId',
