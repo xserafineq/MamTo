@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Auction;
+use App\Models\Chat;
+use App\Models\Message;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class ChatController extends Controller
+{
+    public function index(): View
+    {
+        $userId = auth()->id();
+
+        $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages'])
+            ->where(function ($query) use ($userId) {
+                $query->where('buyerId', $userId)
+                    ->orWhere('sellerId', $userId);
+            })
+            ->get()
+            ->map(function (Chat $chat) use ($userId) {
+                $chat->lastMessage = $chat->messages->sortByDesc('sentAt')->first();
+                $chat->otherParticipant = $this->getOtherParticipant($chat, $userId);
+                $chat->isUnread = $chat->lastMessage
+                    && (int) $chat->lastMessage->senderId !== (int) $userId;
+
+                return $chat;
+            })
+            ->sortByDesc(fn (Chat $chat) => $chat->lastMessage?->sentAt)
+            ->values();
+
+        $newMessagesCount = $chats->where('isUnread', true)->count();
+
+        return view('messages.index', compact('chats', 'newMessagesCount'));
+    }
+
+    public function show(Chat $chat): View
+    {
+        $this->authorizeChatAccess($chat);
+
+        $chat->load(['auction.image', 'seller', 'buyer', 'messages.sender']);
+
+        $messages = $chat->messages->sortBy('sentAt')->values();
+        $otherParticipant = $this->getOtherParticipant($chat, auth()->id());
+
+        return view('messages.show', compact('chat', 'messages', 'otherParticipant'));
+    }
+
+    public function start(Auction $auction): RedirectResponse
+    {
+        if ((int) $auction->userId === (int) auth()->id()) {
+            abort(403, 'Nie możesz napisać wiadomości do własnej aukcji.');
+        }
+
+        $chat = Chat::firstOrCreate(
+            [
+                'auctionId' => $auction->id,
+                'buyerId' => auth()->id(),
+            ],
+            [
+                'sellerId' => $auction->userId,
+            ],
+        );
+
+        return redirect()->route('chats.show', $chat);
+    }
+
+    public function storeMessage(Request $request, Chat $chat): RedirectResponse
+    {
+        $this->authorizeChatAccess($chat);
+
+        $validated = $request->validate([
+            'text' => ['required', 'string', 'max:2000'],
+        ]);
+
+        Message::create([
+            'chatId' => $chat->id,
+            'text' => trim($validated['text']),
+            'sentAt' => now(),
+            'senderId' => auth()->id(),
+        ]);
+
+        return redirect()->route('chats.show', $chat);
+    }
+
+    private function authorizeChatAccess(Chat $chat): void
+    {
+        $userId = auth()->id();
+
+        abort_unless(
+            (int) $chat->buyerId === (int) $userId || (int) $chat->sellerId === (int) $userId,
+            403,
+        );
+    }
+
+    private function getOtherParticipant(Chat $chat, int $userId): User
+    {
+        return (int) $chat->buyerId === $userId
+            ? $chat->seller
+            : $chat->buyer;
+    }
+}
