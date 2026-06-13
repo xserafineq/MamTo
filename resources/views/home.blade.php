@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    @vite(['resources/css/home.css'])
-</head>
-<body>
 @extends('layout')
+
+@push('styles')
+    @vite(['resources/css/home.css'])
+@endpush
 
 @section('content')
     <header>
@@ -76,5 +74,3 @@
         </div>
     </section>
 @endsection
-</body>
-</html>

@@ -90,8 +90,10 @@ function validateForm(form, categorySelect, thumbnailInput, imageInputs) {
     }
 
     if (!thumbnailInput.files.length) {
-        setFieldError(thumbnailInput, 'Miniatura jest wymagana.');
-        isValid = false;
+        if (form.dataset.mode !== 'edit') {
+            setFieldError(thumbnailInput, 'Miniatura jest wymagana.');
+            isValid = false;
+        }
     } else if (!isValidImageFile(thumbnailInput.files[0])) {
         setFieldError(thumbnailInput, 'Miniatura musi być JPG, PNG lub WEBP (max 5 MB).');
         isValid = false;
