@@ -14,8 +14,9 @@
                             <div class="carousel-item @if($loop->first) active @endif">
                                 <img
                                     src="{{ $image->file_url }}"
-                                    class="d-block w-100"
+                                    class="d-block w-100 auction-carousel-image"
                                     alt="{{ $auction->name }}"
+                                    data-slide-index="{{ $loop->index }}"
                                     style="object-fit: cover;"
                                 >
                             </div>
@@ -23,8 +24,9 @@
                             <div class="carousel-item active">
                                 <img
                                     src="{{ asset('assets/placeholder.png') }}"
-                                    class="d-block w-100"
+                                    class="d-block w-100 auction-carousel-image"
                                     alt="{{ $auction->name }}"
+                                    data-slide-index="0"
                                 >
                             </div>
                         @endforelse
@@ -106,7 +108,11 @@
         </div>
         <div id="description">
             <div id="description-head">Opis</div>
-            {{ $auction->description }}
+            @if($auction->description == '')
+                Brak opisu
+            @else
+                {{ $auction->description }}
+            @endif
         </div>
     </div>
 
@@ -134,4 +140,48 @@
             </div>
         </section>
     @endif
+
+    <div class="modal fade" id="imageLightbox" tabindex="-1" aria-labelledby="imageLightboxLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <button type="button" class="btn-close image-lightbox__close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+                <div id="lightboxCarousel" class="carousel slide image-lightbox__carousel" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        @forelse($images as $image)
+                            <div class="carousel-item @if($loop->first) active @endif">
+                                <img
+                                    src="{{ $image->file_url }}"
+                                    class="d-block image-lightbox__image"
+                                    alt="{{ $auction->name }}"
+                                >
+                            </div>
+                        @empty
+                            <div class="carousel-item active">
+                                <img
+                                    src="{{ asset('assets/placeholder.png') }}"
+                                    class="d-block image-lightbox__image"
+                                    alt="{{ $auction->name }}"
+                                >
+                            </div>
+                        @endforelse
+                    </div>
+                    @if($images->count() > 1)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Poprzedni</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Następny</span>
+                        </button>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @vite(['resources/js/auctions/auction-page.js'])
+@endpush
