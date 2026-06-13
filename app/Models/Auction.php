@@ -17,6 +17,8 @@ class Auction extends Model
         'price',
         'negotiable',
         'location',
+        'latitude',
+        'longitude',
         'status',
         'approved',
         'userId',
@@ -29,6 +31,8 @@ class Auction extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
         'negotiable' => 'boolean',
         'approved' => 'boolean',
         'createdAt' => 'datetime',

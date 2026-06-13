@@ -41,6 +41,26 @@ class AuctionController extends Controller
             $query->whereIn('categoryId', $categoryIds);
         }
 
+        if ($request->filled('city_lat') && $request->filled('city_lng')) {
+            $centerLat = (float) $request->input('city_lat');
+            $centerLng = (float) $request->input('city_lng');
+            $radiusKm = $request->filled('distance')
+                ? (float) $request->input('distance')
+                : 10.0;
+
+            if ($radiusKm > 0) {
+                $query->whereNotNull('latitude')
+                    ->whereNotNull('longitude')
+                    ->whereRaw(
+                        '(6371 * acos(LEAST(1, GREATEST(-1,
+                            cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?))
+                            + sin(radians(?)) * sin(radians(latitude))
+                        )))) <= ?',
+                        [$centerLat, $centerLng, $centerLat, $radiusKm],
+                    );
+            }
+        }
+
         match ($request->input('sort', 'newest')) {
             'oldest' => $query->orderBy('createdAt', 'asc'),
             default => $query->latest('createdAt'),
@@ -321,6 +341,8 @@ class AuctionController extends Controller
                 'price' => $request->validated('price'),
                 'negotiable' => $request->boolean('negotiable'),
                 'location' => $request->validated('location'),
+                'latitude' => $request->validated('latitude'),
+                'longitude' => $request->validated('longitude'),
                 'status' => 'aktywna',
                 'approved' => ! $requiresApproval,
                 'userId' => Auth::id(),

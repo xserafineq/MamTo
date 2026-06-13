@@ -5,7 +5,7 @@
 @endpush
 
 @push('scripts')
-    @vite(['resources/js/auctions/category-picker.js'])
+    @vite(['resources/js/auctions/category-picker.js', 'resources/js/auctions/city-search.js'])
 @endpush
 
 @section('content')
@@ -23,6 +23,20 @@
                 @endif
                 @if ($selectedCategoryId ?? null)
                     <input type="hidden" name="category" value="{{ $selectedCategoryId }}">
+                @endif
+                @if (request()->filled('city'))
+                    <input type="hidden" name="city" value="{{ request('city') }}">
+                @endif
+                @if (request()->filled('city_lat'))
+                    <input type="hidden" name="city_lat" value="{{ request('city_lat') }}">
+                @endif
+                @if (request()->filled('city_lng'))
+                    <input type="hidden" name="city_lng" value="{{ request('city_lng') }}">
+                @endif
+                @if (request()->filled('city_lat'))
+                    <input type="hidden" name="distance" value="{{ request('distance', 10) }}">
+                @elseif (request()->filled('distance'))
+                    <input type="hidden" name="distance" value="{{ request('distance') }}">
                 @endif
                 <div>Sortuj</div>
                 <select name="sort" onchange="this.form.submit()">
@@ -54,6 +68,20 @@
                         @if ($selectedCategoryId ?? null)
                             <input type="hidden" name="category" value="{{ $selectedCategoryId }}">
                         @endif
+                        @if (request()->filled('city'))
+                            <input type="hidden" name="city" value="{{ request('city') }}">
+                        @endif
+                        @if (request()->filled('city_lat'))
+                            <input type="hidden" name="city_lat" value="{{ request('city_lat') }}">
+                        @endif
+                        @if (request()->filled('city_lng'))
+                            <input type="hidden" name="city_lng" value="{{ request('city_lng') }}">
+                        @endif
+                        @if (request()->filled('city_lat'))
+                            <input type="hidden" name="distance" value="{{ request('distance', 10) }}">
+                        @elseif (request()->filled('distance'))
+                            <input type="hidden" name="distance" value="{{ request('distance') }}">
+                        @endif
                     </form>
                     <div class="category-picker__trigger">
                         {{ $selectedCategoryName ?? 'Wszystkie kategorie' }}
@@ -62,6 +90,53 @@
                         <div class="category-picker__columns"></div>
                     </div>
                 </div>
+            </div>
+            <div id="city-filter">
+                <div>Miasto</div>
+                <form method="GET" action="{{ route('auctions.index') }}" id="city-filter-form">
+                    @if (request()->filled('q'))
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                    @endif
+                    @if (request()->filled('price_min'))
+                        <input type="hidden" name="price_min" value="{{ request('price_min') }}">
+                    @endif
+                    @if (request()->filled('price_max'))
+                        <input type="hidden" name="price_max" value="{{ request('price_max') }}">
+                    @endif
+                    @if (request()->filled('sort'))
+                        <input type="hidden" name="sort" value="{{ request('sort') }}">
+                    @endif
+                    @if ($selectedCategoryId ?? null)
+                        <input type="hidden" name="category" value="{{ $selectedCategoryId }}">
+                    @endif
+                    <input type="hidden" name="city_lat" id="city-lat" value="{{ request('city_lat') }}">
+                    <input type="hidden" name="city_lng" id="city-lng" value="{{ request('city_lng') }}">
+                    <div class="city-filter__inputs">
+                        <div class="city-search">
+                            <input
+                                type="text"
+                                name="city"
+                                id="city-search"
+                                placeholder="np. Warszawa"
+                                value="{{ request('city') }}"
+                                autocomplete="off"
+                            >
+                            <div id="city-suggestions" class="city-suggestions"></div>
+                        </div>
+                        <div class="city-distance">
+                            <input
+                                type="number"
+                                name="distance"
+                                id="city-distance"
+                                placeholder="km"
+                                min="1"
+                                step="1"
+                                value="{{ request()->filled('distance') ? request('distance') : (request()->filled('city_lat') ? 10 : '') }}"
+                                aria-label="Odległość w kilometrach"
+                            >
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
         <form method="GET" action="{{ route('auctions.index') }}" id="price">
@@ -73,6 +148,20 @@
             @endif
             @if ($selectedCategoryId ?? null)
                 <input type="hidden" name="category" value="{{ $selectedCategoryId }}">
+            @endif
+            @if (request()->filled('city'))
+                <input type="hidden" name="city" value="{{ request('city') }}">
+            @endif
+            @if (request()->filled('city_lat'))
+                <input type="hidden" name="city_lat" value="{{ request('city_lat') }}">
+            @endif
+            @if (request()->filled('city_lng'))
+                <input type="hidden" name="city_lng" value="{{ request('city_lng') }}">
+            @endif
+            @if (request()->filled('city_lat'))
+                <input type="hidden" name="distance" value="{{ request('distance', 10) }}">
+            @elseif (request()->filled('distance'))
+                <input type="hidden" name="distance" value="{{ request('distance') }}">
             @endif
             <div>Cena</div>
             <div id="price-inputs">

@@ -109,19 +109,29 @@
             @enderror
         </div>
 
-        <input
-            type="text"
-            name="location"
-            id="location"
-            class="form-control @error('location') is-invalid @enderror"
-            placeholder="Lokalizacja (np. Warszawa)"
-            value="{{ old('location') }}"
-            maxlength="200"
-            required
-        >
-        @error('location')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
+        <div class="location-field">
+            <input
+                type="text"
+                name="location"
+                id="location-search"
+                class="form-control @error('location') is-invalid @enderror"
+                placeholder="Lokalizacja (np. Warszawa, lub kliknij na mapie)"
+                value="{{ old('location') }}"
+                maxlength="200"
+                autocomplete="off"
+                required
+            >
+            <div id="location-suggestions" class="location-suggestions"></div>
+            <div id="map" class="location-map"></div>
+            <input type="hidden" id="lat" name="latitude" value="{{ old('latitude') }}">
+            <input type="hidden" id="lng" name="longitude" value="{{ old('longitude') }}">
+            @error('location')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+            @error('latitude')
+                <div class="invalid-feedback d-block">Nie wybrano poprawnej lokalizacji z mapy lub podpowiedzi.</div>
+            @enderror
+        </div>
 
         <div id="btns-box">
             <button type="submit" class="btn btn-primary">Zapisz</button>

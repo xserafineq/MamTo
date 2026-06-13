@@ -72,6 +72,56 @@ form input, form textarea, form select {
     gap: 20px;
 }
 
+.location-field {
+    position: relative;
+    width: 100%;
+}
+
+.location-map {
+    height: 300px;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    z-index: 1;
+}
+
+.location-suggestions {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+
+.location-suggestions__item {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.location-suggestions__item:hover,
+.location-suggestions__item:focus {
+    background: #f0f6ff;
+    color: #0066ff;
+}
+
+.location-suggestions__item:last-child {
+    border-bottom: none;
+}
+
 @media screen and (max-width: 900px) {
     #create-auction-container {
         max-width: 92%;
