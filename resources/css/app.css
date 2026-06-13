@@ -1,3 +1,6 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -5,6 +8,9 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+body {
+    font-family: Inter, system-ui, sans-serif;
+}
 
 nav {
     position: relative;
@@ -12,7 +18,6 @@ nav {
     display: flex;
     flex-direction: row;
     width: 100%;
-    font-family: Inter, serif;
     font-weight: bold;
     color: #1A1A1A;
     align-items: center;
@@ -45,7 +50,6 @@ main {
     height: 50px;
     padding: 20px;
     font-size: 20px;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-weight: 550;
     border-radius: 15px 0 0 15px;
     width: 100%;
@@ -236,7 +240,12 @@ main {
     color: #e43d3d !important;
 }
 
-.user-menu__logout:hover {
+.user-menu__dropdown .dropdown-item.user-menu__logout {
+    color: #e43d3d;
+}
+
+.user-menu__dropdown .dropdown-item.user-menu__logout:hover,
+.user-menu__dropdown .dropdown-item.user-menu__logout:focus {
     color: #dc3545;
     background-color: #fff5f5;
 }
