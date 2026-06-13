@@ -1,0 +1,228 @@
+.my-auctions-page {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.my-auctions-page h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.my-auctions-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+.my-auctions-stats__active {
+    color: #0066FF;
+}
+
+.my-auctions-stats__closed {
+    color: #dc3545;
+}
+
+.my-auctions-new-btn {
+    display: inline-block;
+    background-color: #0066FF;
+    border: none;
+    font-weight: 650;
+    padding: 10px 24px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    text-decoration: none;
+}
+
+.my-auctions-new-btn:hover {
+    background-color: #0052cc;
+    color: white;
+}
+
+.my-auctions-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-radius: 18px;
+    box-shadow: 0 0 16px rgb(241 241 241);
+    background: white;
+    transition: transform 0.2s ease;
+    overflow: hidden;
+}
+
+.my-auctions-card:hover {
+    transform: translateY(-2px);
+}
+
+.my-auctions-card--closed {
+    opacity: 0.85;
+    cursor: default;
+}
+
+.my-auctions-card--closed:hover {
+    transform: none;
+}
+
+.my-auctions-card__link {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+}
+
+.my-auctions-card__link:hover {
+    color: inherit;
+}
+
+.my-auctions-card__link img {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.my-auctions-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.my-auctions-card__title {
+    font-weight: 650;
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+.my-auctions-card__price {
+    color: #0066FF;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.my-auctions-card__meta {
+    color: #777;
+    font-size: 14px;
+}
+
+.my-auctions-card__badge {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 4px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #f0f0f0;
+    color: #666;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.my-auctions-card__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.my-auctions-card__actions .btn {
+    min-width: 110px;
+    font-weight: 600;
+}
+
+.edit-auction-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    .my-auctions-page {
+        margin-top: 30px;
+        padding: 0 12px;
+    }
+
+    .my-auctions-page h1 {
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+
+    .my-auctions-stats {
+        font-size: 16px;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .my-auctions-new-btn {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .my-auctions-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+        gap: 0;
+    }
+
+    .my-auctions-card__link {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        text-align: left;
+    }
+
+    .my-auctions-card__link img {
+        width: 100%;
+        height: 220px;
+        max-height: 45vw;
+        border-radius: 0;
+    }
+
+    .my-auctions-card__info {
+        padding: 16px 18px 12px;
+    }
+
+    .my-auctions-card__title {
+        font-size: 20px;
+    }
+
+    .my-auctions-card__price {
+        font-size: 22px;
+    }
+
+    .my-auctions-card--closed .my-auctions-card__info {
+        padding-bottom: 18px;
+    }
+
+    .my-auctions-card__actions {
+        flex-direction: row;
+        padding: 0 18px 18px;
+        gap: 12px;
+    }
+
+    .my-auctions-card__actions .btn {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .my-auctions-card__link img {
+        height: 200px;
+    }
+}

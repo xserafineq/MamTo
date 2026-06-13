@@ -65,6 +65,6 @@ class Auction extends Model
             'AuctionsImages',
             'auctionId',
             'imageId'
-        );
+        )->withPivot('order');
     }
 }

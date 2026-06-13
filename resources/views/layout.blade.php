@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
       <title>Mamto.pl</title>
      @vite(['resources/css/app.css'])
      @stack('styles')
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   </head>
   <body>
     <nav>
         <div id="logo">
-            <img src="{{ asset('assets/logo.png') }}" alt="logo"/>
+            <a href="/">
+                <img src="{{ asset('assets/logo.png') }}" alt="logo"/>
+            </a>
         </div>
         <form method="GET" action="{{ route('auctions.index') }}" id="search-box">
             @if (request()->filled('price_min'))
@@ -42,7 +46,38 @@
                     <img src="{{ asset('assets/messages.png') }}" alt="messages"/>
                 </a>
             </li>
-            <li><img src="{{ asset('assets/fi-sr-user.png') }}" alt="user-profile"/></li>
+            @auth
+                <li class="dropdown user-menu">
+                    <button
+                        class="user-menu__trigger"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-label="Menu użytkownika"
+                    >
+                        <img src="{{ asset('assets/fi-sr-user.png') }}" alt="user-profile"/>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end user-menu__dropdown">
+                        <li><a class="dropdown-item" href="{{ route('profile') }}">Profil użytkownika</a></li>
+                        <li><a class="dropdown-item" href="{{ route('chats.index') }}">Wiadomości</a></li>
+                        <li><a class="dropdown-item" href="{{ route('followed.index') }}">Obserwowane</a></li>
+                        <li><a class="dropdown-item" href="{{ route('auctions.mine') }}">Moje ogłoszenia</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item user-menu__logout">Wyloguj</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            @else
+                <li>
+                    <a href="{{ route('login') }}">
+                        <img src="{{ asset('assets/fi-sr-user.png') }}" alt="user-profile"/>
+                    </a>
+                </li>
+            @endauth
         </ul>
     </nav>
     <main>

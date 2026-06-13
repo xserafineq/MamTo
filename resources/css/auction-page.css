@@ -131,6 +131,15 @@
     margin-top: 2px;
 }
 
+#phoneNumber a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#phoneNumber a:hover {
+    color: #0066ff;
+}
+
 #rating {
     color: #0066ff;
     font-weight: 600;
@@ -222,6 +231,7 @@
     border-radius: 10px;
     height: auto;
     color: #323232;
+    width: 100%;
 }
 
 #description-head {

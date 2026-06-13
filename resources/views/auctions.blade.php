@@ -1,7 +1,11 @@
 @extends('layout')
 
 @push('styles')
-    @vite(['resources/css/auctions.css', 'resources/js/auctions/category-picker.js'])
+    @vite(['resources/css/auctions.css'])
+@endpush
+
+@push('scripts')
+    @vite(['resources/js/auctions/category-picker.js'])
 @endpush
 
 @section('content')
