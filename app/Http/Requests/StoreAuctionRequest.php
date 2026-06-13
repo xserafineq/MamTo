@@ -11,19 +11,6 @@ class StoreAuctionRequest extends AuctionFormRequest
 
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'categoryId' => ['required', 'integer', Rule::exists('Categories', 'id')],
-            'negotiable' => ['required', 'boolean'],
-            'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-            'location' => ['required', 'string', 'max:200'],
-            'latitude' => ['required', 'numeric', 'between:-90,90'],
-            'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'thumbnail' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
-            'images' => ['nullable', 'array', 'max:4'],
-            'images.*' => ['image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
-        ];
         return $this->sharedRules(thumbnailRequired: true);
     }
 
@@ -44,9 +31,9 @@ class StoreAuctionRequest extends AuctionFormRequest
             'salaryType.in' => 'Wybrany rodzaj wynagrodzenia jest nieprawidłowy.',
             'location.required' => 'Lokalizacja jest wymagana.',
             'location.max' => 'Lokalizacja może mieć maksymalnie 200 znaków.',
-            'latitude.required' => 'Wybierz lokalizację z mapy lub podpowiedzi.',
+            'latitude.required' => 'Wybierz lokalizację klikając na mapie.',
             'latitude.between' => 'Nieprawidłowa szerokość geograficzna.',
-            'longitude.required' => 'Wybierz lokalizację z mapy lub podpowiedzi.',
+            'longitude.required' => 'Wybierz lokalizację klikając na mapie.',
             'longitude.between' => 'Nieprawidłowa długość geograficzna.',
             'thumbnail.required' => 'Miniatura jest wymagana.',
             'thumbnail.image' => 'Miniatura musi być obrazem.',

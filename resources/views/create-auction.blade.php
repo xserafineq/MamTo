@@ -144,9 +144,11 @@
             <input
                 type="text"
                 name="location"
-                id="location-search"
+                id="location"
                 class="form-control @error('location') is-invalid @enderror"
-                placeholder="Lokalizacja (np. Warszawa, lub kliknij na mapie)"
+                placeholder="Lokalizacja (kliknij na mapie)"
+                data-auction-placeholder="Lokalizacja (kliknij na mapie)"
+                data-job-placeholder="Miejsce pracy (kliknij na mapie)"
                 value="{{ old('location') }}"
                 maxlength="200"
                 autocomplete="off"
@@ -160,24 +162,9 @@
                 <div class="invalid-feedback d-block">{{ $message }}</div>
             @enderror
             @error('latitude')
-                <div class="invalid-feedback d-block">Nie wybrano poprawnej lokalizacji z mapy lub podpowiedzi.</div>
+                <div class="invalid-feedback d-block">Nie wybrano poprawnej lokalizacji na mapie.</div>
             @enderror
         </div>
-        <input
-            type="text"
-            name="location"
-            id="location"
-            class="form-control @error('location') is-invalid @enderror"
-            placeholder="Lokalizacja (np. Warszawa)"
-            data-auction-placeholder="Lokalizacja (np. Warszawa)"
-            data-job-placeholder="Miejsce pracy (np. Warszawa)"
-            value="{{ old('location') }}"
-            maxlength="200"
-            required
-        >
-        @error('location')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
 
         <div id="btns-box">
             <button type="submit" class="btn btn-primary">Zapisz</button>

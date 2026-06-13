@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initLocationMap(form) {
-    const locationInput = form.querySelector('#location-search');
+    const locationInput = form.querySelector('#location');
     const latInput = form.querySelector('#lat');
     const lngInput = form.querySelector('#lng');
     const suggestionsEl = form.querySelector('#location-suggestions');
@@ -408,7 +408,7 @@ function validateForm(form, categorySelect, thumbnailInput, imageInputs) {
         }
     }
 
-    const location = form.querySelector('#location-search');
+    const location = form.querySelector('#location');
     const lat = form.querySelector('#lat');
     const lng = form.querySelector('#lng');
 
@@ -419,7 +419,7 @@ function validateForm(form, categorySelect, thumbnailInput, imageInputs) {
         setFieldError(location, 'Lokalizacja może mieć maksymalnie 200 znaków.');
         isValid = false;
     } else if (!lat.value || !lng.value) {
-        setFieldError(location, 'Wybierz poprawną lokalizację z listy podpowiedzi lub kliknij na mapie.');
+        setFieldError(location, 'Wybierz lokalizację klikając na mapie.');
         isValid = false;
     }
 
