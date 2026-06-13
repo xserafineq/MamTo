@@ -1,13 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Category;
+use App\Models\Auction;
 
 Route::get('/', function () {
-    return view('home');
+    $categories = Category::with('image')
+        ->whereNull('parentId')
+        ->get();
+
+    return view('home', compact('categories'));
 });
 
 Route::get('/auctions', function () {
-    return view('auctions');
+    $auctions = Auction::with('image')
+        ->latest('createdAt')
+        ->paginate(10);
+
+    return view('auctions', compact('auctions'));
 });
 
 

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Image extends Model
 {
@@ -19,7 +21,7 @@ class Image extends Model
     ];
 
     protected $casts = [
-        'uuid' => 'integer',
+        'uuid' => 'string',
         'uploadedAt' => 'datetime',
     ];
 
@@ -41,5 +43,19 @@ class Image extends Model
             'imageId',
             'auctionId'
         );
+    }
+
+    protected function fileUrl(): Attribute
+    {
+        return Attribute::get(function () {
+            // pobieranie oryginalnego rozszerzenia pliku
+            $extension = pathinfo($this->filename, PATHINFO_EXTENSION);
+
+            // budowa nazwy
+            $diskName = $this->uuid . '.' . $extension;
+
+            // zwracanie gotowego adresu URL
+            return Storage::disk('public')->url('images/' . $diskName);
+        });
     }
 }
