@@ -134,7 +134,7 @@
                                             <option value="0" @selected(! $user->isAdmin)>Użytkownik</option>
                                         </select>
 
-                                        <button type="submit" class="btn btn-primary admin-panel-admin-permissions-btn">
+                                        <button type="submit" class="btn btn-primary btn-sm">
                                             Zapisz
                                         </button>
                                     </form>

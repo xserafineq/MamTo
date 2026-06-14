@@ -318,12 +318,29 @@ footer {
     background-color: #0066FF;
     width: 100%;
     height: 200px;
-    font-weight: 580;
     color: white;
     justify-content: end;
     align-items: end;
     font-size: 20px;
-    padding: 20px;
+    padding: 40px;
 }
 
+#pagename {
+    font-weight: normal;
+    gap: 15px;
+    display: flex;
+    width: 40%;
+    justify-content: left;
+    letter-spacing: 2%;
+}
 
+#authors {
+    font-weight: normal;
+    gap: 5px;
+    display: flex;
+    width: 80%;
+    align-items: end;
+    flex-direction: column;
+    font-size: 16px;
+    text-align: right;
+}

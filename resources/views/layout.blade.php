@@ -91,7 +91,8 @@
     </main>
   <img id="footer-waves" src="{{asset('assets/footer-waves.svg')}}" alt="waves"/>
   <footer>
-        Mateusz Serafin, Przemysław Sulowski
+        <div id="pagename">Mamto.pl</div>
+        <div id="authors"><script>document.write("Copyright " + new Date().getFullYear())</script> <div>Mateusz Serafin <br> Przemysław Sulowski</div></div>
   </footer>
   @stack('scripts')
   </body>
