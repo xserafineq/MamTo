@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Models\Auction;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -51,5 +53,16 @@ class UserController extends Controller
             ->paginate(10);
 
         return view('followed', compact('auctions'));
+    }
+
+    public function show(User $user): View
+    {
+        $auctions = Auction::with('image')
+            ->where('userId', $user->id)
+            ->publiclyVisible()
+            ->latest('createdAt')
+            ->paginate(12);
+
+        return view('user-profile', compact('user', 'auctions'));
     }
 }

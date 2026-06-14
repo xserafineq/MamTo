@@ -66,9 +66,13 @@
                 <div id="seller">
                     <div class="seller-header">{{ $isJobOffer ? 'Pracodawca' : 'Sprzedający' }}</div>
                     <div id="seller-data">
-                        <img id="seller-avatar" src="{{ asset('assets/seller.png') }}" alt="avatar"/>
+                        <a href="{{ route('users.show', $auction->user) }}" class="seller-profile-link" aria-label="Profil użytkownika">
+                            <img id="seller-avatar" src="{{ asset('assets/seller.png') }}" alt="{{ $auction->user->firstName }} {{ $auction->user->lastName }}"/>
+                        </a>
                         <div id="seller-main-data">
-                            <div id="email">{{ $auction->user->email }}</div>
+                            <a href="{{ route('users.show', $auction->user) }}" class="seller-profile-link seller-name">
+                                {{ $auction->user->firstName }} {{ $auction->user->lastName }}
+                            </a>
                             <div id="phoneNumber">
                                 @if($isOwner)
                                     <a href="tel:+48{{ $phoneDigits }}">{{ $displayPhone }}</a>
