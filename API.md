@@ -81,5 +81,26 @@ Pola formularza aukcji: `name`, `description`, `categoryId`, `price`, `negotiabl
 | GET | `/api/admin/administrators` | Lista administratorów |
 | PUT | `/api/admin/administrators/{id}/permissions` | Zmiana uprawnień (`isAdmin`) — tylko główny admin |
 
+### Kategorie
+
+| Metoda | Endpoint | Opis |
+|--------|----------|------|
+| GET | `/api/admin/categories` | Drzewo kategorii + płaska lista (`tree`, `data`) |
+| POST | `/api/admin/categories` | Dodaj kategorię (`multipart/form-data`) |
+| PUT | `/api/admin/categories/{id}` | Edytuj nazwę i/lub zdjęcie kategorii |
+| DELETE | `/api/admin/categories/{id}` | Usuń kategorię |
+
+Pola przy tworzeniu (`POST`):
+
+- `name` — wymagane, max 150 znaków
+- `parentId` — opcjonalne; ID kategorii nadrzędnej (brak = kategoria główna)
+- `image` — opcjonalne; JPG, PNG lub WEBP, max 5 MB
+
+Pola przy edycji (`PUT`):
+
+- `name` — wymagane
+- `image` — opcjonalne; nowe zdjęcie zastępuje poprzednie
+
+Usunięcie zwraca `422`, gdy kategoria ma podkategorie lub przypisane ogłoszenia.
 
 

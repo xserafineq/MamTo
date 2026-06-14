@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\AdministratorController;
 use App\Http\Controllers\Api\Admin\ApprovalController;
 use App\Http\Controllers\Api\Admin\AuctionController as AdminAuctionController;
+use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
@@ -53,5 +54,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/administrators', [AdministratorController::class, 'index']);
         Route::put('/administrators/{user}/permissions', [AdministratorController::class, 'updatePermissions'])->whereNumber('user');
+
+        Route::get('/categories', [AdminCategoryController::class, 'index']);
+        Route::post('/categories', [AdminCategoryController::class, 'store']);
+        Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->whereNumber('category');
+        Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->whereNumber('category');
     });
 });

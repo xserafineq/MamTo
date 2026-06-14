@@ -64,7 +64,12 @@ class Category extends Model
             return [];
         }
 
-        return static::collectDescendantIds($praca->id);
+        return static::descendantIds($praca->id);
+    }
+
+    public static function descendantIds(int $categoryId): array
+    {
+        return static::collectDescendantIds($categoryId);
     }
 
     private static function collectDescendantIds(int $categoryId): array

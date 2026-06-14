@@ -30,4 +30,10 @@
     >
         Inni administratorzy
     </a>
+    <a
+        href="{{ route('admin.categories.index') }}"
+        class="admin-panel-nav-link {{ request()->routeIs('admin.categories.*') ? 'is-active' : '' }}"
+    >
+        Kategorie
+    </a>
 </nav>

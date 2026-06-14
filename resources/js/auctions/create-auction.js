@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const categorySelect = form.querySelector('#categoryId');
+    const categoryInput = form.querySelector('#categoryId');
+    const categoryPicker = form.querySelector('.create-auction-category-picker');
     const thumbnailInput = form.querySelector('#thumbnail');
     const imageInputs = form.querySelectorAll('input[name="images[]"]');
     const salaryType = form.querySelector('#salaryType');
@@ -56,17 +57,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    categorySelect?.addEventListener('change', () => toggleJobMode(form, categorySelect));
+    categoryInput?.addEventListener('change', () => {
+        clearCategoryFieldError(form);
+        toggleJobMode(form);
+    });
+
+    categoryPicker?.addEventListener('category-picker:select', () => {
+        clearCategoryFieldError(form);
+        toggleJobMode(form);
+    });
     salaryType?.addEventListener('change', () => toggleSalaryPrice(form, salaryType, price));
 
-    toggleJobMode(form, categorySelect);
+    toggleJobMode(form);
     toggleSalaryPrice(form, salaryType, price);
 
     form.addEventListener('submit', (event) => {
-        if (!validateForm(form, categorySelect, thumbnailInput, imageInputs)) {
+        if (!validateForm(form, categoryInput, thumbnailInput, imageInputs)) {
             event.preventDefault();
+            scrollToFirstError(form);
         }
     });
+
+    initServerSideErrors(form);
 });
 
 function initLocationMap(form) {
@@ -262,6 +274,43 @@ function initLocationMap(form) {
     setTimeout(() => map.invalidateSize(), 100);
 }
 
+function getCategoryPicker(form) {
+    return form.querySelector('.create-auction-category-picker');
+}
+
+function clearCategoryFieldError(form) {
+    const categoryInput = form.querySelector('#categoryId');
+    clearFieldError(categoryInput);
+    getCategoryPicker(form)?.classList.remove('is-invalid');
+}
+
+function initServerSideErrors(form) {
+    const categoryInput = form.querySelector('#categoryId');
+
+    if (categoryInput?.classList.contains('is-invalid')) {
+        getCategoryPicker(form)?.classList.add('is-invalid');
+    }
+
+    if (form.querySelector('.field-error')) {
+        scrollToFirstError(form);
+    }
+}
+
+function scrollToFirstError(form) {
+    const firstError = form.querySelector('.field-error')
+        || form.querySelector('.is-invalid');
+
+    if (!firstError) {
+        return;
+    }
+
+    const scrollTarget = firstError.closest('.form-field')
+        || firstError.closest('.upload-img-field')
+        || firstError;
+
+    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
 function getPracaIds(form) {
     try {
         return JSON.parse(form.dataset.pracaIds || '[]').map((id) => Number(id));
@@ -270,17 +319,19 @@ function getPracaIds(form) {
     }
 }
 
-function isJobCategory(form, categorySelect) {
-    const categoryId = Number(categorySelect?.value);
+function isJobCategory(form) {
+    const categoryId = Number(form.querySelector('#categoryId')?.value);
 
     return categoryId > 0 && getPracaIds(form).includes(categoryId);
 }
 
-function toggleJobMode(form, categorySelect) {
-    const isJob = isJobCategory(form, categorySelect);
+function toggleJobMode(form) {
+    const isJob = isJobCategory(form);
     const negotiableBox = form.querySelector('#negotiable-box');
     const negotiable = form.querySelector('#negotiable');
+    const salaryTypeBox = form.querySelector('#salaryType-box');
     const salaryType = form.querySelector('#salaryType');
+    const priceLabel = form.querySelector('#price-label');
     const thumbnailLabel = form.querySelector('#thumbnail-label');
     const auctionImageNote = form.querySelector('#auction-image-note');
     const extraImages = form.querySelectorAll('.job-extra-image');
@@ -302,8 +353,11 @@ function toggleJobMode(form, categorySelect) {
         }
     }
 
+    if (salaryTypeBox) {
+        salaryTypeBox.hidden = !isJob;
+    }
+
     if (salaryType) {
-        salaryType.hidden = !isJob;
         salaryType.required = isJob;
         if (!isJob) {
             salaryType.value = '';
@@ -322,6 +376,12 @@ function toggleJobMode(form, categorySelect) {
     updateFieldPlaceholder(form.querySelector('#description'), isJob);
     updateFieldPlaceholder(form.querySelector('#price'), isJob);
     updateFieldPlaceholder(form.querySelector('#location'), isJob);
+
+    if (priceLabel) {
+        priceLabel.textContent = isJob
+            ? priceLabel.dataset.jobLabel || 'Wynagrodzenie'
+            : priceLabel.dataset.auctionLabel || 'Cena';
+    }
 
     toggleSalaryPrice(form, salaryType, form.querySelector('#price'));
 }
@@ -353,9 +413,9 @@ function updateFieldPlaceholder(field, isJob) {
         : field.dataset.auctionPlaceholder || field.placeholder;
 }
 
-function validateForm(form, categorySelect, thumbnailInput, imageInputs) {
+function validateForm(form, categoryInput, thumbnailInput, imageInputs) {
     let isValid = true;
-    const isJob = isJobCategory(form, categorySelect);
+    const isJob = isJobCategory(form);
 
     const name = form.querySelector('#name');
     if (!name.value.trim()) {
@@ -372,8 +432,9 @@ function validateForm(form, categorySelect, thumbnailInput, imageInputs) {
         isValid = false;
     }
 
-    if (!categorySelect.value) {
-        setFieldError(categorySelect, 'Wybierz kategorię.');
+    if (!categoryInput?.value) {
+        setFieldError(categoryInput, 'Wybierz kategorię.');
+        getCategoryPicker(form)?.classList.add('is-invalid');
         isValid = false;
     }
 

@@ -5,6 +5,7 @@
 node_modules
 vendor
 public/build
+public/storage
 storage/framework/cache/data/*
 storage/framework/sessions/*
 storage/framework/testing/*

@@ -1,21 +1,24 @@
 @extends('layout')
 
 @push('styles')
-    @vite(['resources/css/create-auction.css'])
+    @vite(['resources/css/create-auction.css', 'resources/css/auctions.css'])
 @endpush
 
 @push('scripts')
-    @vite(['resources/js/auctions/create-auction.js'])
+    @vite(['resources/js/auctions/category-picker.js', 'resources/js/auctions/create-auction.js'])
 @endpush
 
 @section('content')
 
 <section id="create-auction-container">
     @if ($errors->any())
-        <div class="alert alert-danger py-2 small w-100" role="alert">
-            @foreach ($errors->all() as $error)
-                <div>{{ $error }}</div>
-            @endforeach
+        <div class="create-auction-errors-summary" role="alert">
+            <strong>Formularz zawiera błędy.</strong>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -29,123 +32,84 @@
     >
         @csrf
 
-        <section id="upload-img-card-container">
-            <label class="upload-img-card">
-                <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/webp" class="@error('thumbnail') is-invalid @enderror" hidden>
-                <img class="upload-img-card__preview" src="{{ asset('assets/img-upload-icon.svg') }}" alt="Miniatura"/>
-                <div id="thumbnail-label">Miniatura</div>
-            </label>
-            @foreach (['2', '3', '4', '5'] as $index => $label)
-                <label class="upload-img-card job-extra-image">
-                    <input type="file" name="images[]" accept="image/jpeg,image/png,image/webp" class="@error('images.' . $index) is-invalid @enderror" hidden>
-                    <img class="upload-img-card__preview" src="{{ asset('assets/img-upload-icon.svg') }}" alt="Zdjęcie {{ $label }}"/>
-                    <div>{{ $label }}</div>
+        <div class="form-field upload-img-field @error('thumbnail') has-field-error @enderror">
+            <section id="upload-img-card-container">
+                <label class="upload-img-card @error('thumbnail') is-invalid @enderror">
+                    <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/webp" hidden>
+                    <img class="upload-img-card__preview" src="{{ asset('assets/img-upload-icon.svg') }}" alt="Miniatura"/>
+                    <div id="thumbnail-label">Miniatura</div>
                 </label>
-            @endforeach
-        </section>
-        @error('thumbnail')
-            <div class="text-danger small">{{ $message }}</div>
-        @enderror
-
-        <input
-            type="text"
-            name="name"
-            id="name"
-            class="form-control @error('name') is-invalid @enderror"
-            placeholder="Tytuł aukcji"
-            data-auction-placeholder="Tytuł aukcji"
-            data-job-placeholder="Stanowisko (np. Magazynier)"
-            value="{{ old('name') }}"
-            maxlength="255"
-            required
-        >
-        @error('name')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-
-        <textarea
-            name="description"
-            id="description"
-            class="form-control @error('description') is-invalid @enderror"
-            placeholder="Opis"
-            data-auction-placeholder="Opis"
-            data-job-placeholder="Opis stanowiska i obowiązków"
-            style="height: 100px"
-            maxlength="5000"
-        >{{ old('description') }}</textarea>
-        @error('description')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-
-        <select
-            name="categoryId"
-            id="categoryId"
-            class="form-select @error('categoryId') is-invalid @enderror"
-            required
-        >
-            <option value="" disabled {{ old('categoryId') ? '' : 'selected' }}>Wybierz kategorię</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category['id'] }}" @selected(old('categoryId') == $category['id'])>
-                    {{ $category['label'] }}
-                </option>
-            @endforeach
-        </select>
-        @error('categoryId')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-
-        <div id="price-category-box">
-            <div id="negotiable-box">
-                <select name="negotiable" id="negotiable" class="form-select @error('negotiable') is-invalid @enderror" required>
-                    <option value="" disabled {{ old('negotiable') !== null ? '' : 'selected' }}>Do negocjacji?</option>
-                    <option value="1" @selected(old('negotiable') === '1' || old('negotiable') === 1 || old('negotiable') === true)>Tak</option>
-                    <option value="0" @selected(old('negotiable') === '0' || old('negotiable') === 0 || old('negotiable') === false)>Nie</option>
-                </select>
-                @error('negotiable')
-                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <select
-                name="salaryType"
-                id="salaryType"
-                class="form-select @error('salaryType') is-invalid @enderror"
-                hidden
-            >
-                <option value="" disabled {{ old('salaryType') ? '' : 'selected' }}>Rodzaj wynagrodzenia</option>
-                <option value="brutto/h" @selected(old('salaryType') === 'brutto/h')>brutto / h</option>
-                <option value="brutto/mies." @selected(old('salaryType') === 'brutto/mies.')>brutto / mies.</option>
-                <option value="netto/h" @selected(old('salaryType') === 'netto/h')>netto / h</option>
-                <option value="do uzgodnienia" @selected(old('salaryType') === 'do uzgodnienia')>do uzgodnienia</option>
-            </select>
-            @error('salaryType')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
+                @foreach (['2', '3', '4', '5'] as $index => $label)
+                    <label class="upload-img-card job-extra-image @error('images.' . $index) is-invalid @enderror">
+                        <input type="file" name="images[]" accept="image/jpeg,image/png,image/webp" hidden>
+                        <img class="upload-img-card__preview" src="{{ asset('assets/img-upload-icon.svg') }}" alt="Zdjęcie {{ $label }}"/>
+                        <div>{{ $label }}</div>
+                    </label>
+                @endforeach
+            </section>
+            @error('thumbnail')
+                <div class="field-error">{{ $message }}</div>
             @enderror
+            @error('images')
+                <div class="field-error">{{ $message }}</div>
+            @enderror
+            @foreach ($errors->getMessages() as $field => $messages)
+                @if (str_starts_with($field, 'images.'))
+                    @foreach ($messages as $message)
+                        <div class="field-error">{{ $message }}</div>
+                    @endforeach
+                @endif
+            @endforeach
+        </div>
 
+        <div class="form-field @error('name') has-field-error @enderror">
             <input
-                type="number"
-                name="price"
-                id="price"
-                class="form-control @error('price') is-invalid @enderror"
-                placeholder="Cena"
-                data-auction-placeholder="Cena"
-                data-job-placeholder="Wynagrodzenie"
-                value="{{ old('price') }}"
-                min="0"
-                step="0.01"
+                type="text"
+                name="name"
+                id="name"
+                class="form-control @error('name') is-invalid @enderror"
+                placeholder="Tytuł aukcji"
+                data-auction-placeholder="Tytuł aukcji"
+                data-job-placeholder="Stanowisko (np. Magazynier)"
+                value="{{ old('name') }}"
+                maxlength="255"
                 required
             >
-            @error('price')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @error('name')
+                <div class="field-error">{{ $message }}</div>
             @enderror
         </div>
 
-        <div class="location-field">
+        <div class="form-field @error('description') has-field-error @enderror">
+            <textarea
+                name="description"
+                id="description"
+                class="form-control @error('description') is-invalid @enderror"
+                placeholder="Opis"
+                data-auction-placeholder="Opis"
+                data-job-placeholder="Opis stanowiska i obowiązków"
+                style="height: 100px"
+                maxlength="5000"
+            >{{ old('description') }}</textarea>
+            @error('description')
+                <div class="field-error">{{ $message }}</div>
+            @enderror
+        </div>
+
+        @include('partials.category-picker-form')
+
+        @include('partials.auction-price-fields', [
+            'negotiableValue' => old('negotiable'),
+            'salaryValue' => old('salaryType'),
+            'priceValue' => old('price'),
+        ])
+
+        <div class="location-field form-field @if($errors->hasAny(['location', 'latitude', 'longitude'])) has-field-error @endif">
             <input
                 type="text"
                 name="location"
                 id="location"
-                class="form-control @error('location') is-invalid @enderror"
+                class="form-control @if($errors->hasAny(['location', 'latitude', 'longitude'])) is-invalid @endif"
                 placeholder="Lokalizacja (kliknij na mapie)"
                 data-auction-placeholder="Lokalizacja (kliknij na mapie)"
                 data-job-placeholder="Miejsce pracy (kliknij na mapie)"
@@ -159,10 +123,13 @@
             <input type="hidden" id="lat" name="latitude" value="{{ old('latitude') }}">
             <input type="hidden" id="lng" name="longitude" value="{{ old('longitude') }}">
             @error('location')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
+                <div class="field-error">{{ $message }}</div>
             @enderror
             @error('latitude')
-                <div class="invalid-feedback d-block">Nie wybrano poprawnej lokalizacji na mapie.</div>
+                <div class="field-error">Nie wybrano poprawnej lokalizacji na mapie.</div>
+            @enderror
+            @error('longitude')
+                <div class="field-error">{{ $message }}</div>
             @enderror
         </div>
 

@@ -1,11 +1,11 @@
 @extends('layout')
 
 @push('styles')
-    @vite(['resources/css/create-auction.css'])
+    @vite(['resources/css/create-auction.css', 'resources/css/auctions.css'])
 @endpush
 
 @push('scripts')
-    @vite(['resources/js/auctions/create-auction.js'])
+    @vite(['resources/js/auctions/category-picker.js', 'resources/js/auctions/create-auction.js'])
 @endpush
 
 @section('content')
@@ -83,68 +83,13 @@
             <div class="invalid-feedback d-block">{{ $message }}</div>
         @enderror
 
-        <select
-            name="categoryId"
-            id="categoryId"
-            class="form-select @error('categoryId') is-invalid @enderror"
-            required
-        >
-            <option value="" disabled>Wybierz kategorię</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category['id'] }}" @selected(old('categoryId', $auction->categoryId) == $category['id'])>
-                    {{ $category['label'] }}
-                </option>
-            @endforeach
-        </select>
-        @error('categoryId')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
+        @include('partials.category-picker-form')
 
-        <div id="price-category-box">
-            <div id="negotiable-box">
-                <select name="negotiable" id="negotiable" class="form-select @error('negotiable') is-invalid @enderror" required>
-                    <option value="" disabled>Do negocjacji?</option>
-                    <option value="1" @selected(old('negotiable', $auction->negotiable ? '1' : '0') === '1' || old('negotiable', $auction->negotiable) === true)>Tak</option>
-                    <option value="0" @selected(old('negotiable', $auction->negotiable ? '1' : '0') === '0' || old('negotiable', $auction->negotiable) === false)>Nie</option>
-                </select>
-                @error('negotiable')
-                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <select
-                name="salaryType"
-                id="salaryType"
-                class="form-select @error('salaryType') is-invalid @enderror"
-                hidden
-            >
-                <option value="" disabled {{ old('salaryType', $auction->salaryType ?? ($auction->negotiable ? 'do uzgodnienia' : '')) ? '' : 'selected' }}>Rodzaj wynagrodzenia</option>
-                <option value="brutto/h" @selected(old('salaryType', $auction->salaryType) === 'brutto/h')>brutto / h</option>
-                <option value="brutto/mies." @selected(old('salaryType', $auction->salaryType) === 'brutto/mies.')>brutto / mies.</option>
-                <option value="netto/h" @selected(old('salaryType', $auction->salaryType) === 'netto/h')>netto / h</option>
-                <option value="do uzgodnienia" @selected(old('salaryType', $auction->salaryType ?? ($auction->negotiable ? 'do uzgodnienia' : '')) === 'do uzgodnienia')>do uzgodnienia</option>
-            </select>
-            @error('salaryType')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
-            @enderror
-
-            <input
-                type="number"
-                name="price"
-                id="price"
-                class="form-control @error('price') is-invalid @enderror"
-                placeholder="Cena"
-                data-auction-placeholder="Cena"
-                data-job-placeholder="Wynagrodzenie"
-                value="{{ old('price', $auction->price) }}"
-                min="0"
-                step="0.01"
-                required
-            >
-            @error('price')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
-            @enderror
-        </div>
+        @include('partials.auction-price-fields', [
+            'negotiableValue' => old('negotiable', $auction->negotiable ? '1' : '0'),
+            'salaryValue' => old('salaryType', $auction->salaryType ?? ($auction->negotiable ? 'do uzgodnienia' : '')),
+            'priceValue' => old('price', $auction->price),
+        ])
 
         <div class="location-field">
             <input
