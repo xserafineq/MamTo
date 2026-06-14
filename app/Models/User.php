@@ -62,4 +62,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class, 'userId');
     }
+
+    public function hasAccountOlderThanMonths(int $months): bool
+    {
+        return $this->joinedAt !== null
+            && $this->joinedAt->lte(now()->subMonths($months));
+    }
 }

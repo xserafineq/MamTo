@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\SellerRatingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Auction;
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/followed', [UserController::class, 'followed'])->name('followed.index');
     Route::post('/auctions/{auction}/follow', [FollowedAuctionController::class, 'store'])->name('auctions.follow')->whereNumber('auction');
     Route::delete('/auctions/{auction}/follow', [FollowedAuctionController::class, 'destroy'])->name('auctions.unfollow')->whereNumber('auction');
+    Route::post('/users/{user}/rating', [SellerRatingController::class, 'store'])->name('users.rating.store')->whereNumber('user');
 
     Route::get('/messages', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/messages/{chat}', [ChatController::class, 'show'])->name('chats.show');

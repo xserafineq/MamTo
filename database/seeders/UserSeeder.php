@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
             'email' => 'anna.nowak@example.com',
             'phoneNumber' => '700300400',
             'password' => 'password',
-            'joinedAt' => now()->subMonths(3),
+            'joinedAt' => now()->subMonths(10),
             'lastOnline' => now()->subDay(),
             'isAdmin' => false,
         ]);
