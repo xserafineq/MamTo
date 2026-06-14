@@ -217,7 +217,7 @@ class AuctionController extends Controller
 
         return view('edit-auction', [
             'auction' => $auction,
-            'categories' => $this->getSelectableCategories(),
+            ...$this->formCategoryPickerData($auction->categoryId),
             'pracaCategoryIds' => Category::getPracaCategoryIds(),
         ]);
     }
@@ -229,7 +229,7 @@ class AuctionController extends Controller
 
         return view('edit-auction', [
             'auction' => $auction,
-            'categories' => $this->getSelectableCategories(),
+            ...$this->formCategoryPickerData($auction->categoryId),
             'pracaCategoryIds' => Category::getPracaCategoryIds(),
             'cancelRoute' => route('admin.auctions.index'),
             'updateRoute' => route('admin.auctions.update', $auction),
@@ -330,10 +330,8 @@ class AuctionController extends Controller
     // Formularz tworzenia aukcji
     public function create(): View
     {
-        $categories = $this->getSelectableCategories();
-
         return view('create-auction', [
-            'categories' => $categories,
+            ...$this->formCategoryPickerData(),
             'pracaCategoryIds' => Category::getPracaCategoryIds(),
         ]);
     }
@@ -388,16 +386,40 @@ class AuctionController extends Controller
             ->with('success', 'Aukcja została utworzona.');
     }
 
-    private function getSelectableCategories()
+    private function formCategoryPickerData(?int $selectedCategoryId = null): array
     {
-        $categories = Category::orderBy('name')->get()->keyBy('id');
+        $categories = Category::all()->keyBy('id');
+        $categoryTree = $this->buildFormCategoryTree(
+            Category::with('children.children')->whereNull('parentId')->orderBy('name')->get(),
+        );
 
-        return $categories
-            ->map(fn (Category $category) => [
+        $selectedCategoryId = old('categoryId', $selectedCategoryId);
+        $selectedCategoryLabel = 'Wybierz kategorię';
+
+        if ($selectedCategoryId && $categories->has($selectedCategoryId)) {
+            $selectedCategoryLabel = $this->buildCategoryLabel(
+                $categories->get($selectedCategoryId),
+                $categories,
+            );
+        }
+
+        return compact('categoryTree', 'selectedCategoryId', 'selectedCategoryLabel');
+    }
+
+    private function buildFormCategoryTree($categories): array
+    {
+        return $categories->map(function (Category $category) {
+            $children = $category->children->isNotEmpty()
+                ? $this->buildFormCategoryTree($category->children->sortBy('name'))
+                : [];
+
+            return [
                 'id' => $category->id,
-                'label' => $this->buildCategoryLabel($category, $categories),
-            ])
-            ->values();
+                'name' => $category->name,
+                'count' => 0,
+                'children' => $children,
+            ];
+        })->values()->all();
     }
 
     private function buildCategoryLabel(Category $category, $allCategories): string

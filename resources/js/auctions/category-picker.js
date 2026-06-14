@@ -6,11 +6,12 @@ function initCategoryPicker(picker) {
     const mode = picker.dataset.mode || 'filter';
     const isParentMode = mode === 'parent';
     const isSelectMode = mode === 'select';
+    const isFormMode = mode === 'form';
     const showCount = picker.dataset.showCount !== 'false';
     const tree = JSON.parse(picker.dataset.categories || '[]');
     const excludedIds = new Set(JSON.parse(picker.dataset.excludedIds || '[]').map(String));
     const selectedCategoryId = picker.dataset.selectedCategory || '';
-    const form = isParentMode || isSelectMode
+    const form = isParentMode || isSelectMode || isFormMode
         ? picker.closest('form')
         : picker.querySelector('form');
     const trigger = picker.querySelector('.category-picker__trigger');
@@ -21,7 +22,11 @@ function initCategoryPicker(picker) {
         return;
     }
 
-    if (!isSelectMode && !form) {
+    if (mode === 'filter' && !form) {
+        return;
+    }
+
+    if ((isParentMode || isFormMode) && !form) {
         return;
     }
 
@@ -30,7 +35,9 @@ function initCategoryPicker(picker) {
         ? [{ id: '', name: 'Brak (kategoria główna)', children: filteredTree, count: 0 }]
         : isSelectMode
             ? [{ id: '', name: 'Brak zaznaczenia', children: filteredTree, count: 0 }]
-            : buildFilterRootItems(filteredTree);
+            : isFormMode
+                ? filteredTree
+                : buildFilterRootItems(filteredTree);
 
     function buildFilterRootItems(nodes) {
         const totalCount = nodes.reduce((sum, category) => sum + (category.count ?? 0), 0);
@@ -80,16 +87,32 @@ function initCategoryPicker(picker) {
                 return 'Brak zaznaczenia';
             }
 
+            if (isFormMode) {
+                return 'Wybierz kategorię';
+            }
+
             return 'Wszystkie kategorie';
         }
 
         const path = findPath(rootItems, itemId);
 
-        if (!path || path.length <= 1) {
-            return path?.[path.length - 1]?.name ?? 'Wybrana kategoria';
+        if (!path?.length) {
+            return 'Wybrana kategoria';
         }
 
-        return path.slice(1).map((node) => node.name).join(' > ');
+        if (mode === 'filter' && path.length <= 1) {
+            return path[path.length - 1].name;
+        }
+
+        if (mode === 'filter') {
+            return path.slice(1).map((node) => node.name).join(' > ');
+        }
+
+        if (path.length === 1) {
+            return path[0].name;
+        }
+
+        return path.map((node) => node.name).join(' > ');
     }
 
     function submitCategory(item) {
@@ -112,15 +135,19 @@ function initCategoryPicker(picker) {
     }
 
     function selectCategory(item) {
-        const inputName = picker.dataset.inputName || 'selectedCategoryId';
-        let categoryInput = picker.querySelector(`input[name="${inputName}"]`);
+        const inputName = picker.dataset.inputName || (isFormMode ? 'categoryId' : 'selectedCategoryId');
+        const container = isFormMode || isParentMode ? form : picker;
+        let categoryInput = container.querySelector(`input[name="${inputName}"]`);
 
         if (item.id) {
             if (!categoryInput) {
                 categoryInput = document.createElement('input');
                 categoryInput.type = 'hidden';
                 categoryInput.name = inputName;
-                picker.appendChild(categoryInput);
+                if (isFormMode && inputName === 'categoryId') {
+                    categoryInput.id = 'categoryId';
+                }
+                container.insertBefore(categoryInput, isFormMode ? picker : container.firstChild);
             }
 
             categoryInput.value = item.id;
@@ -129,6 +156,11 @@ function initCategoryPicker(picker) {
         }
 
         trigger.textContent = getSelectionLabel(item.id);
+
+        if (isFormMode && categoryInput) {
+            categoryInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
         picker.dispatchEvent(new CustomEvent('category-picker:select', {
             bubbles: true,
             detail: {
@@ -166,7 +198,7 @@ function initCategoryPicker(picker) {
             return;
         }
 
-        if (isSelectMode) {
+        if (isSelectMode || isFormMode) {
             selectCategory(item);
             return;
         }

@@ -1,19 +1,51 @@
-export function clearFieldError(input) {
-    input.classList.remove('is-invalid');
-    const feedback = input.parentElement.querySelector('.invalid-feedback');
-    if (feedback) {
-        feedback.remove();
+function getErrorContainer(input) {
+    if (!input) {
+        return null;
     }
+
+    return input.closest('.form-field')
+        || input.closest('.price-field')
+        || input.closest('.create-auction-category-field')
+        || input.closest('.location-field')
+        || input.closest('.upload-img-field')
+        || input.parentElement;
+}
+
+export function clearFieldError(input) {
+    if (!input) {
+        return;
+    }
+
+    input.classList.remove('is-invalid');
+
+    const container = getErrorContainer(input);
+    container?.querySelectorAll('.field-error, .invalid-feedback').forEach((element) => {
+        element.remove();
+    });
+
+    container?.classList.remove('has-field-error');
 }
 
 export function setFieldError(input, message) {
+    if (!input) {
+        return;
+    }
+
     clearFieldError(input);
     input.classList.add('is-invalid');
 
+    const container = getErrorContainer(input);
+
+    if (!container) {
+        return;
+    }
+
+    container.classList.add('has-field-error');
+
     const feedback = document.createElement('div');
-    feedback.className = 'invalid-feedback';
+    feedback.className = 'field-error invalid-feedback d-block';
     feedback.textContent = message;
-    input.parentElement.appendChild(feedback);
+    container.appendChild(feedback);
 }
 
 export function isValidEmail(value) {
