@@ -25,14 +25,78 @@ class AuctionSeeder extends Seeder
         ['name' => 'Tarnobrzeg', 'latitude' => 50.5730400, 'longitude' => 21.6793700],
     ];
 
+    private const CONTENT = [
+        [
+            'titl' => 'Smartfon Samsung 128GB Czarny | Stan Idealny + Etui Gratis!',
+            'desc' => 'Telefon od nowości noszony w etui i z profesjonalnym szkłem hartowanym na ekranie, dzięki czemu wygląda jak nowy. W pełni sprawny, z oryginalnym pudełkiem i fabrycznym zestawem akcesoriów w komplecie.',
+            'category' => 'Smartfony',
+        ],
+        [
+            'titl' => 'Skórzana Kurtka',
+            'desc' => 'Ponadczasowa ramoneska wykonana z wysokiej jakości, miękkiej skóry naturalnej, która świetnie dopasowuje się do sylwetki. Stan oceniam na bardzo dobry – nie posiada żadnych przetarć ani uszkodzeń podszewki.',
+            'category' => 'Odzież męska',
+        ],
+        [
+            'titl' => 'Designerski Fotel Uszak',
+            'desc' => 'Niezwykle wygodny i stylowy fotel, który idealnie dopełni wnętrze każdego salonu lub kącika do czytania. Tapicerka jest czysta, zadbana i całkowicie wolna od śladów użytkowania przez zwierzęta.',
+            'category' => 'Meble',
+        ],
+        [
+            'titl' => 'Bestseller "Shuggie Bain" - Douglas Stuar',
+            'desc' => 'Wciągająca powieść, która zdobyła uznanie czytelników na całym świecie, teraz dostępna w twardej oprawie. Egzemplarz jest zupełnie nowy, nigdy nieczytany i nie posiada żadnych zagięć ani zarysowań.',
+            'category' => 'Wyposażenie wnętrz',
+        ],
+        [
+            'titl' => 'Rower Górski MTB Kross Hexagon 5.0 Koła 29"',
+            'desc' => 'Solidny rower górski wyposażony w niezawodny osprzęt Shimano, idealny zarówno na leśne ścieżki, jak i miejskie trasy. Sprzęt przeszedł kompleksowy przegląd przedsezonowy, ma wymieniony łańcuch i wyregulowane hamulce.',
+            'category' => 'Rowery',
+        ],
+        [
+            'titl' => 'Konsola Sony PlayStation 5 Slim 1TB | 2 Pady + Gra w Zestawie',
+            'desc' => 'Sprzęt w stanie idealnym, używany sporadycznie przez dorosłego użytkownika, w 100% sprawny technicznie. Konsola pracuje cicho, nie przegrzewa się, a w komplecie znajduje się pełne fabryczne okablowanie.',
+            'category' => 'Gaming',
+        ],
+        [
+            'titl' => 'Ekspres Ciśnieniowy DeLonghi Magnifica S | Po Przeglądzie, Super Stan',
+            'desc' => 'Niezawodny ekspres automatyczny, który parzy doskonałą, aromatyczną kawę czarną oraz mleczną za jednym dotknięciem. Urządzenie było regularnie czyszczone i odkamieniane wyłącznie oryginalnymi środkami producenta.',
+            'category' => 'Wyposażenie wnętrz',
+        ],
+        [
+            'titl' => 'Zegarek Męski Casio G-Shock Classic | Wstrząsoodporny, Box, Sklep',
+            'desc' => 'Legendarny, pancerny zegarek sportowy, który idealnie sprawdzi się w każdych, nawet najtrudniejszych warunkach. Posiada minimalne ślady użytkowania, a bateria oraz wszystkie funkcje działają bez zarzutu.',
+            'category' => 'Biżuteria i zegarki',
+        ],
+        [
+            'titl' => 'Słuchawki Bezprzewodowe JBL Tune 510BT Czane | Bluetooth, Mocny Bas',
+            'desc' => 'Lekkie i wygodne słuchawki nauszne, które zachwycają czystym brzmieniem oraz niezwykle wydajną baterią działającą do 40 godzin. Stan wizualny oraz techniczny jest perfekcyjny, wyglądają jak prosto z salonu.',
+            'category' => 'TV i audio',
+        ],
+        [
+            'titl' => 'Klocki LEGO Technic 42151 Bugatti Bolide | 100% Kompletny, Instrukcja',
+            'desc' => 'Fantastyczny model kolekcjonerski, który został złożony tylko raz i służył wyłącznie jako ozdoba na półce. Zestaw zawiera wszystkie oryginalne elementy, zapasowe klocki, instrukcję składania oraz fabryczne pudełko.',
+            'category' => 'Zabawki',
+        ],
+    ];
+
     public function run(): void
     {
         $users = User::all();
-        $categories = Category::whereDoesntHave('children')->get();
+        $leafCategories = Category::whereDoesntHave('children')->get()->keyBy('name');
         $image = Image::first();
 
-        if ($users->isEmpty() || $categories->isEmpty() || !$image) {
+        if ($users->isEmpty() || $leafCategories->isEmpty() || ! $image) {
             $this->command->warn('Uruchom najpierw UserSeeder, CategorySeeder i ImageSeeder.');
+
+            return;
+        }
+
+        $missingCategories = collect(self::CONTENT)
+            ->pluck('category')
+            ->unique()
+            ->diff($leafCategories->keys());
+
+        if ($missingCategories->isNotEmpty()) {
+            $this->command->error('Brak kategorii liści: ' . $missingCategories->implode(', '));
 
             return;
         }
@@ -41,29 +105,26 @@ class AuctionSeeder extends Seeder
 
         for ($i = 0; $i < 30; $i++) {
             $city = fake()->randomElement(self::CITIES);
-            $createdAt = fake()->dateTimeBetween('-7 days', 'now');
+            $createdAt = fake()->dateTimeBetween('-21 days', 'now');
+            $content = fake()->randomElement(self::CONTENT);
+            $category = $leafCategories->get($content['category']);
 
             Auction::forceCreate([
-                'name' => fake()->sentence(4),
-                'description' => fake()->paragraph(100),
+                'name' => $content['titl'],
+                'description' => $content['desc'],
                 'price' => fake()->randomFloat(2, 50, 50000),
                 'negotiable' => fake()->boolean(),
                 'location' => $city['name'],
-                'latitude' => $this->jitterCoordinate($city['latitude'], 0.06),
-                'longitude' => $this->jitterCoordinate($city['longitude'], 0.09),
+                'latitude' => $city['latitude'],
+                'longitude' => $city['longitude'],
                 'status' => fake()->randomElement($statuses),
                 'approved' => true,
                 'userId' => $users->random()->id,
-                'categoryId' => $categories->random()->id,
+                'categoryId' => $category->id,
                 'imageId' => $image->id,
                 'createdAt' => $createdAt,
                 'updatedAt' => $createdAt,
             ]);
         }
-    }
-
-    private function jitterCoordinate(float $value, float $maxOffset): float
-    {
-        return round($value + fake()->randomFloat(6, -$maxOffset, $maxOffset), 6);
     }
 }
