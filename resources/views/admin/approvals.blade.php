@@ -50,16 +50,6 @@
             <p>Brak aukcji oczekujących na akceptację.</p>
         @endforelse
 
-        @if ($auctions->hasPages())
-            <div class="admin-panel-pagination">
-                @for ($page = 1; $page <= $auctions->lastPage(); $page++)
-                    @if ($page === $auctions->currentPage())
-                        <span class="admin-panel-pagination-btn is-current">{{ $page }}</span>
-                    @else
-                        <a href="{{ $auctions->url($page) }}" class="admin-panel-pagination-btn">{{ $page }}</a>
-                    @endif
-                @endfor
-            </div>
-        @endif
+        @include('admin.partials.pagination', ['paginator' => $auctions])
     </section>
 @endsection

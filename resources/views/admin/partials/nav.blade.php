@@ -4,12 +4,6 @@
 
 <nav class="admin-panel-nav">
     <a
-        href="{{ route('admin.panel') }}"
-        class="admin-panel-nav-link {{ request()->routeIs('admin.panel') ? 'is-active' : '' }}"
-    >
-        Start
-    </a>
-    <a
         href="{{ route('admin.auctions.index') }}"
         class="admin-panel-nav-link {{ request()->routeIs('admin.auctions.*') ? 'is-active' : '' }}"
     >
@@ -23,6 +17,12 @@
         @if($pendingApprovalsCount > 0)
             <span class="admin-panel-nav-badge">{{ $pendingApprovalsCount }}</span>
         @endif
+    </a>
+    <a
+        href="{{ route('admin.users.index') }}"
+        class="admin-panel-nav-link {{ request()->routeIs('admin.users.*') ? 'is-active' : '' }}"
+    >
+        Użytkownicy
     </a>
     <a
         href="{{ route('admin.administrators.index') }}"

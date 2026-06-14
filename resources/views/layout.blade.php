@@ -37,7 +37,6 @@
                 onblur="if (this.dataset.initialValue !== this.value) this.form.submit()"
                 onkeydown="if (event.key === 'Enter') { event.preventDefault(); this.form.submit(); }"
             >
-            <button type="button" id="filter-btn"><img src="{{ asset('assets/fi-ss-filter.png')}}" alt=""></button>
         </form>
         <ul id="menu">
             <li>
@@ -67,7 +66,7 @@
                         <li><a class="dropdown-item" href="{{ route('followed.index') }}">Obserwowane</a></li>
                         <li><a class="dropdown-item" href="{{ route('auctions.mine') }}">Moje ogłoszenia</a></li>
                         @if(auth()->user()->isAdmin)
-                            <li><a class="dropdown-item user-menu__admin-link" href="{{ route('admin.panel') }}">Panel administratora</a></li>
+                            <li><a class="dropdown-item user-menu__admin-link" href="{{ route('admin.auctions.index') }}">Panel administratora</a></li>
                         @endif
                         <li><hr class="dropdown-divider"></li>
                         <li>

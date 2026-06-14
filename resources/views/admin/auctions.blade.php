@@ -47,22 +47,21 @@
                 <div class="my-auctions-card__actions">
                     <a href="{{ route('auctions.show', $auction) }}" class="btn btn-outline-secondary btn-sm">Podgląd</a>
                     <a href="{{ route('admin.auctions.edit', $auction) }}" class="btn btn-outline-primary btn-sm">Edytuj</a>
+                    <form
+                        action="{{ route('admin.auctions.destroy', $auction) }}"
+                        method="POST"
+                        onsubmit="return confirm('Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.');"
+                    >
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm w-100">Usuń</button>
+                    </form>
                 </div>
             </article>
         @empty
             <p>Brak aukcji w systemie.</p>
         @endforelse
 
-        @if ($auctions->hasPages())
-            <div class="admin-panel-pagination">
-                @for ($page = 1; $page <= $auctions->lastPage(); $page++)
-                    @if ($page === $auctions->currentPage())
-                        <span class="admin-panel-pagination-btn is-current">{{ $page }}</span>
-                    @else
-                        <a href="{{ $auctions->url($page) }}" class="admin-panel-pagination-btn">{{ $page }}</a>
-                    @endif
-                @endfor
-            </div>
-        @endif
+        @include('admin.partials.pagination', ['paginator' => $auctions])
     </section>
 @endsection
