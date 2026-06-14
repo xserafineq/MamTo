@@ -63,6 +63,24 @@ class UserController extends Controller
             ->latest('createdAt')
             ->paginate(12);
 
-        return view('user-profile', compact('user', 'auctions'));
+        $user->load('ratingsReceived');
+        $sellerRatings = $user->ratingsReceived;
+        $recommendationPercent = \App\Models\Rating::recommendationPercent($sellerRatings);
+
+        $isOwner = auth()->check() && (int) auth()->id() === (int) $user->id;
+        $userRating = null;
+        $canRateSeller = false;
+
+        if (auth()->check() && ! $isOwner) {
+            $userRating = $sellerRatings
+                ->where('userId', auth()->id())
+                ->first()
+                ?->rating;
+
+            $canRateSeller = $userRating === null
+                && auth()->user()->hasAccountOlderThanMonths(3);
+        }
+
+        return view('user-profile', compact('user', 'auctions', 'recommendationPercent', 'userRating', 'canRateSeller', 'isOwner'));
     }
 }

@@ -20,6 +20,7 @@ export default defineConfig({
                 'resources/js/auctions/auction-page.js',
                 'resources/js/auctions/create-auction.js',
                 'resources/js/profile.js',
+                'resources/js/user-profile.js',
                 'resources/css/auction-page.css',
                 'resources/css/messages.css',
                 'resources/css/create-auction.css',
