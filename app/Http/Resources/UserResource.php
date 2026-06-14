@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -10,8 +11,8 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         $ratingsLoaded = $this->relationLoaded('ratingsReceived');
-        $averageRating = $ratingsLoaded
-            ? round((float) $this->ratingsReceived->avg('rating'), 1)
+        $recommendationPercent = $ratingsLoaded
+            ? Rating::recommendationPercent($this->ratingsReceived)
             : null;
 
         return [
@@ -24,7 +25,7 @@ class UserResource extends JsonResource
             'isMainAdmin' => (bool) $this->isMainAdmin,
             'joinedAt' => $this->joinedAt?->toIso8601String(),
             'lastOnline' => $this->lastOnline?->toIso8601String(),
-            'averageRating' => $averageRating,
+            'recommendationPercent' => $recommendationPercent,
         ];
     }
 }
