@@ -158,6 +158,9 @@ class AuctionController extends Controller
         $phoneDigits = preg_replace('/\D/', '', $auction->user->phoneNumber);
         $displayPhone = $this->formatDisplayPhone($phoneDigits, $isOwner);
         $isJobOffer = Category::requiresApproval($auction->categoryId);
+        $isFollowed = auth()->check()
+            && (int) auth()->id() !== (int) $auction->userId
+            && auth()->user()->followedAuctions()->whereKey($auction->id)->exists();
 
         return view('auction-page', compact(
             'auction',
@@ -168,6 +171,7 @@ class AuctionController extends Controller
             'phoneDigits',
             'isOwner',
             'isJobOffer',
+            'isFollowed',
         ));
     }
 

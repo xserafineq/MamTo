@@ -45,10 +45,10 @@ class UserController extends Controller
     {
         $auctions = Auth::user()
             ->followedAuctions()
-            ->where('approved', true)
+            ->publiclyVisible()
             ->with('image')
             ->orderByDesc('Auctions.createdAt')
-            ->get();
+            ->paginate(10);
 
         return view('followed', compact('auctions'));
     }

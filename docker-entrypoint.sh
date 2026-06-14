@@ -7,6 +7,13 @@ if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
+# Dependencies must be installed before any artisan command (package discovery cache).
+echo "Installing Composer dependencies..."
+composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Drop stale provider cache after dependency changes (e.g. new packages after merge).
+rm -f bootstrap/cache/packages.php bootstrap/cache/services.php
+
 # Ensure APP_KEY is set in .env
 if ! grep -q "APP_KEY=base64:" .env || [ -z "$(grep APP_KEY= .env | cut -d'=' -f2)" ]; then
     echo "Generating Laravel application key..."

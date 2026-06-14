@@ -1,23 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const picker = document.getElementById('category-picker');
+    document.querySelectorAll('.category-picker').forEach(initCategoryPicker);
+});
 
-    if (!picker) {
-        return;
-    }
-
+function initCategoryPicker(picker) {
+    const mode = picker.dataset.mode || 'filter';
+    const isParentMode = mode === 'parent';
+    const isSelectMode = mode === 'select';
+    const showCount = picker.dataset.showCount !== 'false';
     const tree = JSON.parse(picker.dataset.categories || '[]');
+    const excludedIds = new Set(JSON.parse(picker.dataset.excludedIds || '[]').map(String));
     const selectedCategoryId = picker.dataset.selectedCategory || '';
-    const form = picker.querySelector('form');
+    const form = isParentMode || isSelectMode
+        ? picker.closest('form')
+        : picker.querySelector('form');
     const trigger = picker.querySelector('.category-picker__trigger');
     const columnsContainer = picker.querySelector('.category-picker__columns');
     const panel = picker.querySelector('.category-picker__panel');
 
-    const totalCount = tree.reduce((sum, category) => sum + (category.count ?? 0), 0);
+    if (!trigger || !columnsContainer || !panel) {
+        return;
+    }
 
-    const rootItems = [
-        { id: '', name: 'Wszystkie', children: [], count: totalCount },
-        ...tree,
-    ];
+    if (!isSelectMode && !form) {
+        return;
+    }
+
+    const filteredTree = filterTree(tree, excludedIds);
+    const rootItems = isParentMode
+        ? [{ id: '', name: 'Brak (kategoria główna)', children: filteredTree, count: 0 }]
+        : isSelectMode
+            ? [{ id: '', name: 'Brak zaznaczenia', children: filteredTree, count: 0 }]
+            : buildFilterRootItems(filteredTree);
+
+    function buildFilterRootItems(nodes) {
+        const totalCount = nodes.reduce((sum, category) => sum + (category.count ?? 0), 0);
+
+        return [
+            { id: '', name: 'Wszystkie', children: [], count: totalCount },
+            ...nodes,
+        ];
+    }
+
+    function filterTree(nodes, excludedSet) {
+        return nodes
+            .filter((node) => !excludedSet.has(String(node.id)))
+            .map((node) => ({
+                ...node,
+                children: filterTree(node.children || [], excludedSet),
+            }));
+    }
 
     function findPath(nodes, targetId, trail = []) {
         for (const node of nodes) {
@@ -39,6 +70,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
+    function getSelectionLabel(itemId) {
+        if (!itemId) {
+            if (isParentMode) {
+                return 'Brak (kategoria główna)';
+            }
+
+            if (isSelectMode) {
+                return 'Brak zaznaczenia';
+            }
+
+            return 'Wszystkie kategorie';
+        }
+
+        const path = findPath(rootItems, itemId);
+
+        if (!path || path.length <= 1) {
+            return path?.[path.length - 1]?.name ?? 'Wybrana kategoria';
+        }
+
+        return path.slice(1).map((node) => node.name).join(' > ');
+    }
+
     function submitCategory(item) {
         let categoryInput = form.querySelector('input[name="category"]');
 
@@ -56,6 +109,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         form.submit();
+    }
+
+    function selectCategory(item) {
+        const inputName = picker.dataset.inputName || 'selectedCategoryId';
+        let categoryInput = picker.querySelector(`input[name="${inputName}"]`);
+
+        if (item.id) {
+            if (!categoryInput) {
+                categoryInput = document.createElement('input');
+                categoryInput.type = 'hidden';
+                categoryInput.name = inputName;
+                picker.appendChild(categoryInput);
+            }
+
+            categoryInput.value = item.id;
+        } else if (categoryInput) {
+            categoryInput.remove();
+        }
+
+        trigger.textContent = getSelectionLabel(item.id);
+        picker.dispatchEvent(new CustomEvent('category-picker:select', {
+            bubbles: true,
+            detail: {
+                id: item.id || null,
+                name: item.id ? item.name : '',
+                imageUrl: item.imageUrl || null,
+            },
+        }));
+        closePanel();
+    }
+
+    function selectParent(item) {
+        let parentInput = form.querySelector('input[name="parentId"]');
+
+        if (item.id) {
+            if (!parentInput) {
+                parentInput = document.createElement('input');
+                parentInput.type = 'hidden';
+                parentInput.name = 'parentId';
+                form.insertBefore(parentInput, picker);
+            }
+
+            parentInput.value = item.id;
+        } else if (parentInput) {
+            parentInput.remove();
+        }
+
+        trigger.textContent = getSelectionLabel(item.id);
+        closePanel();
+    }
+
+    function handleSelection(item) {
+        if (isParentMode) {
+            selectParent(item);
+            return;
+        }
+
+        if (isSelectMode) {
+            selectCategory(item);
+            return;
+        }
+
+        submitCategory(item);
     }
 
     function clearColumnsFrom(level) {
@@ -89,11 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
             label.className = 'category-picker__label';
             label.textContent = item.name;
 
-            const count = document.createElement('span');
-            count.className = 'category-picker__count';
-            count.textContent = String(item.count ?? 0);
+            listItem.appendChild(label);
 
-            listItem.append(label, count);
+            if (showCount) {
+                const count = document.createElement('span');
+                count.className = 'category-picker__count';
+                count.textContent = String(item.count ?? 0);
+                listItem.appendChild(count);
+            }
 
             if (String(item.id) === selectedCategoryId) {
                 listItem.classList.add('is-selected');
@@ -105,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     event.stopPropagation();
 
                     if (listItem.classList.contains('is-active')) {
-                        submitCategory(item);
+                        handleSelection(item);
                         return;
                     }
 
@@ -114,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 listItem.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    submitCategory(item);
+                    handleSelection(item);
                 });
             }
 
@@ -172,6 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
         columnsContainer.innerHTML = '';
     }
 
+    trigger.textContent = picker.dataset.selectedLabel || getSelectionLabel(selectedCategoryId);
+
     trigger.addEventListener('click', (event) => {
         event.stopPropagation();
 
@@ -187,4 +308,4 @@ document.addEventListener('DOMContentLoaded', () => {
             closePanel();
         }
     });
-});
+}

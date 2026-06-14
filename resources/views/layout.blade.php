@@ -40,7 +40,11 @@
             <button type="button" id="filter-btn"><img src="{{ asset('assets/fi-ss-filter.png')}}" alt=""></button>
         </form>
         <ul id="menu">
-            <li><img src="{{ asset('assets/fi-bs-heart.png') }}" alt="favourites"/></li>
+            <li>
+                <a href="{{ auth()->check() ? route('followed.index') : route('login') }}">
+                    <img src="{{ asset('assets/fi-bs-heart.png') }}" alt="Obserwowane"/>
+                </a>
+            </li>
             <li>
                 <a href="{{ auth()->check() ? route('chats.index') : route('login') }}">
                     <img src="{{ asset('assets/messages.png') }}" alt="messages"/>

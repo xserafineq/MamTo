@@ -13,7 +13,7 @@ class FollowedAuctionController extends Controller
     {
         $auctions = request()->user()
             ->followedAuctions()
-            ->where('approved', true)
+            ->publiclyVisible()
             ->with(['image', 'category', 'user'])
             ->orderByDesc('Auctions.createdAt')
             ->get();

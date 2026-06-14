@@ -8,17 +8,39 @@
     align-items: center;
 }
 
+#followed-header {
+    width: 95%;
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.followed-empty {
+    font-size: 18px;
+    color: #505050;
+    text-align: center;
+}
+
 #filters {
     width: 75%;
+    max-width: 1200px;
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
     margin: auto;
     padding: 10px;
+    box-sizing: border-box;
 }
 
 #filters-left {
     display: flex;
+    flex-wrap: wrap;
     gap: 24px;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 #sortby,
@@ -29,6 +51,15 @@
     font-weight: bold;
     font-size: 22px;
     gap: 5px;
+    min-width: 0;
+}
+
+#sortby select,
+.category-picker,
+.category-picker__trigger,
+#city-filter form,
+.city-filter__inputs {
+    width: 100%;
 }
 
 .city-search {
@@ -54,7 +85,8 @@
     font-size: 18px;
     font-weight: 550;
     padding: 5px 12px;
-    min-height: 36px;
+    min-height: 50px;
+    height: 50px;
     width: 80px;
     box-sizing: border-box;
     text-align: center;
@@ -75,7 +107,8 @@
     font-size: 18px;
     font-weight: 550;
     padding: 5px 12px;
-    min-height: 36px;
+    min-height: 50px;
+    height: 50px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -138,7 +171,8 @@
     font-size: 18px;
     font-weight: 550;
     padding: 5px 12px;
-    min-height: 36px;
+    min-height: 50px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -233,17 +267,23 @@
     flex-direction: column;
     font-weight: bold;
     font-size: 22px;
+    gap: 5px;
+    flex-shrink: 0;
 }
 
 #price-inputs {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 #price-inputs input {
     border: 2px solid #0066FF;
     border-radius: 10px;
     font-size: 18px;
-    padding: 5px;
+    padding: 5px 12px;
+    min-height: 50px;
+    height: 50px;
+    box-sizing: border-box;
     text-align: center;
     background-color: white;
     width: 80px;
@@ -263,11 +303,17 @@
     border-radius: 10px;
     font-size: 18px;
     font-weight: 550;
-    padding: 5px 12px;
-    min-height: 36px;
+    padding: 5px 32px 5px 12px;
+    height: 50px;
     box-sizing: border-box;
-    text-align: center;
+    text-align: left;
     background-color: white;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230066FF' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
 }
 
 .searched-auction-card {
@@ -368,12 +414,118 @@
 
 
 @media screen and (max-width: 1100px) {
+    #filters {
+        width: 95%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #filters-left {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 20px;
+        width: 100%;
+    }
+
+    #city-filter {
+        grid-column: 1 / -1;
+    }
+
+    #price {
+        width: 100%;
+    }
+
+    #price-inputs input {
+        flex: 1 1 120px;
+        min-width: 0;
+    }
+
     .searched-auction-card {
         flex-direction: column;
         height: auto !important;
     }
+
     .searched-auction-img {
         width: auto;
         height: auto;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    #filters {
+        width: 100%;
+        padding: 16px;
+        gap: 16px;
+    }
+
+    #filters-left {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    #sortby,
+    #category-filter,
+    #city-filter,
+    #price {
+        font-size: 18px;
+    }
+
+    .category-picker {
+        min-width: 0;
+    }
+
+    .category-picker__trigger {
+        min-height: 44px;
+        height: auto;
+    }
+
+    #filters select,
+    #city-search,
+    #city-distance,
+    #price-inputs input {
+        min-height: 44px;
+        height: 44px;
+        font-size: 16px;
+    }
+
+    .city-filter__inputs {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .city-search {
+        min-width: 0;
+    }
+
+    #city-distance {
+        width: 72px;
+        flex-shrink: 0;
+    }
+
+    #price-inputs {
+        width: 100%;
+    }
+
+    #price-inputs input {
+        flex: 1 1 calc(50% - 5px);
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .city-filter__inputs {
+        flex-direction: column;
+    }
+
+    #city-distance {
+        width: 100%;
+    }
+
+    #price-inputs {
+        flex-direction: column;
+    }
+
+    #price-inputs input {
+        width: 100%;
     }
 }

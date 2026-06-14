@@ -305,6 +305,10 @@
     fill: none;
 }
 
+.btn-like.is-followed svg {
+    fill: #0066ff;
+}
+
 .btn-message {
     display: inline-block;
     text-align: center;
