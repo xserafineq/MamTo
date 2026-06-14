@@ -22,13 +22,7 @@ class AdminUserController extends Controller
         $query = User::query()->withCount('auctions');
 
         if ($request->filled('q')) {
-            $search = $request->input('q');
-            $query->where(function ($builder) use ($search) {
-                $builder->where('email', 'ilike', '%'.$search.'%')
-                    ->orWhere('firstName', 'ilike', '%'.$search.'%')
-                    ->orWhere('lastName', 'ilike', '%'.$search.'%')
-                    ->orWhere('phoneNumber', 'ilike', '%'.$search.'%');
-            });
+            $query->matchingSearch($request->input('q'));
         }
 
         $users = $query

@@ -8,6 +8,7 @@ use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -21,14 +22,24 @@ class AdminController extends Controller
     }
 
     // Wszystkie aukcje w systemie
-    public function auctions(): View
+    public function auctions(Request $request): View
     {
         $activeCount = Auction::where('status', 'aktywna')->count();
         $closedCount = Auction::where('status', 'zakończona')->count();
 
-        $auctions = Auction::with(['image', 'user'])
-            ->latest('createdAt')
-            ->paginate(15);
+        $query = Auction::with(['image', 'user'])->latest('createdAt');
+
+        if ($request->filled('q')) {
+            $search = $request->input('q');
+
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name', 'ilike', '%'.$search.'%')
+                    ->orWhere('location', 'ilike', '%'.$search.'%')
+                    ->orWhereHas('user', fn ($userQuery) => $userQuery->matchingSearch($search));
+            });
+        }
+
+        $auctions = $query->paginate(15)->withQueryString();
 
         return view('admin.auctions', compact('auctions', 'activeCount', 'closedCount'));
     }

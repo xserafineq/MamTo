@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -67,5 +68,19 @@ class User extends Authenticatable
     {
         return $this->joinedAt !== null
             && $this->joinedAt->lte(now()->subMonths($months));
+    }
+
+    public function scopeMatchingSearch(Builder $query, string $search): Builder
+    {
+        $like = '%'.$search.'%';
+
+        return $query->where(function (Builder $builder) use ($like) {
+            $builder->where('email', 'ilike', $like)
+                ->orWhere('firstName', 'ilike', $like)
+                ->orWhere('lastName', 'ilike', $like)
+                ->orWhere('phoneNumber', 'ilike', $like)
+                ->orWhereRaw('CONCAT("firstName", \' \', "lastName") ILIKE ?', [$like])
+                ->orWhereRaw('CONCAT("lastName", \' \', "firstName") ILIKE ?', [$like]);
+        });
     }
 }

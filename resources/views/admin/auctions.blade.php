@@ -21,6 +21,20 @@
             <div class="alert alert-success py-2 small" role="alert">{{ session('success') }}</div>
         @endif
 
+        <form method="GET" action="{{ route('admin.auctions.index') }}" class="admin-panel-users-search">
+            <input
+                type="search"
+                name="q"
+                class="form-control"
+                placeholder="Szukaj po tytule, lokalizacji, imieniu, nazwisku lub e-mailu sprzedawcy…"
+                value="{{ request('q') }}"
+            >
+            <button type="submit" class="btn btn-primary">Szukaj</button>
+            @if (request('q'))
+                <a href="{{ route('admin.auctions.index') }}" class="btn btn-outline-secondary">Wyczyść</a>
+            @endif
+        </form>
+
         @forelse($auctions as $auction)
             <article class="my-auctions-card {{ $auction->status !== 'aktywna' ? 'my-auctions-card--closed' : '' }}">
                 <a href="{{ route('auctions.show', $auction) }}" class="my-auctions-card__link">
