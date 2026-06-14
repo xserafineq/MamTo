@@ -26,6 +26,10 @@ Route::get('/', function () {
 
 Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.index');
 
+Route::get('/users/{user}', [UserController::class, 'show'])
+    ->whereNumber('user')
+    ->name('users.show');
+
 Route::middleware('auth')->group(function () {
     Route::get('/auctions/create', [AuctionController::class, 'create'])->name('auctions.create');
     Route::post('/auctions/create', [AuctionController::class, 'store'])->name('auctions.store');
