@@ -17,6 +17,43 @@
                 <p class="user-profile-joined">
                     Dołączył: {{ $user->joinedAt?->format('d.m.Y') ?? '—' }}
                 </p>
+                @if($recommendationPercent !== null)
+                    <div id="rating" data-recommendation-percent="{{ $recommendationPercent }}">
+                        {{ $recommendationPercent }}% oceniających poleca
+                    </div>
+                @else
+                    <div id="rating" data-recommendation-percent="" hidden></div>
+                @endif
+
+                @auth
+                    @if(! $isOwner)
+                        <div
+                            id="seller-rating-actions"
+                            class="seller-rating-actions"
+                            data-rate-url="{{ route('users.rating.store', $user) }}"
+                            data-csrf="{{ csrf_token() }}"
+                            data-user-rating="{{ $userRating ?? '' }}"
+                            data-can-rate="{{ $canRateSeller ? '1' : '0' }}"
+                        >
+                            <button
+                                type="button"
+                                class="btn-rate btn-rate--recommend @if($userRating === 1) is-selected @endif"
+                                data-rating="1"
+                                @if(! $canRateSeller) disabled @endif
+                            >
+                                polecam
+                            </button>
+                            <button
+                                type="button"
+                                class="btn-rate btn-rate--not-recommend @if($userRating === 0) is-selected @endif"
+                                data-rating="0"
+                                @if(! $canRateSeller) disabled @endif
+                            >
+                                nie polecam
+                            </button>
+                        </div>
+                    @endif
+                @endauth
             </div>
         </div>
 
@@ -57,3 +94,7 @@
         @endif
     </section>
 @endsection
+
+@push('scripts')
+    @vite(['resources/js/user-profile.js'])
+@endpush

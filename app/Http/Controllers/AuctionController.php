@@ -137,29 +137,13 @@ class AuctionController extends Controller
             abort(404);
         }
 
-        $auction->load(['user.ratingsReceived', 'image', 'additionalImages']);
+        $auction->load(['user', 'image', 'additionalImages']);
 
         $images = collect([$auction->image])
             ->merge($auction->additionalImages)
             ->filter()
             ->unique('id')
             ->values();
-
-        $sellerRatings = $auction->user->ratingsReceived;
-        $recommendationPercent = Rating::recommendationPercent($sellerRatings);
-
-        $userRating = null;
-        $canRateSeller = false;
-
-        if (auth()->check() && ! $isOwner) {
-            $userRating = $sellerRatings
-                ->where('userId', auth()->id())
-                ->first()
-                ?->rating;
-
-            $canRateSeller = $userRating === null
-                && auth()->user()->hasAccountOlderThanMonths(3);
-        }
 
         $otherAuctions = Auction::with('image')
             ->where('userId', $auction->userId)
@@ -180,9 +164,6 @@ class AuctionController extends Controller
         return view('auction-page', compact(
             'auction',
             'images',
-            'recommendationPercent',
-            'userRating',
-            'canRateSeller',
             'otherAuctions',
             'displayPhone',
             'phoneDigits',

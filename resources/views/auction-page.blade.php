@@ -80,44 +80,8 @@
                                     {{ $displayPhone }}
                                 @endif
                             </div>
-                            @if($recommendationPercent !== null)
-                                <div id="rating" data-recommendation-percent="{{ $recommendationPercent }}">
-                                    {{ $recommendationPercent }}% oceniających poleca
-                                </div>
-                            @else
-                                <div id="rating" data-recommendation-percent="" hidden></div>
-                            @endif
                         </div>
                     </div>
-                    @auth
-                        @if(! $isOwner)
-                            <div
-                                id="seller-rating-actions"
-                                class="seller-rating-actions"
-                                data-rate-url="{{ route('users.rating.store', $auction->user) }}"
-                                data-csrf="{{ csrf_token() }}"
-                                data-user-rating="{{ $userRating ?? '' }}"
-                                data-can-rate="{{ $canRateSeller ? '1' : '0' }}"
-                            >
-                                <button
-                                    type="button"
-                                    class="btn-rate btn-rate--recommend @if($userRating === 1) is-selected @endif"
-                                    data-rating="1"
-                                    @if(! $canRateSeller) disabled @endif
-                                >
-                                    polecam
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn-rate btn-rate--not-recommend @if($userRating === 0) is-selected @endif"
-                                    data-rating="0"
-                                    @if(! $canRateSeller) disabled @endif
-                                >
-                                    nie polecam
-                                </button>
-                            </div>
-                        @endif
-                    @endauth
                 </div>
                 <div id="extra-info">
                     <div id="extra-info-location-date">
