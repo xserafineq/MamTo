@@ -4,6 +4,10 @@
     @vite(['resources/css/home.css'])
 @endpush
 
+@push('scripts')
+    @vite(['resources/js/home-latest-auctions.js'])
+@endpush
+
 @section('content')
     <header>
         <div id="header-text-box">
@@ -49,20 +53,11 @@
     </section>
     <section id="newest-auctions">
         <div class="section-text-title">Najnowsze <span style="color: #0066FF">Aukcje</span></div>
-        <div id="auctions-box">
-            @forelse($newestAuctions as $auction)
-                <div class="newest-auction-card">
-                    <img
-                        src="{{ $auction->image?->file_url ?? asset('assets/placeholder.png') }}"
-                        alt="{{ $auction->name }}"
-                    />
-                    <div class="auction-title">{{ $auction->name }}</div>
-                    <a href="{{ route('auctions.show', $auction) }}" class="check-auction-btn">Sprawdź</a>
-                    <div class="auction-price">{{ number_format($auction->price, 0, ',', ' ') }} zł</div>
-                </div>
-            @empty
-                <p>Brak aukcji.</p>
-            @endforelse
+        <div
+            id="auctions-box"
+            data-placeholder-url="{{ asset('assets/placeholder.png') }}"
+        >
+            <p class="home-auctions-loading">Ładowanie aukcji…</p>
         </div>
     </section>
 @endsection

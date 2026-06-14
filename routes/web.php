@@ -3,6 +3,7 @@
 use App\Http\Controllers\FollowedAuctionController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\ChatController;
@@ -18,13 +19,7 @@ Route::get('/', function () {
         ->whereNull('parentId')
         ->get();
 
-    $newestAuctions = Auction::with('image')
-        ->publiclyVisible()
-        ->latest('createdAt')
-        ->limit(6)
-        ->get();
-
-    return view('home', compact('categories', 'newestAuctions'));
+    return view('home', compact('categories'));
 });
 
 
@@ -57,12 +52,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/approvals/{auction}/approve', [AdminController::class, 'approve'])->name('approvals.approve')->whereNumber('auction');
         Route::get('/administrators', [AdminController::class, 'administrators'])->name('administrators.index');
         Route::put('/administrators/{user}/permissions', [AdminController::class, 'updatePermissions'])->name('administrators.permissions.update')->whereNumber('user');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit')->whereNumber('user');
+        Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update')->whereNumber('user');
+        Route::put('/users/{user}/permissions', [AdminUserController::class, 'updatePermissions'])->name('users.permissions.update')->whereNumber('user');
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy')->whereNumber('user');
         Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->name('categories.update')->whereNumber('category');
         Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy')->whereNumber('category');
         Route::get('/auctions/{auction}/edit', [AuctionController::class, 'adminEdit'])->name('auctions.edit')->whereNumber('auction');
         Route::put('/auctions/{auction}', [AuctionController::class, 'adminUpdate'])->name('auctions.update')->whereNumber('auction');
+        Route::delete('/auctions/{auction}', [AdminController::class, 'destroy'])->name('auctions.destroy')->whereNumber('auction');
     });
 });
 

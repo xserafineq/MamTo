@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminUpdatePermissionsRequest;
 use App\Models\Auction;
+use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    // Panel administratora
-    public function index(): View
+    // Panel administratora — przekierowanie na listę aukcji
+    public function index(): RedirectResponse
     {
-        return view('admin-panel');
+        return redirect()->route('admin.auctions.index');
     }
 
     // Wszystkie aukcje w systemie
@@ -55,6 +58,26 @@ class AdminController extends Controller
         return redirect()
             ->route('admin.approvals.index')
             ->with('success', 'Aukcja została zaakceptowana i jest widoczna publicznie.');
+    }
+
+    public function destroy(Auction $auction): RedirectResponse
+    {
+        DB::transaction(function () use ($auction) {
+            $chatIds = Chat::where('auctionId', $auction->id)->pluck('id');
+
+            if ($chatIds->isNotEmpty()) {
+                Message::whereIn('chatId', $chatIds)->delete();
+                Chat::whereIn('id', $chatIds)->delete();
+            }
+
+            $auction->followers()->detach();
+            $auction->additionalImages()->detach();
+            $auction->delete();
+        });
+
+        return redirect()
+            ->route('admin.auctions.index')
+            ->with('success', 'Aukcja została usunięta.');
     }
 
     // Pozostali administratorzy systemu

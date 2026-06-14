@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/css/forms.css',
                 'resources/css/home.css',
+                'resources/js/home-latest-auctions.js',
                 'resources/css/auctions.css',
                 'resources/js/app.js',
                 'resources/js/auth/login.js',
