@@ -45,12 +45,16 @@ echo "Could not connect to database after 60 seconds!\n";
 exit(1);
 '
 
-# Run migrations
 echo "Running database migrations..."
 php artisan migrate --force
-
+USER_COUNT=$(php artisan tinker --execute="echo \App\Models\User::count();" 2>/dev/null | tail -1)
+if [ "$USER_COUNT" = "0" ]; then
+    echo "Seeding database (empty database)..."
+    php artisan db:seed --force
+else
+    echo "Database already has data — skipping seed."
+fi
 # Public link to storage (uploaded images)
 php artisan storage:link --force
-
 # Execute the main command (e.g. apache2-foreground)
 exec "$@"
