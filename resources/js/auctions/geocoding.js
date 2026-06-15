@@ -15,6 +15,7 @@ const EXCLUDED_CITY_CLASSES = new Set([
     'shop',
 ]);
 
+// Sprawdza, czy wynik wyszukiwania z API reprezentuje miejscowość
 export function isCitySearchResult(result) {
     if (EXCLUDED_CITY_CLASSES.has(result.class)) {
         return false;
@@ -33,6 +34,7 @@ export function isCitySearchResult(result) {
     return false;
 }
 
+// Formatuje adres do krótkiej, czytelnej postaci (np. ulica i miasto)
 export function formatShortLocation(address) {
     if (!address || typeof address !== 'object') {
         return null;
@@ -70,6 +72,7 @@ export function formatShortLocation(address) {
     return null;
 }
 
+// Wyciąga z obiektu adresu tylko nazwę miasta/miejscowości
 export function formatCityLocation(address) {
     if (!address || typeof address !== 'object') {
         return null;
@@ -82,12 +85,14 @@ export function formatCityLocation(address) {
         || null;
 }
 
+// Generuje czytelną etykietę tekstową dla wyniku wyszukiwania
 export function locationLabelFromResult(result) {
     return formatShortLocation(result.address)
         || result.display_name?.split(',').slice(0, 2).join(',').trim()
         || null;
 }
 
+// Zwraca nazwę miasta, jeśli wynik reprezentuje miejscowość
 export function cityLabelFromResult(result) {
     if (!isCitySearchResult(result)) {
         return null;
@@ -96,10 +101,12 @@ export function cityLabelFromResult(result) {
     return result.name || formatCityLocation(result.address);
 }
 
+// Normalizuje tekst lokalizacji (usuwa spacje i zamienia na małe litery)
 export function normalizeLocationText(value) {
     return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+// Tworzy listę wyników z wygenerowanymi etykietami tekstowymi
 export function buildLabeledResults(results, labelFn = locationLabelFromResult) {
     return results
         .map((result) => ({
@@ -109,6 +116,7 @@ export function buildLabeledResults(results, labelFn = locationLabelFromResult) 
         .filter((item) => item.label);
 }
 
+// Zwraca priorytet sortowania dla danego typu miejscowości
 function placeTypePriority(result) {
     if (result.class === 'place' && result.type in PLACE_TYPE_PRIORITY) {
         return PLACE_TYPE_PRIORITY[result.type];
@@ -117,6 +125,7 @@ function placeTypePriority(result) {
     return 99;
 }
 
+// Sortuje wyniki wyszukiwania miast według dopasowania i ważności
 function sortCityResults(results, query = '') {
     const normalizedQuery = normalizeLocationText(query);
 
@@ -143,6 +152,7 @@ function sortCityResults(results, query = '') {
     });
 }
 
+// Zwraca unikalną listę miast na podstawie nazwy
 export function buildUniqueCityResults(results, query = '') {
     const seen = new Set();
     const items = [];
@@ -160,13 +170,15 @@ export function buildUniqueCityResults(results, query = '') {
             continue;
         }
 
-        seen.add(key);
+        const keySeen = key;
+        seen.add(keySeen);
         items.push({ result, label });
     }
 
     return items;
 }
 
+// Wyszukuje miejscowości w Polsce na podstawie zapytania tekstowego
 export async function searchCities(query, { limit = 15 } = {}) {
     const params = new URLSearchParams({
         format: 'json',
@@ -189,6 +201,7 @@ export async function searchCities(query, { limit = 15 } = {}) {
     return results.filter(isCitySearchResult);
 }
 
+// Wyszukuje dowolne lokalizacje w Polsce na podstawie zapytania
 export async function searchLocations(query, { limit = 5 } = {}) {
     const params = new URLSearchParams({
         format: 'json',
@@ -208,6 +221,7 @@ export async function searchLocations(query, { limit = 5 } = {}) {
     return response.json();
 }
 
+// Wykonuje geokodowanie odwrotne (współrzędne na adres)
 export async function reverseGeocode(lat, lng) {
     const params = new URLSearchParams({
         format: 'json',

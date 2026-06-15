@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FollowedAuctionController;
+use App\Http\Controllers\AdminImageController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminUserController;
@@ -67,6 +68,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->name('categories.update')->whereNumber('category');
         Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy')->whereNumber('category');
+        Route::get('/images', [AdminImageController::class, 'index'])->name('images.index');
+        Route::put('/images/{image}', [AdminImageController::class, 'update'])->name('images.update')->whereNumber('image');
+        Route::delete('/images/{image}', [AdminImageController::class, 'destroy'])->name('images.destroy')->whereNumber('image');
         Route::get('/auctions/{auction}/edit', [AuctionController::class, 'adminEdit'])->name('auctions.edit')->whereNumber('auction');
         Route::put('/auctions/{auction}', [AuctionController::class, 'adminUpdate'])->name('auctions.update')->whereNumber('auction');
         Route::delete('/auctions/{auction}', [AdminController::class, 'destroy'])->name('auctions.destroy')->whereNumber('auction');

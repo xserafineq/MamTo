@@ -3,19 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\Image;
+use App\Services\ImageService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ImageSeeder extends Seeder
 {
-    private const UUID = '11111111-1111-4111-8111-111111111111';
-
     private const FILENAME = 'placeholder.png';
 
     public function run(): void
     {
-        $diskName = self::UUID . '.png';
+        $uuid = ImageService::PLACEHOLDER_UUID;
+        $diskName = $uuid . '.png';
         $targetPath = 'images/' . $diskName;
         $source = public_path('assets/placeholder.png');
 
@@ -30,7 +30,7 @@ class ImageSeeder extends Seeder
         }
 
         Image::firstOrCreate(
-            ['uuid' => self::UUID],
+            ['uuid' => $uuid],
             [
                 'filename' => self::FILENAME,
                 'uploadedAt' => now(),

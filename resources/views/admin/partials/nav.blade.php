@@ -36,4 +36,10 @@
     >
         Kategorie
     </a>
+    <a
+        href="{{ route('admin.images.index') }}"
+        class="admin-panel-nav-link {{ request()->routeIs('admin.images.*') ? 'is-active' : '' }}"
+    >
+        Zdjęcia
+    </a>
 </nav>
