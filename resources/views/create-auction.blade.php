@@ -105,20 +105,22 @@
         ])
 
         <div class="location-field form-field @if($errors->hasAny(['location', 'latitude', 'longitude'])) has-field-error @endif">
-            <input
-                type="text"
-                name="location"
-                id="location"
-                class="form-control @if($errors->hasAny(['location', 'latitude', 'longitude'])) is-invalid @endif"
-                placeholder="Lokalizacja (kliknij na mapie)"
-                data-auction-placeholder="Lokalizacja (kliknij na mapie)"
-                data-job-placeholder="Miejsce pracy (kliknij na mapie)"
-                value="{{ old('location') }}"
-                maxlength="200"
-                autocomplete="off"
-                required
-            >
-            <div id="location-suggestions" class="location-suggestions"></div>
+            <div class="location-input-wrap">
+                <input
+                    type="text"
+                    name="location"
+                    id="location"
+                    class="form-control @if($errors->hasAny(['location', 'latitude', 'longitude'])) is-invalid @endif"
+                    placeholder="Lokalizacja (kliknij na mapie)"
+                    data-auction-placeholder="Lokalizacja (kliknij na mapie)"
+                    data-job-placeholder="Miejsce pracy (kliknij na mapie)"
+                    value="{{ old('location') }}"
+                    maxlength="200"
+                    autocomplete="off"
+                    required
+                >
+                <div id="location-suggestions" class="location-suggestions"></div>
+            </div>
             <div id="map" class="location-map"></div>
             <input type="hidden" id="lat" name="latitude" value="{{ old('latitude') }}">
             <input type="hidden" id="lng" name="longitude" value="{{ old('longitude') }}">

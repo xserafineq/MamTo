@@ -178,6 +178,10 @@ form input:not([type="file"]):not([type="hidden"]), form textarea, form select {
 }
 
 .location-field {
+    width: 100%;
+}
+
+.location-input-wrap {
     position: relative;
     width: 100%;
 }

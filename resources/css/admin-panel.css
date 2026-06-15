@@ -1,11 +1,7 @@
 .admin-panel {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 60px auto;
     padding: 0 20px;
-}
-
-.admin-panel--wide {
-    max-width: 1200px;
 }
 
 .admin-panel h1 {

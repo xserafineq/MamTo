@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-    <section class="admin-panel admin-panel--wide">
+    <section class="admin-panel">
         <h1>Zdjęcia</h1>
 
         <p class="admin-panel-desc">
