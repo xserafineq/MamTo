@@ -8,7 +8,7 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   </head>
   <body>
-    <nav>
+    <nav id="site-nav">
         <div id="logo">
             <a href="/">
                 <img src="{{ asset('assets/logo.png') }}" alt="logo"/>

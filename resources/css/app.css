@@ -18,9 +18,9 @@ body {
     white-space: nowrap;
 }
 
-nav {
+#site-nav {
     position: relative;
-    z-index: 1030;
+    z-index: 10;
     display: flex;
     flex-direction: row;
     width: 100%;
