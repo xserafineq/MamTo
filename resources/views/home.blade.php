@@ -43,6 +43,7 @@
                     <img
                         src="{{ $category->image?->file_url ?? asset('assets/default-category.png') }}"
                         alt="{{ $category->name }}"
+                        style="max-width: 130px"
                     />
                     <div class="category-title">{{ $category->name }}</div>
                 </a>
