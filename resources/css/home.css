@@ -296,15 +296,19 @@
     .center-hexagon {
         display: none;
     }
+    #header-text {
+        font-size: 42px;
+    }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 850px) {
     #header-text {
-        font-size: 40px;
+        font-size: 38px;
     }
 
     #car-img img {
-        width: 520px;
+        width: 400px;
+        height: 350px;
         max-width: none;
     }
 }
