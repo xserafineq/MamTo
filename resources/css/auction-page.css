@@ -350,25 +350,52 @@
     transform: translateY(-1px);
 }
 
+#description-container {
+    width: 100%;
+    margin-top: 28px;
+    display: flex;
+    justify-content: flex-start;
+}
+
 #description {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
-    border: 3px solid #3b82f6;
-    padding: 15px;
-    font-weight: 550;
-    font-size: 20px;
-    border-radius: 10px;
-    height: auto;
-    color: #323232;
     width: 100%;
+    max-width: 720px;
+    border: 1px solid #e5e7eb;
+    background: #fafbfc;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 #description-head {
-    font-weight: bold;
-    font-size: 25px;
-    margin-bottom: 10px;
-    color: black;
+    padding: 16px 20px;
+    font-weight: 700;
+    font-size: 18px;
+    color: #111;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.auction-description__body {
+    padding: 18px 20px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #333;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.auction-description__empty {
+    margin: 0;
+    padding: 18px 20px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #888;
+    font-style: italic;
 }
 
 
