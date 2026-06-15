@@ -32,6 +32,7 @@ class ChatResource extends JsonResource
             'otherParticipant' => $otherParticipant,
             'lastMessage' => $lastMessage,
             'isUnread' => (bool) ($this->isUnread ?? false),
+            'unreadCount' => (int) ($this->unreadCount ?? 0),
             'messages' => $this->whenLoaded(
                 'messages',
                 fn () => MessageResource::collection($this->messages),
