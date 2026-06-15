@@ -50,7 +50,9 @@ php artisan migrate --force
 USER_COUNT=$(php artisan tinker --execute="echo \App\Models\User::count();" 2>/dev/null | tail -1)
 if [ "$USER_COUNT" = "0" ]; then
     echo "Seeding database (empty database)..."
-    php artisan db:seed --force
+    if ! bash /var/www/html/docker/seed-db.sh; then
+        echo "WARNING: Database seed failed — container will continue starting."
+    fi
 else
     echo "Database already has data — skipping seed."
 fi
