@@ -10,6 +10,7 @@ zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny 
 - [Podział zadań](#podział-zadań)
 - [Technologie](#technologie)
 - [Przeznaczenie aplikacji](#przeznaczenie-aplikacji)
+- [Funkcjonalności](#funkcjonalności)
 - [Diagram ERD](#diagram-erd)
 - [Uruchomienie](#uruchomienie)
 - [Wybrany przebieg działania aplikacji](#wybrany-przebieg-działania-aplikacji)
@@ -42,6 +43,8 @@ zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny 
 ## Przeznaczenie aplikacji
 
 Głównym celem jest stworzenie miejsca w internecie, gdzie zwykli ludzie (albo małe firmy) mogą bez żadnych opłat wystawić na sprzedaż swoje stare meble, ubrania czy elektronikę, a inni mogą te rzeczy łatwo znaleźć i kupić.
+
+## Funkcjonalności
 
 ### Ogłoszenia i wyszukiwanie
 
