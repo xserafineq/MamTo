@@ -16,6 +16,11 @@ class Chat extends Model
         'auctionId',
         'sellerId',
         'buyerId',
+        'archived',
+    ];
+
+    protected $casts = [
+        'archived' => 'boolean',
     ];
 
     public function auction(): BelongsTo
@@ -36,5 +41,10 @@ class Chat extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class, 'chatId');
+    }
+
+    public function scopeVisible($query)
+    {
+        return $query->where('archived', false);
     }
 }

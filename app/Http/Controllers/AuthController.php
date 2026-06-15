@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         User::whereKey(Auth::id())->update(['lastOnline' => now()]);
 
-        return redirect()->intended('/');
+        return redirect()->intended('/')->with('login_toast', true);
     }
 
     // Formularz rejestracji
@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect('/')->with('success', 'Konto zostało utworzone. Witaj!');
+        return redirect('/')->with('login_toast', true);
     }
 
     // Wylogowanie i unieważnienie sesji
@@ -71,6 +71,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')->with('logout_toast', true);
     }
 }

@@ -26,6 +26,7 @@ class AdminUserController extends Controller
         }
 
         $users = $query
+            ->with('ratingsReceived')
             ->orderBy('lastName')
             ->orderBy('firstName')
             ->paginate(12)
@@ -51,6 +52,38 @@ class AdminUserController extends Controller
             'user' => $user,
             'returnQuery' => request()->only('q', 'page'),
         ]);
+    }
+
+    public function ratings(Request $request, User $user): View
+    {
+        $ratings = Rating::query()
+            ->where('sellerId', $user->id)
+            ->whereNotNull('rating')
+            ->with('reviewer')
+            ->latest('id')
+            ->get();
+
+        $recommendationPercent = Rating::recommendationPercent($ratings);
+
+        return view('admin.users-ratings', [
+            'user' => $user,
+            'ratings' => $ratings,
+            'recommendationPercent' => $recommendationPercent,
+            'returnQuery' => $request->only('q', 'page'),
+        ]);
+    }
+
+    public function destroyRating(Request $request, User $user, Rating $rating): RedirectResponse
+    {
+        if ((int) $rating->sellerId !== (int) $user->id) {
+            abort(404);
+        }
+
+        $rating->delete();
+
+        return redirect()
+            ->route('admin.users.ratings.index', array_merge(['user' => $user], $request->only('q', 'page')))
+            ->with('success', 'Polecenie zostało usunięte.');
     }
 
     public function update(AdminUpdateUserRequest $request, User $user): RedirectResponse

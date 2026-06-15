@@ -8,6 +8,15 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   </head>
   <body>
+    @if (session('login_toast'))
+        <div id="auth-toast" class="auth-toast auth-toast--login" role="status" aria-live="polite">
+            Zalogowano pomyślnie !
+        </div>
+    @elseif (session('logout_toast'))
+        <div id="auth-toast" class="auth-toast auth-toast--logout" role="status" aria-live="polite">
+            Wylogowano
+        </div>
+    @endif
     <nav id="site-nav">
         <div id="logo">
             <a href="/">
@@ -95,5 +104,15 @@
         <div id="authors"><script>document.write("Copyright " + new Date().getFullYear())</script> <div>Mateusz Serafin <br> Przemysław Sulowski</div></div>
   </footer>
   @stack('scripts')
+  @if (session('login_toast') || session('logout_toast'))
+      <script>
+          setTimeout(() => {
+              const toast = document.getElementById('auth-toast');
+              if (toast) {
+                  toast.remove();
+              }
+          }, 4000);
+      </script>
+  @endif
   </body>
 </html>

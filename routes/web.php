@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FollowedAuctionController;
 use App\Http\Controllers\AdminImageController;
+use App\Http\Controllers\AdminAuctionMessageController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminUserController;
@@ -60,6 +61,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/administrators', [AdminController::class, 'administrators'])->name('administrators.index');
         Route::put('/administrators/{user}/permissions', [AdminController::class, 'updatePermissions'])->name('administrators.permissions.update')->whereNumber('user');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}/ratings', [AdminUserController::class, 'ratings'])->name('users.ratings.index')->whereNumber('user');
+        Route::delete('/users/{user}/ratings/{rating}', [AdminUserController::class, 'destroyRating'])->name('users.ratings.destroy')->whereNumber(['user', 'rating']);
         Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit')->whereNumber('user');
         Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update')->whereNumber('user');
         Route::put('/users/{user}/permissions', [AdminUserController::class, 'updatePermissions'])->name('users.permissions.update')->whereNumber('user');
@@ -71,6 +74,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/images', [AdminImageController::class, 'index'])->name('images.index');
         Route::put('/images/{image}', [AdminImageController::class, 'update'])->name('images.update')->whereNumber('image');
         Route::delete('/images/{image}', [AdminImageController::class, 'destroy'])->name('images.destroy')->whereNumber('image');
+        Route::get('/auctions/{auction}/messages', [AdminAuctionMessageController::class, 'index'])->name('auctions.messages.index')->whereNumber('auction');
+        Route::delete('/auctions/{auction}/chats/{chat}', [AdminAuctionMessageController::class, 'destroyChat'])->name('auctions.chats.destroy')->whereNumber(['auction', 'chat']);
+        Route::post('/auctions/{auction}/chats/{chat}/archive', [AdminAuctionMessageController::class, 'archiveChat'])->name('auctions.chats.archive')->whereNumber(['auction', 'chat']);
+        Route::post('/auctions/{auction}/chats/{chat}/unarchive', [AdminAuctionMessageController::class, 'unarchiveChat'])->name('auctions.chats.unarchive')->whereNumber(['auction', 'chat']);
         Route::get('/auctions/{auction}/edit', [AuctionController::class, 'adminEdit'])->name('auctions.edit')->whereNumber('auction');
         Route::put('/auctions/{auction}', [AuctionController::class, 'adminUpdate'])->name('auctions.update')->whereNumber('auction');
         Route::delete('/auctions/{auction}', [AdminController::class, 'destroy'])->name('auctions.destroy')->whereNumber('auction');

@@ -12,10 +12,27 @@ body {
     font-family: Inter, system-ui, sans-serif;
 }
 
-.auction-own-badge {
-    font-size: 12px;
+.auth-toast {
+    position: fixed;
+    top: 88px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    padding: 14px 28px;
+    background-color: #ffffff;
+    font-size: 15px;
     font-weight: 600;
-    white-space: nowrap;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+}
+
+.auth-toast--login {
+    color: #0066FF;
+}
+
+.auth-toast--logout {
+    color: #e43d3d;
 }
 
 #site-nav {

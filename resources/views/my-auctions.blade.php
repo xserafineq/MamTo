@@ -99,7 +99,6 @@
             @endif
         @empty
             <p>Nie masz jeszcze żadnych ogłoszeń.</p>
-            <a href="{{ route('auctions.create') }}" class="btn btn-primary mt-3">Utwórz aukcję</a>
         @endforelse
     </section>
 

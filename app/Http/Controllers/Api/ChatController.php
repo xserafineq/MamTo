@@ -18,7 +18,8 @@ class ChatController extends Controller
     {
         $userId = request()->user()->id;
 
-        $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages'])
+        $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages' => fn ($query) => $query->visible()])
+            ->visible()
             ->where(function ($query) use ($userId) {
                 $query->where('buyerId', $userId)
                     ->orWhere('sellerId', $userId);
@@ -45,7 +46,9 @@ class ChatController extends Controller
     {
         $this->authorizeChatAccess($chat);
 
-        $chat->load(['auction.image', 'seller', 'buyer', 'messages.sender']);
+        abort_if($chat->archived, 404);
+
+        $chat->load(['auction.image', 'seller', 'buyer', 'messages' => fn ($query) => $query->visible()->with('sender')]);
         $chat->setRelation('messages', $chat->messages->sortBy('sentAt')->values());
         $chat->otherParticipant = $this->getOtherParticipant($chat, request()->user()->id);
 
@@ -66,6 +69,15 @@ class ChatController extends Controller
 
         if ((int) $auction->userId === (int) request()->user()->id) {
             abort(403, 'Nie możesz napisać wiadomości do własnej aukcji.');
+        }
+
+        $chat = Chat::query()
+            ->where('auctionId', $auction->id)
+            ->where('buyerId', request()->user()->id)
+            ->first();
+
+        if ($chat?->archived) {
+            abort(403, 'Ta rozmowa została zarchiwizowana przez administratora.');
         }
 
         $chat = Chat::firstOrCreate(
