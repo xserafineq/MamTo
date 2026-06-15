@@ -2,14 +2,13 @@
 
 Platforma ogłoszeniowa typu marketplace — użytkownicy mogą bezpłatnie publikować aukcje i ogłoszenia,
 przeglądać oferty według kategorii, kontaktować się ze sprzedawcami przez wbudowany czat oraz
-zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny interfejs [RestApi](https://github.com/xserafineq/MamTo/blob/main/API.md).
+zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny interfejs RestAPI.
 
 ## Spis treści
 
 - [Autorzy](#autorzy)
 - [Podział zadań](#podział-zadań)
 - [Technologie](#technologie)
-- [Funkcjonalności](#funkcjonalności)
 - [Przeznaczenie aplikacji](#przeznaczenie-aplikacji)
 - [Diagram ERD](#diagram-erd)
 - [Uruchomienie](#uruchomienie)
@@ -43,8 +42,6 @@ zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny 
 ## Przeznaczenie aplikacji
 
 Głównym celem jest stworzenie miejsca w internecie, gdzie zwykli ludzie (albo małe firmy) mogą bez żadnych opłat wystawić na sprzedaż swoje stare meble, ubrania czy elektronikę, a inni mogą te rzeczy łatwo znaleźć i kupić.
-
-## Funkcjonalności
 
 ### Ogłoszenia i wyszukiwanie
 
@@ -99,7 +96,7 @@ docker compose exec app php artisan migrate:fresh --seed
 
 ## Wybrany przebieg działania aplikacji
 
-**Strona główna → tworzenie konta → wyszukiwanie → moje ogłoszenia → tworzenie aukcji -> edytowanie aukcji**
+**Strona główna → tworzenie konta → wyszukiwanie → moje ogłoszenia → tworzenie aukcji**
 
 ### 1. Strona główna
 
@@ -208,7 +205,9 @@ Użytkownik może w niej edytować szczegóły ogłoszeń oraz zmieniać ich sta
 
 ### 7. Dodawanie nowej aukcji
 
-Edytowanie aukcji odbywa się w ten sam sposób jak jej dodawanie. Użytkownik może zmieniać zawartość formularza, a następnie zapisać lub odrzucić zmiany.
+Aby dodać nową aukcję, użytkownik musi wypełnić formularz, podając: co najmniej jedno zdjęcie (miniatura),
+tytuł, opis, cenę, lokalizację oraz zaznaczyć, czy cena podlega negocjacji.
+
 <p align="center">
   <img
     src="public/assets/documentation/newAuctionv2.png"
@@ -218,18 +217,6 @@ Edytowanie aukcji odbywa się w ten sam sposób jak jej dodawanie. Użytkownik m
 </p>
 
 <p align="center"><em>Dodawanie nowej aukcji</em></p>
-
-### 8. Edycja aukcji
-<p align="center">
-  <img
-    src="public/assets/documentation/editAuctionv2.png"
-    alt="Formularz edytowania aukcji"
-    width="800"
-  />
-</p>
-
-<p align="center"><em>Edytowanie aukcji</em></p>
-
 
 ## Dalszy rozwój
 
