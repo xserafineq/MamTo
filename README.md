@@ -218,6 +218,20 @@ tytuł, opis, cenę, lokalizację oraz zaznaczyć, czy cena podlega negocjacji.
 
 <p align="center"><em>Dodawanie nowej aukcji</em></p>
 
+### 7. Edytowanie aukcji
+
+Edytowanie aukcji odbywa się w ten sam sposób jak jej dodawanie. Użytkownik może zmieniać wybraną przez siebie zawartość w formularza. (Dane, zdjęcia, lokalizacje)
+<p align="center">
+  <img
+    src="public/assets/documentation/editAuctionv2.png"
+    alt="Edytowanie aukcji"
+    width="800"
+  />
+</p>
+
+<p align="center"><em>Dodawanie nowej aukcji</em></p>
+
+
 ## Dalszy rozwój
 
 - powiadomienia e-mail przy wiadomościach i akceptacji ogłoszeń
