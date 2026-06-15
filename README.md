@@ -96,7 +96,7 @@ docker compose exec app php artisan migrate:fresh --seed
 
 ## Wybrany przebieg działania aplikacji
 
-**Strona główna → tworzenie konta → wyszukiwanie → moje ogłoszenia → tworzenie aukcji**
+**Strona główna → tworzenie konta → wyszukiwanie → moje ogłoszenia → tworzenie aukcji → edytowanie aukcji**
 
 ### 1. Strona główna
 
@@ -229,7 +229,7 @@ Edytowanie aukcji odbywa się w ten sam sposób jak jej dodawanie. Użytkownik m
   />
 </p>
 
-<p align="center"><em>Dodawanie nowej aukcji</em></p>
+<p align="center"><em>Edytowanie aukcji</em></p>
 
 
 ## Dalszy rozwój
