@@ -2,7 +2,7 @@
 
 Platforma ogłoszeniowa typu marketplace — użytkownicy mogą bezpłatnie publikować aukcje i ogłoszenia,
 przeglądać oferty według kategorii, kontaktować się ze sprzedawcami przez wbudowany czat oraz
-zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny interfejs RestAPI.
+zarządzać własnym kontem. Aplikacja posiada panel administratora oraz osobny interfejs [RestApi](https://github.com/xserafineq/MamTo/blob/main/API.md).
 
 ## Spis treści
 
