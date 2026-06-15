@@ -27,8 +27,8 @@ class ChatController extends Controller
             ->map(function (Chat $chat) use ($userId) {
                 $chat->lastMessage = $chat->messages->sortByDesc('sentAt')->first();
                 $chat->otherParticipant = $this->getOtherParticipant($chat, $userId);
-                $chat->isUnread = $chat->lastMessage
-                    && (int) $chat->lastMessage->senderId !== (int) $userId;
+                $chat->unreadCount = $chat->unreadMessagesCountFor($userId);
+                $chat->isUnread = $chat->unreadCount > 0;
 
                 return $chat;
             })
@@ -37,13 +37,15 @@ class ChatController extends Controller
 
         return response()->json([
             'data' => ChatResource::collection($chats),
-            'unreadCount' => $chats->where('isUnread', true)->count(),
+            'unreadCount' => $chats->sum('unreadCount'),
         ]);
     }
 
     public function show(Chat $chat): JsonResponse
     {
         $this->authorizeChatAccess($chat);
+
+        $chat->markAsReadBy(request()->user()->id);
 
         $chat->load(['auction.image', 'seller', 'buyer', 'messages.sender']);
         $chat->setRelation('messages', $chat->messages->sortBy('sentAt')->values());
@@ -96,6 +98,8 @@ class ChatController extends Controller
             'sentAt' => now(),
             'senderId' => request()->user()->id,
         ]);
+
+        $chat->markAsReadBy(request()->user()->id);
 
         $message->load('sender');
 

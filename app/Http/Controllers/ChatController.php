@@ -25,15 +25,15 @@ class ChatController extends Controller
             ->map(function (Chat $chat) use ($userId) {
                 $chat->lastMessage = $chat->messages->sortByDesc('sentAt')->first();
                 $chat->otherParticipant = $this->getOtherParticipant($chat, $userId);
-                $chat->isUnread = $chat->lastMessage
-                    && (int) $chat->lastMessage->senderId !== (int) $userId;
+                $chat->unreadCount = $chat->unreadMessagesCountFor($userId);
+                $chat->isUnread = $chat->unreadCount > 0;
 
                 return $chat;
             })
             ->sortByDesc(fn (Chat $chat) => $chat->lastMessage?->sentAt)
             ->values();
 
-        $newMessagesCount = $chats->where('isUnread', true)->count();
+        $newMessagesCount = $chats->sum('unreadCount');
 
         return view('messages.index', compact('chats', 'newMessagesCount'));
     }
@@ -41,6 +41,8 @@ class ChatController extends Controller
     public function show(Chat $chat): View
     {
         $this->authorizeChatAccess($chat);
+
+        $chat->markAsReadBy(auth()->id());
 
         $chat->load(['auction.image', 'seller', 'buyer', 'messages.sender']);
 
@@ -91,6 +93,8 @@ class ChatController extends Controller
             'sentAt' => now(),
             'senderId' => auth()->id(),
         ]);
+
+        $chat->markAsReadBy(auth()->id());
 
         return redirect()->route('chats.show', $chat);
     }
