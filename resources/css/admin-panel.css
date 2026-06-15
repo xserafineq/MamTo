@@ -763,3 +763,326 @@
     gap: 8px;
     margin-top: 8px;
 }
+
+.admin-panel-user-rating-check {
+    margin-left: 4px;
+    color: #0066FF;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.admin-panel-user-rating-check:hover {
+    color: #0052cc;
+    text-decoration: underline;
+}
+
+.admin-panel-user-rating-empty {
+    color: #888;
+}
+
+.admin-panel-back-link-wrap {
+    margin-bottom: 20px;
+}
+
+.admin-panel-back-link {
+    color: #0066FF;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-panel-back-link:hover {
+    text-decoration: underline;
+}
+
+.admin-panel-ratings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-panel-rating-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 0 16px rgb(241 241 241);
+}
+
+.admin-panel-rating-card__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+}
+
+.admin-panel-rating-card__reviewer {
+    font-size: 16px;
+    font-weight: 650;
+    color: #1A1A1A;
+}
+
+.admin-panel-rating-card__email {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+}
+
+.admin-panel-rating-card__badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.admin-panel-rating-card__badge--positive {
+    background: #e8f7ee;
+    color: #1a8a4a;
+}
+
+.admin-panel-rating-card__badge--negative {
+    background: #fde8ea;
+    color: #dc3545;
+}
+
+.admin-panel-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.admin-panel-chats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-panel-chat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 0 16px rgb(241 241 241);
+}
+
+.admin-panel-chat-card__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    min-width: 0;
+}
+
+.admin-panel-chat-card__participants {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+    font-size: 15px;
+    color: #1A1A1A;
+}
+
+.admin-panel-chat-card__separator {
+    color: #bbb;
+}
+
+.admin-panel-chat-card__email {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+}
+
+.admin-panel-chat-card__count {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #eef4ff;
+    color: #0066ff;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.admin-panel-chat-card--archived {
+    opacity: 0.85;
+}
+
+.admin-panel-chat-card__badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #eef0f3;
+    color: #555;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.admin-panel-chat-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.admin-panel-chat-modal__message {
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid #efefef;
+}
+
+.admin-panel-chat-modal__message .admin-panel-message-card__meta {
+    margin-bottom: 8px;
+}
+
+.admin-panel-chat-modal__participants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #ececec;
+    font-size: 14px;
+}
+
+.admin-panel-chat-modal__thread {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#chatPreviewModal.admin-panel-chat-preview-modal--behind {
+    z-index: 1050;
+}
+
+#deleteChatModal {
+    z-index: 1060;
+}
+
+.admin-panel-chat {
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 0 16px rgb(241 241 241);
+    overflow: hidden;
+}
+
+.admin-panel-chat__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    padding: 18px 22px;
+    background: #f8f9fb;
+    border-bottom: 1px solid #ececec;
+    font-size: 15px;
+}
+
+.admin-panel-chat__email {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+}
+
+.admin-panel-messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 22px 22px;
+}
+
+.admin-panel-message-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid #efefef;
+}
+
+.admin-panel-message-card--archived {
+    opacity: 0.75;
+    background: #f3f3f3;
+}
+
+.admin-panel-message-card__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-panel-message-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    margin-bottom: 8px;
+}
+
+.admin-panel-message-card__sender {
+    font-size: 15px;
+    font-weight: 650;
+    color: #1A1A1A;
+}
+
+.admin-panel-message-card__date {
+    font-size: 13px;
+    color: #777;
+}
+
+.admin-panel-message-card__badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: #eef0f3;
+    color: #555;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.admin-panel-message-card__text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #222;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.admin-panel-message-card__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .admin-panel-chat-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-panel-chat-card__info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-panel-chat-card__actions {
+        width: 100%;
+    }
+
+    .admin-panel-chat-card__actions .btn,
+    .admin-panel-chat-card__actions form {
+        flex: 1;
+    }
+}

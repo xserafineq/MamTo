@@ -136,13 +136,15 @@
                 </div>
             </div>
         </div>
-        <div id="description">
-            <div id="description-head">Opis</div>
-            @if($auction->description == '')
-                Brak opisu
-            @else
-                {{ $auction->description }}
-            @endif
+        <div id="description-container">
+            <div id="description">
+                <div id="description-head">Opis</div>
+                @if(blank(trim($auction->description ?? '')))
+                    <p class="auction-description__empty">Brak opisu</p>
+                @else
+                    <div class="auction-description__body">{{ $auction->description }}</div>
+                @endif
+            </div>
         </div>
     </div>
 

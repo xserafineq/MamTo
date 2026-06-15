@@ -17,11 +17,13 @@ class Chat extends Model
         'auctionId',
         'sellerId',
         'buyerId',
+        'archived',
         'buyerLastReadAt',
         'sellerLastReadAt',
     ];
 
     protected $casts = [
+        'archived' => 'boolean',
         'buyerLastReadAt' => 'datetime',
         'sellerLastReadAt' => 'datetime',
     ];
@@ -44,6 +46,11 @@ class Chat extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class, 'chatId');
+    }
+
+    public function scopeVisible($query)
+    {
+        return $query->where('archived', false);
     }
 
     public function lastReadAtFor(int $userId): ?Carbon

@@ -61,6 +61,12 @@
                 <div class="my-auctions-card__actions">
                     <a href="{{ route('auctions.show', $auction) }}" class="btn btn-outline-secondary btn-sm">Podgląd</a>
                     <a href="{{ route('admin.auctions.edit', $auction) }}" class="btn btn-outline-primary btn-sm">Edytuj</a>
+                    <a
+                        href="{{ route('admin.auctions.messages.index', array_merge(['auction' => $auction], request()->only('q', 'page'))) }}"
+                        class="btn btn-outline-secondary btn-sm"
+                    >
+                        Wiadomości
+                    </a>
                     <form
                         action="{{ route('admin.auctions.destroy', $auction) }}"
                         method="POST"

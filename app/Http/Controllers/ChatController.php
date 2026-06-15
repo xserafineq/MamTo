@@ -16,7 +16,8 @@ class ChatController extends Controller
     {
         $userId = auth()->id();
 
-        $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages'])
+        $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages' => fn ($query) => $query->visible()])
+            ->visible()
             ->where(function ($query) use ($userId) {
                 $query->where('buyerId', $userId)
                     ->orWhere('sellerId', $userId);
@@ -38,17 +39,22 @@ class ChatController extends Controller
         return view('messages.index', compact('chats', 'newMessagesCount'));
     }
 
+    To ten sam konflikt co w API — web ChatController::show(). Połącz obie strony tak:
+
+
     public function show(Chat $chat): View
     {
         $this->authorizeChatAccess($chat);
-
+        abort_if($chat->archived, 404);
         $chat->markAsReadBy(auth()->id());
-
-        $chat->load(['auction.image', 'seller', 'buyer', 'messages.sender']);
-
+        $chat->load([
+            'auction.image',
+            'seller',
+            'buyer',
+            'messages' => fn ($query) => $query->visible()->with('sender'),
+        ]);
         $messages = $chat->messages->sortBy('sentAt')->values();
         $otherParticipant = $this->getOtherParticipant($chat, auth()->id());
-
         return view('messages.show', compact('chat', 'messages', 'otherParticipant'));
     }
 
@@ -64,6 +70,15 @@ class ChatController extends Controller
 
         if ((int) $auction->userId === (int) auth()->id()) {
             abort(403, 'Nie możesz napisać wiadomości do własnej aukcji.');
+        }
+
+        $chat = Chat::query()
+            ->where('auctionId', $auction->id)
+            ->where('buyerId', auth()->id())
+            ->first();
+
+        if ($chat?->archived) {
+            abort(403, 'Ta rozmowa została zarchiwizowana przez administratora.');
         }
 
         $chat = Chat::firstOrCreate(

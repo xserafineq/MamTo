@@ -16,10 +16,12 @@ class Message extends Model
         'text',
         'sentAt',
         'senderId',
+        'archived',
     ];
 
     protected $casts = [
         'sentAt' => 'datetime',
+        'archived' => 'boolean',
     ];
 
     public function chat(): BelongsTo
@@ -30,5 +32,10 @@ class Message extends Model
     public function sender(): BelongsTo
     {
         return $this->belongsTo(User::class, 'senderId');
+    }
+
+    public function scopeVisible($query)
+    {
+        return $query->where('archived', false);
     }
 }

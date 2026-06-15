@@ -99,6 +99,24 @@
                                 <span class="admin-panel-admin-label">Ogłoszenia</span>
                                 <span>{{ $user->auctions_count }}</span>
                             </div>
+                            <div class="admin-panel-admin-detail">
+                                <span class="admin-panel-admin-label">Polecenia</span>
+                                @php
+                                    $recommendationPercent = \App\Models\Rating::recommendationPercent($user->ratingsReceived);
+                                    $ratingsCount = $user->ratingsReceived->whereNotNull('rating')->count();
+                                @endphp
+                                @if($recommendationPercent !== null)
+                                    <span>
+                                        {{ $recommendationPercent }}% poleca ({{ $ratingsCount }})
+                                        <a
+                                            href="{{ route('admin.users.ratings.index', array_merge(['user' => $user], request()->only('q', 'page'))) }}"
+                                            class="admin-panel-user-rating-check"
+                                        >(Sprawdź)</a>
+                                    </span>
+                                @else
+                                    <span class="admin-panel-user-rating-empty">Brak poleceń</span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="admin-panel-user-actions">
