@@ -9,29 +9,38 @@
 @endpush
 
 @section('content')
-    <header>
-        <div id="header-text-box">
-            <div id="header-text">
-                <div>Utwórz nową</div>
-                <div>aukcje całkowicie</div>
-                <div>za darmo</div>
-                <a href="{{ route('auctions.create') }}" id="create-auction-btn">Utwórz aukcje</a>
+    <header class="home-header">
+        <div class="home-header__stage">
+            <div id="header-text-box" class="home-header__copy">
+                <div id="header-text">
+                    <p class="header-text__headline">
+                        Utwórz nową<br>
+                        aukcje całkowicie<br>
+                        <span class="header-text__accent">za darmo</span>
+                    </p>
+                    <a href="{{ route('auctions.create') }}" id="create-auction-btn">Utwórz aukcje</a>
+                </div>
             </div>
-        </div>
-        <div style="bottom: 0; z-index: 4 !important;" class="header-hexagon">
-            <img src="{{asset('assets/hexagon-half.svg')}}" alt="hexagon"/>
-        </div>
-        <div style="right: 0;" class="header-hexagon">
-            <img src="{{asset('assets/hexagon-halftop.png')}}" alt="hexagon"/>
-        </div>
-        <div style="right: 400px; top: 180px;" class="header-hexagon center-hexagon">
-            <img src="{{asset('assets/hexagon.svg')}}" alt="hexagon"/>
-        </div>
-        <div id="car-img">
-            <img style="object-fit: cover;" src="{{asset('assets/car.svg')}}" alt="car"/>
-        </div>
-        <div id="clouds" style="display: flex; width: 100%; padding: 0; position: absolute; z-index: 3; bottom: -30px; height: 180px;">
-            <img style="object-fit: cover;" src="{{asset('assets/clouds.svg')}}" width="100%" alt="clouds"/>
+
+            <div class="home-header__visual">
+                <div id="car-img">
+                    <img src="{{ asset('assets/car.svg') }}" alt="Samochód"/>
+                </div>
+            </div>
+
+            <div class="header-hexagon header-hexagon--top-right">
+                <img src="{{ asset('assets/hexagon-halftop.png') }}" alt=""/>
+            </div>
+            <div class="header-hexagon header-hexagon--center center-hexagon">
+                <img src="{{ asset('assets/hexagon.svg') }}" alt=""/>
+            </div>
+            <div class="header-hexagon header-hexagon--bottom">
+                <img src="{{ asset('assets/hexagon-half.svg') }}" alt=""/>
+            </div>
+
+            <div id="clouds">
+                <img src="{{ asset('assets/clouds.svg') }}" alt=""/>
+            </div>
         </div>
     </header>
     <section id="categories">
