@@ -88,12 +88,6 @@ Głównym celem jest stworzenie miejsca w internecie, gdzie zwykli ludzie (albo 
 docker compose up -d --build
 ```
 
-### Seeder bazy danych
-
-```bash
-docker compose exec app php artisan migrate:fresh --seed
-```
-
 ## Wybrany przebieg działania aplikacji
 
 **Strona główna → tworzenie konta → wyszukiwanie → moje ogłoszenia → tworzenie aukcji → edytowanie aukcji**
