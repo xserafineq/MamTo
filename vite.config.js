@@ -19,6 +19,7 @@ export default defineConfig({
                 'resources/js/admin/admin-images.js',
                 'resources/js/auctions/city-search.js',
                 'resources/js/auctions/auction-page.js',
+                'resources/js/followed-auctions.js',
                 'resources/js/auctions/create-auction.js',
                 'resources/js/profile.js',
                 'resources/js/user-profile.js',
