@@ -12,6 +12,7 @@ FROM php:8.4-apache
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    postgresql-client \
     libzip-dev \
     libpng-dev \
     zip \
