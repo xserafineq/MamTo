@@ -15,10 +15,17 @@
                 alt="{{ $chat->auction?->name ?? 'Aukcja' }}"
             />
             <div class="chat-header-card__info">
-                <h1 class="chat-header-card__title">{{ $chat->auction?->name ?? 'Usunięta aukcja' }}</h1>
+                <h1 class="chat-header-card__title">
+                    {{ $chat->auction?->name ?? 'Usunięta aukcja' }}
+                    @if($chat->auction)
+                        @include('partials.own-auction-badge', ['auction' => $chat->auction])
+                    @endif
+                </h1>
                 <p class="chat-header-card__meta">
                     Rozmowa z
-                    <span class="chat-header-card__email">{{ $otherParticipant->email }}</span>
+                    <a href="{{ route('users.show', $otherParticipant) }}" class="chat-header-card__participant-link">
+                        {{ $otherParticipant->firstName }} {{ $otherParticipant->lastName }}
+                    </a>
                 </p>
                 @if($chat->auction)
                     <a href="{{ route('auctions.show', $chat->auction) }}" class="chat-header-card__auction-link">

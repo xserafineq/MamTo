@@ -327,6 +327,7 @@
     padding: 20px;
     text-decoration: none;
     color: inherit;
+    gap: 20px;
 }
 
 .searched-auction-card:hover {
@@ -339,20 +340,34 @@
     height: 220px;
     border-radius: 25px;
     object-fit: cover;
+    flex-shrink: 0;
 }
 .content {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
     padding: 20px;
     gap: 30px;
 }
 .title-price {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
     font-size: 25px;
     font-weight: bolder;
+    min-width: 0;
+}
+
+.title-price .title {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
 }
 
 .content .description {
@@ -366,6 +381,8 @@
 .price {
     color: #0066FF !important;
     text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .date-location {

@@ -91,10 +91,9 @@
                             name="phoneNumber"
                             id="phoneNumber"
                             class="form-control form-control-lg @error('phoneNumber') is-invalid @enderror"
-                            placeholder="123456789"
+                            placeholder="+48123456789"
                             value="{{ old('phoneNumber') }}"
-                            pattern="[0-9]{9}"
-                            maxlength="9"
+                            maxlength="12"
                             required
                         >
                         @error('phoneNumber')

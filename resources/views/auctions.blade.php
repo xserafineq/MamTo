@@ -201,7 +201,10 @@
                 />
                 <div class="content">
                     <div class="title-price">
-                        <div class="title">{{ $auction->name }}</div>
+                        <div class="title">
+                            {{ $auction->name }}
+                            @include('partials.own-auction-badge', ['auction' => $auction])
+                        </div>
                         <div class="price">{{ number_format($auction->price, 0, ',', ' ') }} zł</div>
                     </div>
                     <div class="description">

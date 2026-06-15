@@ -90,8 +90,9 @@
                             id="phoneNumber"
                             class="form-control @error('phoneNumber') is-invalid @enderror"
                             value="{{ old('phoneNumber', $user->phoneNumber) }}"
-                            maxlength="9"
-                            inputmode="numeric"
+                            placeholder="+48123456789"
+                            maxlength="12"
+                            inputmode="tel"
                             required
                         >
                         @error('phoneNumber')

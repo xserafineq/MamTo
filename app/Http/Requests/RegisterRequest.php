@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -18,7 +19,7 @@ class RegisterRequest extends FormRequest
             'firstName' => ['required', 'string', 'max:100', 'regex:/^[\pL\s\-]+$/u'],
             'lastName' => ['required', 'string', 'max:100', 'regex:/^[\pL\s\-]+$/u'],
             'email' => ['required', 'string', 'email', 'max:200', 'unique:Users,email'],
-            'phoneNumber' => ['required', 'string', 'regex:/^[0-9]{9}$/'],
+            'phoneNumber' => ['required', 'string', 'max:12', new PhoneNumber],
             'password' => ['required', 'string', 'confirmed', Password::min(8)],
         ];
     }
@@ -37,7 +38,7 @@ class RegisterRequest extends FormRequest
             'email.max' => 'Adres e-mail może mieć maksymalnie 200 znaków.',
             'email.unique' => 'Ten adres e-mail jest już zajęty.',
             'phoneNumber.required' => 'Numer telefonu jest wymagany.',
-            'phoneNumber.regex' => 'Numer telefonu musi składać się z 9 cyfr.',
+            'phoneNumber.max' => 'Numer telefonu może mieć maksymalnie 11 cyfr (opcjonalnie + na początku).',
             'password.required' => 'Hasło jest wymagane.',
             'password.min' => 'Hasło musi mieć co najmniej 8 znaków.',
             'password.confirmed' => 'Hasła nie są identyczne.',

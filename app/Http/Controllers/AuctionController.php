@@ -9,6 +9,7 @@ use App\Models\Auction;
 use App\Models\Category;
 use App\Models\Image;
 use App\Models\Rating;
+use App\Services\AuctionService;
 use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -154,8 +155,10 @@ class AuctionController extends Controller
             ->get();
 
         $isOwner = auth()->check() && (int) auth()->id() === (int) $auction->userId;
-        $phoneDigits = preg_replace('/\D/', '', $auction->user->phoneNumber);
-        $displayPhone = $this->formatDisplayPhone($phoneDigits, $isOwner);
+        $displayPhone = app(AuctionService::class)->formatDisplayPhone(
+            $auction->user->phoneNumber,
+            $isOwner,
+        );
         $isJobOffer = Category::requiresApproval($auction->categoryId);
         $isFollowed = auth()->check()
             && (int) auth()->id() !== (int) $auction->userId
@@ -166,25 +169,10 @@ class AuctionController extends Controller
             'images',
             'otherAuctions',
             'displayPhone',
-            'phoneDigits',
             'isOwner',
             'isJobOffer',
             'isFollowed',
         ));
-    }
-
-    // Formatuje numer telefonu
-    private function formatDisplayPhone(string $digits, bool $showFull): string
-    {
-        if (strlen($digits) !== 9) {
-            return $digits;
-        }
-
-        if ($showFull) {
-            return substr($digits, 0, 3) . ' ' . substr($digits, 3, 3) . ' ' . substr($digits, 6, 3);
-        }
-
-        return substr($digits, 0, 3) . ' *** ' . substr($digits, 6, 3);
     }
 
     // Ogłoszenia zalogowanego użytkownika

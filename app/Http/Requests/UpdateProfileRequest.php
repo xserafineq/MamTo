@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends FormRequest
 {
@@ -17,14 +17,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             'firstName' => ['required', 'string', 'max:100', 'regex:/^[\pL\s\-]+$/u'],
             'lastName' => ['required', 'string', 'max:100', 'regex:/^[\pL\s\-]+$/u'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:200',
-                Rule::unique('Users', 'email')->ignore($this->user()->id),
-            ],
-            'phoneNumber' => ['required', 'string', 'regex:/^[0-9]{9}$/'],
+            'phoneNumber' => ['required', 'string', 'max:12', new PhoneNumber],
         ];
     }
 
@@ -37,12 +30,8 @@ class UpdateProfileRequest extends FormRequest
             'lastName.required' => 'Nazwisko jest wymagane.',
             'lastName.max' => 'Nazwisko może mieć maksymalnie 100 znaków.',
             'lastName.regex' => 'Nazwisko może zawierać tylko litery.',
-            'email.required' => 'Adres e-mail jest wymagany.',
-            'email.email' => 'Podaj prawidłowy adres e-mail.',
-            'email.max' => 'Adres e-mail może mieć maksymalnie 200 znaków.',
-            'email.unique' => 'Ten adres e-mail jest już zajęty.',
             'phoneNumber.required' => 'Numer telefonu jest wymagany.',
-            'phoneNumber.regex' => 'Numer telefonu musi składać się z 9 cyfr.',
+            'phoneNumber.max' => 'Numer telefonu może mieć maksymalnie 11 cyfr (opcjonalnie + na początku).',
         ];
     }
 }

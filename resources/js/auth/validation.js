@@ -57,5 +57,5 @@ export function isValidName(value) {
 }
 
 export function isValidPhone(value) {
-    return /^[0-9]{9}$/.test(value.trim());
+    return /^\+?[0-9]{9,11}$/.test(value.trim());
 }

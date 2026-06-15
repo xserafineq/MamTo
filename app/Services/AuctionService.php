@@ -87,17 +87,32 @@ class AuctionService
             ->get();
     }
 
-    public function formatDisplayPhone(string $digits, bool $showFull): string
+    public function formatDisplayPhone(string $phoneNumber, bool $showFull): string
     {
-        if (strlen($digits) !== 9) {
-            return $digits;
+        $stored = trim($phoneNumber);
+        $digits = preg_replace('/\D/', '', $stored);
+
+        $prefix = '';
+        $local = $digits;
+
+        if (str_starts_with($digits, '48') && strlen($digits) >= 11) {
+            $prefix = '+48 ';
+            $local = substr($digits, 2);
+        } elseif (str_starts_with($stored, '+') && strlen($digits) > 9) {
+            $countryCodeLength = strlen($digits) - 9;
+            $prefix = '+'.substr($digits, 0, $countryCodeLength).' ';
+            $local = substr($digits, -9);
+        }
+
+        if (strlen($local) !== 9) {
+            return $stored;
         }
 
         if ($showFull) {
-            return substr($digits, 0, 3).' '.substr($digits, 3, 3).' '.substr($digits, 6, 3);
+            return $prefix.substr($local, 0, 3).' '.substr($local, 3, 3).' '.substr($local, 6, 3);
         }
 
-        return substr($digits, 0, 3).' *** '.substr($digits, 6, 3);
+        return $prefix.substr($local, 0, 3).' *** '.substr($local, 6, 3);
     }
 
     public function getUserAuctions(User $user): Collection

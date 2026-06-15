@@ -56,6 +56,7 @@
             <div id="information">
                 <div id="title">
                     {{ $auction->name }}
+                    @include('partials.own-auction-badge', ['auction' => $auction])
                 </div>
                 <div id="price">
                     @if($isJobOffer)
@@ -85,7 +86,7 @@
                             </a>
                             <div id="phoneNumber">
                                 @if($isOwner)
-                                    <a href="tel:+48{{ $phoneDigits }}">{{ $displayPhone }}</a>
+                                    <a href="{{ $auction->user->telHref() }}">{{ $displayPhone }}</a>
                                 @else
                                     {{ $displayPhone }}
                                 @endif

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +28,7 @@ class AdminUpdateUserRequest extends FormRequest
                 'max:200',
                 Rule::unique('Users', 'email')->ignore($targetUser->id),
             ],
-            'phoneNumber' => ['required', 'string', 'regex:/^[0-9]{9}$/'],
+            'phoneNumber' => ['required', 'string', 'max:12', new PhoneNumber],
         ];
     }
 
@@ -45,7 +46,7 @@ class AdminUpdateUserRequest extends FormRequest
             'email.max' => 'Adres e-mail może mieć maksymalnie 200 znaków.',
             'email.unique' => 'Ten adres e-mail jest już zajęty.',
             'phoneNumber.required' => 'Numer telefonu jest wymagany.',
-            'phoneNumber.regex' => 'Numer telefonu musi składać się z 9 cyfr.',
+            'phoneNumber.max' => 'Numer telefonu może mieć maksymalnie 11 cyfr (opcjonalnie + na początku).',
         ];
     }
 }
