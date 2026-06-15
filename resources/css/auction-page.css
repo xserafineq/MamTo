@@ -28,9 +28,9 @@
     margin-bottom: 10px;
     line-height: 1.2;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 #price {

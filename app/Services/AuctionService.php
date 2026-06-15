@@ -63,10 +63,6 @@ class AuctionService
         $isOwner = $viewer && (int) $viewer->id === (int) $auction->userId;
         $isAdmin = $viewer && $viewer->isAdmin;
 
-        if ($auction->status !== 'aktywna' && ! $isAdmin) {
-            abort(404);
-        }
-
         if (! $auction->approved && ! $isAdmin && ! $isOwner) {
             abort(404);
         }

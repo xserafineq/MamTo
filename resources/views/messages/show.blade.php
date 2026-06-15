@@ -16,9 +16,13 @@
             />
             <div class="chat-header-card__info">
                 <h1 class="chat-header-card__title">
-                    {{ $chat->auction?->name ?? 'Usunięta aukcja' }}
                     @if($chat->auction)
+                        <a href="{{ route('auctions.show', $chat->auction) }}" class="auction-title-link">
+                            {{ $chat->auction->name }}
+                        </a>
                         @include('partials.own-auction-badge', ['auction' => $chat->auction])
+                    @else
+                        Usunięta aukcja
                     @endif
                 </h1>
                 <p class="chat-header-card__meta">

@@ -13,9 +13,8 @@ body {
 }
 
 .auction-own-badge {
-    font-size: 0.55em;
+    font-size: 12px;
     font-weight: 600;
-    vertical-align: middle;
     white-space: nowrap;
 }
 

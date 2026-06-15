@@ -130,10 +130,6 @@ class AuctionController extends Controller
     {
         $isOwner = auth()->check() && (int) auth()->id() === (int) $auction->userId;
 
-        if ($auction->status !== 'aktywna' && ! $this->viewerIsAdmin() && ! $isOwner) {
-            abort(404);
-        }
-
         if (! $auction->approved && ! $this->viewerIsAdmin() && ! $isOwner) {
             abort(404);
         }
