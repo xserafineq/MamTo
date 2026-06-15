@@ -211,7 +211,7 @@ Nie interesuje mnie zmiana.
 Negocjacja tylko na miejscu.', 3200.00, false, 'Mokra Prawa', 'aktywna', '2026-06-15 18:04:27', '2026-06-15 18:04:27', 4, 14, 25, true, 52.01734587, 20.18646246, NULL);
 INSERT INTO public."Auctions" VALUES (7, 'Osoba na stanowisko nauczyciel wychowania przedszkolnego', 'Niepubliczne Przedszkole poszukuje osoby na stanowisko nauczyciela z pasją i powołaniem, otwartego na nowe wyzwania, elastycznego i empatycznego.
 
-Oferujemy stałą, stabilną pracę w miłym zespole (nauczycie, PS i pomoc), benefity pracownicze, pracę max 6-7 h dziennie (plus przerwy na przygotowanie do zajęć, praca własna), bez pracy w domu. Dodatkowo otrzymasz wsparcie zespołu specjalistów i spokojny onboarding do zespołu i pracy w grupie, mamy budżet na szkolenia, które potrzebujesz aby się rozwijać. 
+Oferujemy stałą, stabilną pracę w miłym zespole (nauczycie, PS i pomoc), benefity pracownicze, pracę max 6-7 h dziennie (plus przerwy na przygotowanie do zajęć, praca własna), bez pracy w domu. Dodatkowo otrzymasz wsparcie zespołu specjalistów i spokojny onboarding do zespołu i pracy w grupie, mamy budżet na szkolenia, które potrzebujesz aby się rozwijać.
 
 Szukamy osoby z potwierdzonymi kwalifikacjami (ukończone studia lub ostatni rok: Pedagogika przedszkolna i wczesnoszkolna)', 0.00, true, 'Łanowa, Rzeszów', 'aktywna', '2026-06-15 18:09:58', '2026-06-15 18:11:04', 4, 6, 29, true, 50.06524960, 21.94908143, 'do uzgodnienia');
 INSERT INTO public."Auctions" VALUES (6, 'specjalista ds. dotacji', 'Zakres obowiązków:
@@ -278,7 +278,7 @@ INSERT INTO public."Auctions" VALUES (13, 'Złoty naszyjnik z ametystami i perł
 Kompozycję uzupełniają dodatkowe ametysty o łącznej masie 1,91 ct oraz perły, nadające biżuterii elegancji i ponadczasowego charakteru. Starannie wykonany projekt harmonijnie łączy szlachetne kamienie z ciepłym odcieniem złota, tworząc wyjątkową ozdobę o luksusowym wyglądzie.
 Do zawieszki dołączony jest certyfikat potwierdzający autentyczność wyrobu oraz jego parametry. To wyjątkowy dodatek dla osób ceniących wysoką jakość wykonania, klasyczne piękno i unikatowy design', 4500.00, false, 'Dębina', 'aktywna', '2026-06-15 18:37:31', '2026-06-15 18:37:31', 3, 19, 47, true, 51.05796970, 17.43347179, NULL);
 INSERT INTO public."Auctions" VALUES (14, 'Buty męskie adidas rozmiar 43,5', 'Bardzo wygodne buty męskie marki adidas, w rozmiarze 43,5. Kolor niebieski, długość wkładki: 27,5 cm', 60.00, true, 'Piastów 25b, Łojki', 'aktywna', '2026-06-15 18:59:42', '2026-06-15 18:59:42', 2, 20, 49, true, 50.78649093, 18.99353039, NULL);
-INSERT INTO public."Auctions" VALUES (15, 'Parobek', 'Szukam parobka', 0.00, true, '74, Zosin', 'aktywna', '2026-06-15 19:05:24', '2026-06-15 19:05:24', 1, 1, 1, false, 50.85941517, 24.12901640, 'do uzgodnienia');
+INSERT INTO public."Auctions" VALUES (15, 'Magazynier', 'Szukam magazyniera', 0.00, true, '74, Zosin', 'aktywna', '2026-06-15 19:05:24', '2026-06-15 19:05:24', 1, 1, 1, false, 50.85941517, 24.12901640, 'do uzgodnienia');
 
 
 --
