@@ -28,27 +28,40 @@
         action="{{ $updateRoute ?? route('auctions.update', $auction) }}"
         enctype="multipart/form-data"
         data-praca-ids="{{ json_encode($pracaCategoryIds) }}"
+        data-upload-placeholder="{{ asset('assets/img-upload-icon.svg') }}"
         novalidate
     >
         @csrf
         @method('PUT')
 
         <section id="upload-img-card-container">
-            <label class="upload-img-card">
-                <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/webp" class="@error('thumbnail') is-invalid @enderror" hidden>
-                <img
-                    class="upload-img-card__preview upload-img-card__preview--filled"
-                    src="{{ $auction->image?->file_url ?? asset('assets/img-upload-icon.svg') }}"
-                    alt="Miniatura"
-                />
-                <div id="thumbnail-label">Miniatura</div>
-            </label>
-            @foreach (['2', '3', '4', '5'] as $index => $label)
-                <label class="upload-img-card job-extra-image">
-                    <input type="file" name="images[]" accept="image/jpeg,image/png,image/webp" class="@error('images.' . $index) is-invalid @enderror" hidden>
-                    <img class="upload-img-card__preview" src="{{ asset('assets/img-upload-icon.svg') }}" alt="Zdjęcie {{ $label }}"/>
-                    <div>{{ $label }}</div>
+            <div class="upload-img-card-wrap">
+                <label class="upload-img-card">
+                    <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/webp" class="@error('thumbnail') is-invalid @enderror" hidden>
+                    <img
+                        class="upload-img-card__preview @if($auction->image) upload-img-card__preview--filled @endif"
+                        data-placeholder="{{ asset('assets/img-upload-icon.svg') }}"
+                        src="{{ $auction->image?->file_url ?? asset('assets/img-upload-icon.svg') }}"
+                        alt="Miniatura"
+                    />
+                    <div id="thumbnail-label">Miniatura</div>
                 </label>
+                <button type="button" class="upload-img-card__remove" hidden aria-label="Usuń zdjęcie">&times;</button>
+            </div>
+            @foreach (['2', '3', '4', '5'] as $index => $label)
+                <div class="upload-img-card-wrap">
+                    <label class="upload-img-card job-extra-image">
+                        <input type="file" name="images[]" accept="image/jpeg,image/png,image/webp" class="@error('images.' . $index) is-invalid @enderror" hidden>
+                        <img
+                            class="upload-img-card__preview"
+                            data-placeholder="{{ asset('assets/img-upload-icon.svg') }}"
+                            src="{{ asset('assets/img-upload-icon.svg') }}"
+                            alt="Zdjęcie {{ $label }}"
+                        />
+                        <div>{{ $label }}</div>
+                    </label>
+                    <button type="button" class="upload-img-card__remove" hidden aria-label="Usuń zdjęcie">&times;</button>
+                </div>
             @endforeach
         </section>
         <p id="auction-image-note" class="text-muted small">Pozostaw puste, aby zachować obecne zdjęcia. Nowe pliki zastąpią wybrane.</p>

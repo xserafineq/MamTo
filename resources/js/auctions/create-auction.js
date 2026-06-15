@@ -57,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    initImageRemoveButtons(form);
+
     categoryInput?.addEventListener('change', () => {
         clearCategoryFieldError(form);
         toggleJobMode(form);
@@ -520,14 +522,85 @@ function isValidImageFile(file) {
     return ALLOWED_IMAGE_TYPES.includes(file.type) && file.size <= MAX_FILE_SIZE;
 }
 
+function getImageUploadContext(input) {
+    const wrap = input.closest('.upload-img-card-wrap');
+    const card = wrap?.querySelector('.upload-img-card');
+
+    return {
+        wrap,
+        card,
+        preview: wrap?.querySelector('.upload-img-card__preview'),
+        removeBtn: wrap?.querySelector('.upload-img-card__remove'),
+    };
+}
+
+function initImageRemoveButtons(form) {
+    const defaultPlaceholder = form.dataset.uploadPlaceholder || '';
+
+    form.querySelectorAll('.upload-img-card-wrap').forEach((wrap) => {
+        const input = wrap.querySelector('input[type="file"]');
+        const { card, preview, removeBtn } = getImageUploadContext(input);
+
+        if (!input || !preview || !removeBtn || !card) {
+            return;
+        }
+
+        const placeholder = preview.dataset.placeholder || defaultPlaceholder;
+
+        if (preview.classList.contains('upload-img-card__preview--filled')) {
+            removeBtn.hidden = false;
+            card.classList.add('upload-img-card--filled');
+        }
+
+        removeBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            clearImagePreview(input, placeholder);
+        });
+    });
+}
+
 function previewImage(input) {
-    const card = input.closest('.upload-img-card');
-    const preview = card?.querySelector('.upload-img-card__preview');
+    const { card, preview, removeBtn } = getImageUploadContext(input);
 
     if (!preview || !input.files.length) {
         return;
     }
 
-    preview.src = URL.createObjectURL(input.files[0]);
+    if (preview.dataset.objectUrl) {
+        URL.revokeObjectURL(preview.dataset.objectUrl);
+    }
+
+    const objectUrl = URL.createObjectURL(input.files[0]);
+    preview.dataset.objectUrl = objectUrl;
+    preview.src = objectUrl;
     preview.classList.add('upload-img-card__preview--filled');
+    card?.classList.add('upload-img-card--filled');
+
+    if (removeBtn) {
+        removeBtn.hidden = false;
+    }
+}
+
+function clearImagePreview(input, placeholder) {
+    const { card, preview, removeBtn } = getImageUploadContext(input);
+
+    input.value = '';
+    clearFieldError(input);
+
+    if (preview?.dataset.objectUrl) {
+        URL.revokeObjectURL(preview.dataset.objectUrl);
+        delete preview.dataset.objectUrl;
+    }
+
+    if (preview) {
+        preview.src = placeholder;
+        preview.classList.remove('upload-img-card__preview--filled');
+    }
+
+    card?.classList.remove('upload-img-card--filled');
+
+    if (removeBtn) {
+        removeBtn.hidden = true;
+    }
 }
