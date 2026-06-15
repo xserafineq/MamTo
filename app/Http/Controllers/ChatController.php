@@ -39,8 +39,6 @@ class ChatController extends Controller
         return view('messages.index', compact('chats', 'newMessagesCount'));
     }
 
-    To ten sam konflikt co w API — web ChatController::show(). Połącz obie strony tak:
-
 
     public function show(Chat $chat): View
     {
