@@ -155,29 +155,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
     });
 
-    input.addEventListener('keydown', (event) => {
+    input.addEventListener('keydown', async (event) => {
         if (event.key !== 'Enter') {
             return;
         }
 
         event.preventDefault();
+        clearTimeout(searchTimeout);
+        hideSuggestions();
 
         const query = input.value.trim();
 
-        if (query.length < 2 || !lastSearchResults.length) {
+        if (!query) {
+            if (latInput.value || lngInput.value) {
+                clearCityCoordinates();
+            }
+            submitForm();
             return;
         }
 
-        if (tryAutoSelectMatch(query, lastSearchResults, true)) {
+        if (query.length < 2) {
             return;
         }
 
-        const first = lastSearchResults[0];
-        selectCity({
-            label: first.label,
-            lat: first.result.lat,
-            lon: first.result.lon,
-        });
+        if (latInput.value && lngInput.value) {
+            submitForm();
+            return;
+        }
+
+        let results = lastSearchResults;
+
+        if (!results.length) {
+            try {
+                const searchResults = await searchCities(query);
+                results = buildUniqueCityResults(searchResults, query);
+                lastSearchResults = results;
+            } catch {
+                return;
+            }
+        }
+
+        if (tryAutoSelectMatch(query, results, true)) {
+            return;
+        }
+
+        if (results.length) {
+            const first = results[0];
+            selectCity({
+                label: first.label,
+                lat: first.result.lat,
+                lon: first.result.lon,
+            });
+        }
     });
 
     distanceInput.addEventListener('focus', () => {

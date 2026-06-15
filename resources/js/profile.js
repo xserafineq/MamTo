@@ -1,6 +1,5 @@
 import {
     clearFieldError,
-    isValidEmail,
     isValidName,
     isValidPhone,
     setFieldError,
@@ -40,7 +39,6 @@ function validateProfileForm(form) {
 
     const firstName = form.querySelector('#firstName');
     const lastName = form.querySelector('#lastName');
-    const email = form.querySelector('#email');
     const phoneNumber = form.querySelector('#phoneNumber');
 
     const firstNameValue = firstName.value.trim();
@@ -61,21 +59,12 @@ function validateProfileForm(form) {
         isValid = false;
     }
 
-    const emailValue = email.value.trim();
-    if (!emailValue) {
-        setFieldError(email, 'Adres e-mail jest wymagany.');
-        isValid = false;
-    } else if (!isValidEmail(emailValue)) {
-        setFieldError(email, 'Podaj prawidłowy adres e-mail.');
-        isValid = false;
-    }
-
     const phoneValue = phoneNumber.value.trim();
     if (!phoneValue) {
         setFieldError(phoneNumber, 'Numer telefonu jest wymagany.');
         isValid = false;
     } else if (!isValidPhone(phoneValue)) {
-        setFieldError(phoneNumber, 'Numer telefonu musi składać się z 9 cyfr.');
+        setFieldError(phoneNumber, 'Podaj prawidłowy numer telefonu (9–11 cyfr, opcjonalnie + na początku).');
         isValid = false;
     }
 

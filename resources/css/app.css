@@ -12,6 +12,12 @@ body {
     font-family: Inter, system-ui, sans-serif;
 }
 
+.auction-own-badge {
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 nav {
     position: relative;
     z-index: 1030;
@@ -73,7 +79,7 @@ main {
     gap: 10px;
     justify-content: end;
     width: auto;
-    padding: 20px;
+    padding-right: 20px;
 }
 
 #menu li img{

@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setFieldError(fields.phoneNumber, 'Numer telefonu jest wymagany.');
             isValid = false;
         } else if (!isValidPhone(phoneNumber)) {
-            setFieldError(fields.phoneNumber, 'Numer telefonu musi składać się z 9 cyfr.');
+            setFieldError(fields.phoneNumber, 'Podaj prawidłowy numer telefonu (9–11 cyfr, opcjonalnie + na początku).');
             isValid = false;
         }
 

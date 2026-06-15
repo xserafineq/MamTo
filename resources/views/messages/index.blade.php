@@ -28,10 +28,21 @@
                         alt="{{ $chat->auction?->name ?? 'Aukcja' }}"
                     />
                     <div class="message-card__content">
-                        <h2 class="message-card__title">{{ $chat->auction?->name ?? 'Usunięta aukcja' }}</h2>
+                        <h2 class="message-card__title">
+                            @if($chat->auction)
+                                <a href="{{ route('auctions.show', $chat->auction) }}" class="auction-title-link">
+                                    {{ $chat->auction->name }}
+                                </a>
+                                @include('partials.own-auction-badge', ['auction' => $chat->auction])
+                            @else
+                                Usunięta aukcja
+                            @endif
+                        </h2>
                         <p class="message-card__meta">
                             Chat z
-                            <span class="message-card__email">{{ $chat->otherParticipant->email }}</span>,
+                            <a href="{{ route('users.show', $chat->otherParticipant) }}" class="message-card__participant-link">
+                                {{ $chat->otherParticipant->firstName }} {{ $chat->otherParticipant->lastName }}
+                            </a>,
                             @if($chat->lastMessage)
                                 {{ $chat->lastMessage->sentAt->format('d/m/Y H:i') }}
                             @else

@@ -64,16 +64,12 @@
                     <label for="email" class="form-label">Adres e-mail</label>
                     <input
                         type="email"
-                        name="email"
                         id="email"
-                        class="form-control @error('email') is-invalid @enderror"
-                        value="{{ old('email', $user->email) }}"
+                        class="form-control"
+                        value="{{ $user->email }}"
                         maxlength="200"
-                        required
+                        disabled
                     >
-                    @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="mt-3">
@@ -84,8 +80,8 @@
                         id="phoneNumber"
                         class="form-control @error('phoneNumber') is-invalid @enderror"
                         value="{{ old('phoneNumber', $user->phoneNumber) }}"
-                        pattern="[0-9]{9}"
-                        maxlength="9"
+                        placeholder="+48123456789"
+                        maxlength="12"
                         required
                     >
                     @error('phoneNumber')

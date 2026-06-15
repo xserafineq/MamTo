@@ -70,6 +70,23 @@ class User extends Authenticatable
             && $this->joinedAt->lte(now()->subMonths($months));
     }
 
+    public function telHref(): string
+    {
+        $phone = preg_replace('/\s+/', '', trim($this->phoneNumber));
+
+        if (str_starts_with($phone, '+')) {
+            return 'tel:'.$phone;
+        }
+
+        $digits = preg_replace('/\D/', '', $phone);
+
+        if (strlen($digits) === 9) {
+            return 'tel:+48'.$digits;
+        }
+
+        return 'tel:+'.$digits;
+    }
+
     public function scopeMatchingSearch(Builder $query, string $search): Builder
     {
         $like = '%'.$search.'%';

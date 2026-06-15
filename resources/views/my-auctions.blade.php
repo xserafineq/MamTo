@@ -32,7 +32,7 @@
 
         @forelse($auctions as $auction)
             <article class="my-auctions-card {{ $auction->status !== 'aktywna' ? 'my-auctions-card--closed' : '' }}">
-                @if($auction->status === 'aktywna' || auth()->user()?->isAdmin)
+                @if($auction->status === 'aktywna' || auth()->user()?->isAdmin || (auth()->check() && (int) auth()->id() === (int) $auction->userId))
                     <a href="{{ route('auctions.show', $auction) }}" class="my-auctions-card__link">
                 @else
                     <div class="my-auctions-card__link">
@@ -53,7 +53,7 @@
                             <span class="my-auctions-card__badge my-auctions-card__badge--pending">Oczekuje na akceptację</span>
                         @endif
                     </div>
-                @if($auction->status === 'aktywna' || auth()->user()?->isAdmin)
+                @if($auction->status === 'aktywna' || auth()->user()?->isAdmin || (auth()->check() && (int) auth()->id() === (int) $auction->userId))
                     </a>
                 @else
                     </div>

@@ -66,6 +66,22 @@
     font-weight: 700;
     margin: 0 0 8px;
     line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.auction-title-link {
+    color: inherit;
+    text-decoration: none;
+    font: inherit;
+}
+
+.auction-title-link:hover,
+.auction-title-link:focus {
+    color: inherit;
+    text-decoration: none;
 }
 
 .message-card__meta {
@@ -74,9 +90,14 @@
     margin: 0;
 }
 
-.message-card__email {
+.message-card__participant-link {
     color: #0066FF;
     font-weight: 600;
+    text-decoration: none;
+}
+
+.message-card__participant-link:hover {
+    text-decoration: underline;
 }
 
 .message-card__actions {
@@ -180,6 +201,10 @@
     font-size: 26px;
     font-weight: 700;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .chat-header-card__meta {
@@ -188,9 +213,14 @@
     margin: 0;
 }
 
-.chat-header-card__email {
+.chat-header-card__participant-link {
     color: #0066FF;
     font-weight: 600;
+    text-decoration: none;
+}
+
+.chat-header-card__participant-link:hover {
+    text-decoration: underline;
 }
 
 .chat-header-card__auction-link {

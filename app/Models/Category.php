@@ -58,13 +58,13 @@ class Category extends Model
 
     public static function getPracaCategoryIds(): array
     {
-        $praca = static::where('name', 'Praca')->whereNull('parentId')->first();
+        $ids = [];
 
-        if (! $praca) {
-            return [];
+        foreach (static::where('name', 'Praca')->whereNull('parentId')->pluck('id') as $pracaId) {
+            $ids = array_merge($ids, static::descendantIds((int) $pracaId));
         }
 
-        return static::descendantIds($praca->id);
+        return array_values(array_unique($ids));
     }
 
     public static function descendantIds(int $categoryId): array

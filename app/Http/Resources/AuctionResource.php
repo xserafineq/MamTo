@@ -14,14 +14,10 @@ class AuctionResource extends JsonResource
         $viewer = $request->user();
         $isOwner = $viewer && (int) $viewer->id === (int) $this->userId;
         $isAdmin = $viewer && $viewer->isAdmin;
-        $phoneDigits = $this->relationLoaded('user') && $this->user
-            ? preg_replace('/\D/', '', $this->user->phoneNumber)
-            : null;
-
         $displayPhone = null;
-        if ($phoneDigits !== null && $this->relationLoaded('user')) {
+        if ($this->relationLoaded('user') && $this->user) {
             $displayPhone = app(AuctionService::class)->formatDisplayPhone(
-                $phoneDigits,
+                $this->user->phoneNumber,
                 $isOwner || $isAdmin,
             );
         }
