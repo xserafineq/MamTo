@@ -13,6 +13,8 @@ return new class extends Migration
             $table->foreignId('auctionId')->nullable()->constrained('Auctions')->onDelete('no action')->onUpdate('no action');
             $table->foreignId('sellerId')->constrained('Users')->onDelete('no action')->onUpdate('no action');
             $table->foreignId('buyerId')->constrained('Users')->onDelete('no action')->onUpdate('no action');
+            $table->timestamp('buyerLastReadAt')->nullable();
+            $table->timestamp('sellerLastReadAt')->nullable();
         });
     }
 

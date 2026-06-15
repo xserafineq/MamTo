@@ -26,30 +26,35 @@ class ChatController extends Controller
             ->map(function (Chat $chat) use ($userId) {
                 $chat->lastMessage = $chat->messages->sortByDesc('sentAt')->first();
                 $chat->otherParticipant = $this->getOtherParticipant($chat, $userId);
-                $chat->isUnread = $chat->lastMessage
-                    && (int) $chat->lastMessage->senderId !== (int) $userId;
+                $chat->unreadCount = $chat->unreadMessagesCountFor($userId);
+                $chat->isUnread = $chat->unreadCount > 0;
 
                 return $chat;
             })
             ->sortByDesc(fn (Chat $chat) => $chat->lastMessage?->sentAt)
             ->values();
 
-        $newMessagesCount = $chats->where('isUnread', true)->count();
+        $newMessagesCount = $chats->sum('unreadCount');
 
         return view('messages.index', compact('chats', 'newMessagesCount'));
     }
 
+    To ten sam konflikt co w API — web ChatController::show(). Połącz obie strony tak:
+
+
     public function show(Chat $chat): View
     {
         $this->authorizeChatAccess($chat);
-
         abort_if($chat->archived, 404);
-
-        $chat->load(['auction.image', 'seller', 'buyer', 'messages' => fn ($query) => $query->visible()->with('sender')]);
-
+        $chat->markAsReadBy(auth()->id());
+        $chat->load([
+            'auction.image',
+            'seller',
+            'buyer',
+            'messages' => fn ($query) => $query->visible()->with('sender'),
+        ]);
         $messages = $chat->messages->sortBy('sentAt')->values();
         $otherParticipant = $this->getOtherParticipant($chat, auth()->id());
-
         return view('messages.show', compact('chat', 'messages', 'otherParticipant'));
     }
 
@@ -103,6 +108,8 @@ class ChatController extends Controller
             'sentAt' => now(),
             'senderId' => auth()->id(),
         ]);
+
+        $chat->markAsReadBy(auth()->id());
 
         return redirect()->route('chats.show', $chat);
     }
