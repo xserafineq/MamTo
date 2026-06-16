@@ -73,12 +73,8 @@ class ImageService
         });
     }
 
-    public function replaceSystemImage(Image $image, UploadedFile $file): Image
+    public function replaceImage(Image $image, UploadedFile $file): Image
     {
-        if (! $this->isPlaceholder($image)) {
-            throw new \RuntimeException('Podmiana jest dostępna tylko dla zdjęć systemowych.');
-        }
-
         $oldPath = $image->diskPath();
 
         $diskName = $image->uuid . '.' . $file->getClientOriginalExtension();

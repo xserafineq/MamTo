@@ -15,7 +15,7 @@
         <p class="admin-panel-desc">
             Wszystkie zdjęcia zapisane w systemie. Usunięcie usuwa plik z dysku i rekord z bazy danych.
             Aukcje korzystające ze zdjęcia jako miniatury otrzymają domyślny placeholder.
-            Domyślnego zdjęcia systemowego nie można usunąć, ale można je podmienić przyciskiem Edytuj.
+            Każde zdjęcie można podmienić przyciskiem Edytuj. Domyślnego zdjęcia systemowego nie można usunąć.
         </p>
 
         @include('admin.partials.nav')
@@ -73,31 +73,30 @@
                                 @endif
                             </div>
                             <div class="admin-images-card__actions">
-                                @if ($isPlaceholder)
-                                    <form
-                                        method="POST"
-                                        action="{{ route('admin.images.update', $image) }}"
-                                        enctype="multipart/form-data"
-                                        class="admin-images-card__replace-form"
-                                        data-admin-image-replace-form
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.images.update', $image) }}"
+                                    enctype="multipart/form-data"
+                                    class="admin-images-card__replace-form"
+                                    data-admin-image-replace-form
+                                >
+                                    @csrf
+                                    @method('PUT')
+                                    <input
+                                        type="file"
+                                        name="image"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        class="visually-hidden"
+                                        id="admin-image-input-{{ $image->id }}"
                                     >
-                                        @csrf
-                                        @method('PUT')
-                                        <input
-                                            type="file"
-                                            name="image"
-                                            accept="image/jpeg,image/png,image/webp"
-                                            class="visually-hidden"
-                                            id="admin-image-input-{{ $image->id }}"
-                                        >
-                                        <label
-                                            for="admin-image-input-{{ $image->id }}"
-                                            class="btn btn-outline-primary btn-sm w-100 mb-0"
-                                        >
-                                            Edytuj
-                                        </label>
-                                    </form>
-                                @else
+                                    <label
+                                        for="admin-image-input-{{ $image->id }}"
+                                        class="btn btn-outline-primary btn-sm w-100 mb-0"
+                                    >
+                                        Edytuj
+                                    </label>
+                                </form>
+                                @unless ($isPlaceholder)
                                     <form
                                         method="POST"
                                         action="{{ route('admin.images.destroy', $image) }}"
@@ -108,7 +107,7 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm w-100">Usuń</button>
                                     </form>
-                                @endif
+                                @endunless
                             </div>
                         </div>
                     </article>

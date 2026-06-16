@@ -16,7 +16,7 @@ function initAdminImageReplaceForms() {
                 return;
             }
 
-            const confirmed = window.confirm('Czy na pewno podmienić to zdjęcie systemowe?');
+            const confirmed = window.confirm('Czy na pewno podmienić to zdjęcie?');
 
             if (confirmed) {
                 form.submit();

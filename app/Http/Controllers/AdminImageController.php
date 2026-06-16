@@ -23,7 +23,7 @@ class AdminImageController extends Controller
     public function update(UpdateAdminImageRequest $request, Image $image, ImageService $imageService): RedirectResponse
     {
         try {
-            $imageService->replaceSystemImage($image, $request->file('image'));
+            $imageService->replaceImage($image, $request->file('image'));
         } catch (\RuntimeException $exception) {
             return redirect()
                 ->route('admin.images.index')
@@ -32,7 +32,7 @@ class AdminImageController extends Controller
 
         return redirect()
             ->route('admin.images.index')
-            ->with('success', 'Zdjęcie systemowe zostało podmienione.');
+            ->with('success', 'Zdjęcie zostało podmienione.');
     }
 
     public function destroy(Image $image, ImageService $imageService): RedirectResponse

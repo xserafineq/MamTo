@@ -64,7 +64,9 @@ class Image extends Model
                 return asset('assets/notfound.png');
             }
 
-            return Storage::disk('public')->url($this->diskPath());
+            $url = Storage::disk('public')->url($this->diskPath());
+
+            return $url . '?v=' . $this->uploadedAt?->timestamp;
         });
     }
 }
