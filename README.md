@@ -93,6 +93,12 @@ docker compose up -d --build
 
 ## Wybrany przebieg działania aplikacji
 
+```bash
+#konto testowe
+login: ja@admin.com
+hasło: password
+```
+
 **Strona główna → tworzenie konta → wyszukiwanie → moje ogłoszenia → tworzenie aukcji → edytowanie aukcji**
 
 ### 1. Strona główna
