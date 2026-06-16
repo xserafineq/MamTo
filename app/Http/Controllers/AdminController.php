@@ -39,7 +39,7 @@ class AdminController extends Controller
             });
         }
 
-        $auctions = $query->paginate(15)->withQueryString();
+        $auctions = $query->paginate(10)->withQueryString();
 
         return view('admin.auctions', compact('auctions', 'activeCount', 'closedCount'));
     }
@@ -50,7 +50,7 @@ class AdminController extends Controller
         $auctions = Auction::with(['image', 'user', 'category'])
             ->where('approved', false)
             ->latest('createdAt')
-            ->paginate(15);
+            ->paginate(10);
 
         return view('admin.approvals', compact('auctions'));
     }

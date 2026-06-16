@@ -14,7 +14,7 @@ class AdminImageController extends Controller
     {
         $images = Image::query()
             ->orderByDesc('uploadedAt')
-            ->paginate(24)
+            ->paginate(20)
             ->withQueryString();
 
         return view('admin.images', compact('images'));

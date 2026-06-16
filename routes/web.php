@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/rating', [SellerRatingController::class, 'store'])->name('users.rating.store')->whereNumber('user');
 
     Route::get('/messages', [ChatController::class, 'index'])->name('chats.index');
+    Route::post('/messages/{chat}/archive', [ChatController::class, 'archive'])->name('chats.archive');
+    Route::post('/messages/{chat}/unarchive', [ChatController::class, 'unarchive'])->name('chats.unarchive');
     Route::get('/messages/{chat}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('/messages/{chat}', [ChatController::class, 'storeMessage'])->name('chats.messages.store');
     Route::get('/auctions/{auction}/chat', [ChatController::class, 'start'])->name('chats.start');

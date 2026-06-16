@@ -18,7 +18,7 @@ class AuctionController extends Controller
 
         $auctions = Auction::with(['image', 'user', 'category'])
             ->latest('createdAt')
-            ->paginate((int) $request->input('per_page', 15));
+            ->paginate((int) $request->input('per_page', 10));
 
         return response()->json([
             'data' => AuctionResource::collection($auctions),

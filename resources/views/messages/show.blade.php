@@ -6,7 +6,7 @@
 
 @section('content')
     <section id="chat-page">
-        <a href="{{ route('chats.index') }}" class="chat-back-link">← Wróć do wiadomości</a>
+        <a href="{{ route('chats.index', $isArchived ? ['tab' => 'archived'] : []) }}" class="chat-back-link">← Wróć do wiadomości</a>
 
         <article class="chat-header-card">
             <img
@@ -39,6 +39,12 @@
             </div>
         </article>
 
+        @if($isArchived)
+            <div class="alert alert-warning mb-0" role="alert">
+                Ten chat jest zarchiwizowany. Dostępny jest tylko podgląd wiadomości.
+            </div>
+        @endif
+
         <div class="chat-thread">
             @forelse($messages as $message)
                 <div @class([
@@ -53,19 +59,21 @@
             @endforelse
         </div>
 
-        <form method="POST" action="{{ route('chats.messages.store', $chat) }}" class="chat-form">
-            @csrf
-            <textarea
-                name="text"
-                class="chat-form__input @error('text') chat-form__input--error @enderror"
-                rows="4"
-                placeholder="Napisz wiadomość..."
-                required
-            >{{ old('text') }}</textarea>
-            @error('text')
-                <p class="chat-form__error">{{ $message }}</p>
-            @enderror
-            <button type="submit" class="chat-form__submit">Wyślij</button>
-        </form>
+        @if(! $isArchived)
+            <form method="POST" action="{{ route('chats.messages.store', $chat) }}" class="chat-form">
+                @csrf
+                <textarea
+                    name="text"
+                    class="chat-form__input @error('text') chat-form__input--error @enderror"
+                    rows="4"
+                    placeholder="Napisz wiadomość..."
+                    required
+                >{{ old('text') }}</textarea>
+                @error('text')
+                    <p class="chat-form__error">{{ $message }}</p>
+                @enderror
+                <button type="submit" class="chat-form__submit">Wyślij</button>
+            </form>
+        @endif
     </section>
 @endsection

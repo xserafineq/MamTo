@@ -15,36 +15,44 @@ class ChatController extends Controller
     public function index(): View
     {
         $userId = auth()->id();
+        $isArchiveTab = request()->input('tab') === 'archived';
 
-        $chats = Chat::with(['auction.image', 'seller', 'buyer', 'messages' => fn ($query) => $query->visible()])
-            ->visible()
-            ->where(function ($query) use ($userId) {
-                $query->where('buyerId', $userId)
-                    ->orWhere('sellerId', $userId);
-            })
-            ->get()
-            ->map(function (Chat $chat) use ($userId) {
-                $chat->lastMessage = $chat->messages->sortByDesc('sentAt')->first();
-                $chat->otherParticipant = $this->getOtherParticipant($chat, $userId);
-                $chat->unreadCount = $chat->unreadMessagesCountFor($userId);
-                $chat->isUnread = $chat->unreadCount > 0;
-
-                return $chat;
-            })
-            ->sortByDesc(fn (Chat $chat) => $chat->lastMessage?->sentAt)
-            ->values();
+        $chats = $this->getChatsForTab($userId, $isArchiveTab);
 
         $newMessagesCount = $chats->sum('unreadCount');
 
-        return view('messages.index', compact('chats', 'newMessagesCount'));
+        return view('messages.index', compact('chats', 'newMessagesCount', 'isArchiveTab'));
+    }
+
+    public function archive(Chat $chat): RedirectResponse
+    {
+        $this->authorizeChatAccess($chat);
+
+        $chat->update(['archived' => true]);
+
+        return redirect()
+            ->route('chats.index')
+            ->with('success', 'Chat został zarchiwizowany.');
+    }
+
+    public function unarchive(Chat $chat): RedirectResponse
+    {
+        $this->authorizeChatAccess($chat);
+
+        $chat->update(['archived' => false]);
+
+        return redirect()
+            ->route('chats.index', ['tab' => 'archived'])
+            ->with('success', 'Chat został przywrócony.');
     }
 
 
     public function show(Chat $chat): View
     {
         $this->authorizeChatAccess($chat);
-        abort_if($chat->archived, 404);
-        $chat->markAsReadBy(auth()->id());
+        if (! $chat->archived) {
+            $chat->markAsReadBy(auth()->id());
+        }
         $chat->load([
             'auction.image',
             'seller',
@@ -53,7 +61,9 @@ class ChatController extends Controller
         ]);
         $messages = $chat->messages->sortBy('sentAt')->values();
         $otherParticipant = $this->getOtherParticipant($chat, auth()->id());
-        return view('messages.show', compact('chat', 'messages', 'otherParticipant'));
+        $isArchived = (bool) $chat->archived;
+
+        return view('messages.show', compact('chat', 'messages', 'otherParticipant', 'isArchived'));
     }
 
     public function start(Auction $auction): RedirectResponse
@@ -95,6 +105,7 @@ class ChatController extends Controller
     public function storeMessage(Request $request, Chat $chat): RedirectResponse
     {
         $this->authorizeChatAccess($chat);
+        abort_if($chat->archived, 403, 'Ten chat jest zarchiwizowany i tylko do podglądu.');
 
         $validated = $request->validate([
             'text' => ['required', 'string', 'max:2000'],
@@ -127,5 +138,26 @@ class ChatController extends Controller
         return (int) $chat->buyerId === $userId
             ? $chat->seller
             : $chat->buyer;
+    }
+
+    private function getChatsForTab(int $userId, bool $archived): \Illuminate\Support\Collection
+    {
+        return Chat::with(['auction.image', 'seller', 'buyer', 'messages' => fn ($query) => $query->visible()])
+            ->where('archived', $archived)
+            ->where(function ($query) use ($userId) {
+                $query->where('buyerId', $userId)
+                    ->orWhere('sellerId', $userId);
+            })
+            ->get()
+            ->map(function (Chat $chat) use ($userId) {
+                $chat->lastMessage = $chat->messages->sortByDesc('sentAt')->first();
+                $chat->otherParticipant = $this->getOtherParticipant($chat, $userId);
+                $chat->unreadCount = $chat->unreadMessagesCountFor($userId);
+                $chat->isUnread = $chat->unreadCount > 0;
+
+                return $chat;
+            })
+            ->sortByDesc(fn (Chat $chat) => $chat->lastMessage?->sentAt)
+            ->values();
     }
 }

@@ -22,6 +22,26 @@
     text-align: center;
 }
 
+.messages-tabs {
+    display: flex;
+    gap: 12px;
+}
+
+.messages-tab {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 2px solid #0066FF;
+    color: #0066FF;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.messages-tab--active {
+    background-color: #0066FF;
+    color: white;
+}
+
 .messages-subtitle__highlight {
     color: #0066FF;
 }
@@ -142,8 +162,19 @@
 .message-btn--archive {
     background-color: #e53935;
     color: white;
-    opacity: 0.55;
-    cursor: not-allowed;
+}
+
+.message-btn--archive:hover {
+    background-color: #d32f2f;
+}
+
+.message-btn--restore {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.message-btn--restore:hover {
+    background-color: #256828;
 }
 
 .messages-empty {
