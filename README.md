@@ -238,4 +238,5 @@ Edytowanie aukcji odbywa się w ten sam sposób jak jej dodawanie. Użytkownik m
 ## Dalszy rozwój
 
 - powiadomienia e-mail przy wiadomościach i akceptacji ogłoszeń
+- możliwość zapisania przez użytkownika filtrów wyszukiwania
 - wiadomości w czasie rzeczywistym
